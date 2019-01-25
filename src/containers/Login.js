@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import {Image, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import logo from '../images/cepalogo.png'
 import "./Login.css";
 
 export default class Login extends Component {
@@ -24,6 +25,10 @@ export default class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    const email = this.inputEmail.value
+    const pwd = this.inputPwd.value
+    console.log({email,pwd});
+    
   }
 
   render() {
@@ -31,12 +36,15 @@ export default class Login extends Component {
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="usuario" bsSize="large">
+          <Image src={logo} className="img-responsive center-block"  alt="" responsive/>
+           <p></p>
             <ControlLabel>Usuario</ControlLabel>
             <FormControl
               autoFocus
               type="usuario"
               value={this.state.usuario}
               onChange={this.handleChange}
+              inputRef ={inputElement => this.inputEmail = inputElement}
             />
           </FormGroup>
           <FormGroup controlId="password" bsSize="large">
@@ -45,6 +53,7 @@ export default class Login extends Component {
               value={this.state.password}
               onChange={this.handleChange}
               type="password"
+              inputRef={inputElement => this.inputPwd = inputElement}
             />
           </FormGroup>
           <Button
