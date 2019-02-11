@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import {Image, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
-import "./Login.css";
+import "../styles/styles.css";
 
-export default class Login extends Component {
+export class Login extends Component {
   constructor(props) {
     super(props);
 
