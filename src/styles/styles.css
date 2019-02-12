@@ -1,11 +1,29 @@
-@media all and (min-width: 480px) {
-    .Login {
-      padding: 60px 0;
-    }
+
+
+  .navbar{
+    background-color: #438C83 ;
+    border: 1px solid rgba(0, 0, 0, 0.125);  
+
+  }
   
-    .Login form {
-      margin: 0 auto;
-      max-width: 320px;
-    }
+  .nav-link:hover{
+    background-color: #438C83;
   }
 
+  .nav-link {
+    color : white ;
+  }
+  
+  .linkspan {
+    cursor:pointer;
+    
+}
+
+  .card-header{
+    background-color: white;
+    border-bottom : "1px solid rgba(0, 0, 0, 0.125)"
+  }
+
+  .card-body{
+    background-color:#f8f9fa
+  }

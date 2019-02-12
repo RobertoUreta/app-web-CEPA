@@ -1,8 +1,10 @@
 import React , { Component } from 'react'
-import { NavItem, Navbar,NavDropdown, Nav} from 'react-bootstrap';
+import { Navbar,Nav} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
+import "../styles/styles.css"
+
 
 
 export class NavBar extends Component {
@@ -10,7 +12,7 @@ export class NavBar extends Component {
         return (
        
             <div className="Layout">
-               <Navbar bg="dark" >
+               <Navbar bg="light">
                <Link to="/">
                    <Navbar.Brand >
                        
@@ -18,6 +20,8 @@ export class NavBar extends Component {
                            src = {logo}
                            className="d-inline-block align-top"
                            alt="Cepa logo"
+                           width= "45"
+                           height="30"
                        />
                        
                    </Navbar.Brand> 
@@ -26,24 +30,16 @@ export class NavBar extends Component {
                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
                    <Navbar.Collapse  className="justify-content-end" id="basic-navbar-nav">
                        <Nav className="mr-auto">
-                       
-                       <LinkContainer to="/">
-                            <NavItem> Home </NavItem>
+                       <LinkContainer to="/"> 
+                            <Nav.Link>Usuarios</Nav.Link>
                        </LinkContainer>
-                       <NavDropdown  title="Opciones" id="basic-nav-dropdown">
-                           <LinkContainer to="/Layout">
-                               <NavDropdown.Item>Action</NavDropdown.Item>
-                           </LinkContainer>
-
-                           <LinkContainer to="/CrearUsuario">
-                               <NavDropdown.Item>Crear Usuario</NavDropdown.Item>
-                           </LinkContainer>
-                           
-                         
-                           <LinkContainer to="/">
-                               <NavDropdown.Item>Another action</NavDropdown.Item>
-                           </LinkContainer>
-                       </NavDropdown>
+                       <LinkContainer to="/">
+                            <Nav.Link>Pacientes</Nav.Link>
+                       </LinkContainer>
+                       <LinkContainer to="/">
+                            <Nav.Link>Utilidades</Nav.Link>
+                       </LinkContainer>
+                       
                        </Nav>
                        
                    </Navbar.Collapse>

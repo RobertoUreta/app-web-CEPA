@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
-import "../styles/styles.css";
+import "../styles/login.css";
 
 export class Login extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ export class Login extends Component {
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
           <Form.Group controlId="usuario" bsSize="large">
-          <Image src={logo} className="img-responsive center-block"  alt="" responsive/>
+          <Image src={logo} width="320" className="img-responsive center-block "  alt="" responsive/>
            <p></p>
             <Form.Control
               autoFocus
