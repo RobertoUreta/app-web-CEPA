@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Login } from './pages/Login';
 import { Layout } from './components/Layout'
 import { Switch , Route} from 'react-router-dom'
+import CrearUsuario from './pages/CrearUsuario'
 
 
 class App extends Component {
@@ -11,6 +12,7 @@ class App extends Component {
         <Switch>
           <Route exact path='/' component = {Login}  />
           <Route path='/Layout' component = {Layout} />
+          <Route path='/CrearUsuario' component = {CrearUsuario} />
         </Switch>
         
       </div>

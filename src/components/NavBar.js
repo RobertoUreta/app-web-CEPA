@@ -1,5 +1,5 @@
 import React , { Component } from 'react'
-import { NavItem, Navbar,NavDropdown, Nav, MenuItem} from 'react-bootstrap';
+import { NavItem, Navbar,NavDropdown, Nav} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
@@ -32,16 +32,16 @@ export class NavBar extends Component {
                        </LinkContainer>
                        <NavDropdown  title="Opciones" id="basic-nav-dropdown">
                            <LinkContainer to="/Layout">
-                               <MenuItem>Action</MenuItem>
+                               <NavDropdown.Item>Action</NavDropdown.Item>
                            </LinkContainer>
 
-                           <LinkContainer to="/">
-                               <MenuItem>Another action</MenuItem>
+                           <LinkContainer to="/CrearUsuario">
+                               <NavDropdown.Item>Crear Usuario</NavDropdown.Item>
                            </LinkContainer>
                            
                          
                            <LinkContainer to="/">
-                               <MenuItem>Another action</MenuItem>
+                               <NavDropdown.Item>Another action</NavDropdown.Item>
                            </LinkContainer>
                        </NavDropdown>
                        </Nav>
