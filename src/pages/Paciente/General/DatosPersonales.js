@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { Form, Button, Col } from "react-bootstrap";
-import {Option} from '../components/Option'
+import React, {Component} from 'react'
+import {Form,Col,Button} from 'react-bootstrap'
+import {Option} from '../../../components/Option'
 
-const generos = ["Masculino","Femenino","Otro"]
+const valoresSesion = [0,3000,8000,15000]
+const relacionesContractuales = ["Sin contrato","Honorarios","Pension de vejez"]
 
 export default class CrearUsuario extends Component {
 
@@ -14,17 +15,18 @@ export default class CrearUsuario extends Component {
             apellidoPaterno: "",
             apellidoMaterno: "",
             rut: "",
-            genero: "",
-            usuario: "",
-            password: "",
-            telefonoMovil:"",
-            telefonoTrabajo: "",
+            fechaNacimiento: "",
+            telefonoMovil: "",
+            telefonoFijo: "",
             correo: "",
-            horasSemanales: 0,
-            nombreContactoEmergencia: "",
-            telefonoContactoEmergencia: "",
-            rol: "",
-            supervisor: ""
+            nivelInstruccion:"",
+            establecimientoEducacional:"",
+            tipoEstablecimiento:"",
+            prevision:"",
+            ocupacion:"",
+            relacionContractual:"",
+            tipoPaciente:"",
+            valorSesion:0,
         };
     }
 
@@ -46,7 +48,7 @@ export default class CrearUsuario extends Component {
 
     render() {
         return (
-            <div className="CrearUsuario">
+            <div className="DatosPersonales">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -86,40 +88,16 @@ export default class CrearUsuario extends Component {
                                     placeholder="19275731-2"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="genero">
-                                <Form.Label>Genero</Form.Label>
+                            <Form.Group controlId="fechaNacimiento">
+                                <Form.Label>Fecha de nacimiento</Form.Label>
                                 <Form.Control
-                                    as="select"
-                                    type="genero"
-                                    value={this.state.genero}
+                                    type="fechaNacimiento"
+                                    value={this.state.fechaNacimiento}
                                     onChange={this.handleChange}
-                                    placeholder="Seleccione el genero del usuario">
-                                    <Option options= {generos}></Option>
+                                    placeholder="Seleccione la fechaNacimiento del usuario">
                                 </Form.Control>
+                                
                             </Form.Group>
-                            <Form.Group controlId="usuario">
-                                <Form.Label>Usuario</Form.Label>
-                                <Form.Control
-                                    type="usuario"
-                                    value={this.state.usuario}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el username/alias del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="password">
-                                <Form.Label>Contraseña</Form.Label>
-                                <Form.Control
-                                    value={this.state.password}
-                                    onChange={this.handleChange}
-                                    type="password"
-                                    inputRef={inputElement => this.inputPwd = inputElement}
-                                    placeholder="Ingrese la contraseña del usuario"
-                                />
-                            </Form.Group>
-                        </Form.Group>
-
-                        <Form.Group as={Col}>
-
                             <Form.Group controlId="telefonoMovil">
                                 <Form.Label>Telefono Movil</Form.Label>
                                 <Form.Control
@@ -147,63 +125,94 @@ export default class CrearUsuario extends Component {
                                     placeholder="Ingrese el correo del usuario"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="horasSemanales">
-                                <Form.Label>Horas Semanales</Form.Label>
+                        
+                        </Form.Group>
+
+                        <Form.Group as={Col}>
+                            <Form.Group controlId="nivelInstruccion">
+                                <Form.Label>Nivel Instruccion</Form.Label>
                                 <Form.Control
-                                    type="HorasSemanales"
-                                    value={this.state.horasSemanales}
+                                    type="nivelInstruccion"
+                                    value={this.state.nivelInstruccion}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese las horas semanales del usuario"
+                                    placeholder="Ingrese el nivel de Instruccion"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="nombreContactoEmergencia">
-                                <Form.Label>Nombre Contacto Emergencia</Form.Label>
+                            <Form.Group controlId="establecimientoEducacional">
+                                <Form.Label>Establecimiento Educacional</Form.Label>
                                 <Form.Control
-                                    type="nombreContactoEmergencia"
-                                    value={this.state.nombreContactoEmergencia}
+                                    type="establecimientoEducacional"
+                                    value={this.state.establecimientoEducacional}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el nombre de contacto de emergencia del usuario"
+                                    placeholder="Ingrese el establecimiento educacional"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="telefonoContactoEmergencia">
-                                <Form.Label>Telefono Contacto Emergencia</Form.Label>
+                            <Form.Group controlId="tipoEstablecimiento">
+                                <Form.Label>tipo de Establecimiento</Form.Label>
                                 <Form.Control
-                                    type="telefonoContactoEmergencia"
-                                    value={this.state.telefonoContactoEmergencia}
+                                    type="tipoEstablecimiento"
+                                    value={this.state.tipoEstablecimiento}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono de contacto de emergencia"
+                                    placeholder="Ingrese el tipo de establecimiento"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="rol">
-                                <Form.Label>Rol</Form.Label>
+                            <Form.Group controlId="prevision">
+                                <Form.Label>Prevision</Form.Label>
+                                <Form.Control
+                                    type="prevision"
+                                    value={this.state.prevision}
+                                    onChange={this.handleChange}
+                                    placeholder="Ingrese la prevision"
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="ocupacion">
+                                <Form.Label>Ocupacion</Form.Label>
+                                <Form.Control
+                                    type="ocupacion"
+                                    value={this.state.ocupacion}
+                                    onChange={this.handleChange}
+                                    placeholder="Ingrese la ocupacion"
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="relacionContractual">
+                                <Form.Label>Relacion contractual</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    type="rol"
-                                    value={this.state.rol}
+                                    type="relacionContractual"
+                                    value={this.state.relacionContractual}
                                     onChange={this.handleChange}
-                                    placeholder="Seleccione un rol">
-                                    <option>...</option>
+                                    placeholder="Ingrese la relacion contractual"
+                                >
+                                    <Option options={relacionesContractuales}/>
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group controlId="supervisor">
-                                <Form.Label>Supervisor</Form.Label>
+                            <Form.Group controlId="tipoPaciente">
+                                <Form.Label>Tipo paciente</Form.Label>
+                                <Form.Control
+                                    type="tipoPaciente"
+                                    value={this.state.tipoPaciente}
+                                    onChange={this.handleChange}
+                                    placeholder="Ingrese el tipo de paciente"
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="valorSesion">
+                                <Form.Label>Valor de sesion</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    type="supervisor"
-                                    value={this.state.rol}
+                                    type="valorSesion"
+                                    value={this.state.valorSesion}
                                     onChange={this.handleChange}
-                                    placeholder="Seleccion un supervisor">
-                                    <option>...</option>
+                                    placeholder="Ingrese el valor de la sesion"
+                                >
+                                    <Option options={valoresSesion}/>
                                 </Form.Control>
-
                             </Form.Group>
-
                             <Button
                                 size="lg"
                                 type="submit"
                             >
                                 Guardar
-                                </Button>
+                            </Button>
 
                         </Form.Group>
                     </Form.Row>

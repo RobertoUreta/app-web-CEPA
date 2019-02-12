@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {
     AppContainer as BaseAppContainer,
     ExampleNavigation as BaseNavigation,
-    ExampleBody as Body
+    Body
   } from "../containers/containers";
 import "../styles/styles.css";
 import { Link } from 'react-router-dom'
@@ -80,9 +80,7 @@ export class NavLateral extends Component {
 
             </Navigation>
             <Body>
-          You can render any items as child of Nav element. All items will be
-          rendered under a flex container.
-        </Body>
+            </Body>
             </AppContainer>
         )
     }
