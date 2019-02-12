@@ -12,7 +12,7 @@ export class NavBar extends Component {
         return (
        
             <div className="Layout">
-               <Navbar bg="light">
+               <Navbar bg="light" expand="lg">
                <Link to="/">
                    <Navbar.Brand >
                        
