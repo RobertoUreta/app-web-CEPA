@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Col, Button } from 'react-bootstrap'
 
-export default class AdultoContacto extends Component {
+export  class DatosSocioDemograficos extends Component {
 
     constructor(props) {
         super(props);

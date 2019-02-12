@@ -5,7 +5,7 @@ import {Option} from '../../../components/Option'
 const valoresSesion = [0,3000,8000,15000]
 const relacionesContractuales = ["Sin contrato","Honorarios","Pension de vejez"]
 
-export default class CrearUsuario extends Component {
+export class DatosPersonales extends Component {
 
     constructor(props) {
         super(props);

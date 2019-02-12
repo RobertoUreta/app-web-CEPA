@@ -4,7 +4,7 @@ import {Option} from '../../../components/Option'
 
 
 const estados = ["Abierto","Cerrado","En proceso de alta"]
-export default class AdultoContacto extends Component {
+export  class DatosAdicionales extends Component {
     constructor(props) {
         super(props);
 
