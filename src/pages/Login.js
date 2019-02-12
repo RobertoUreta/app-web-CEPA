@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import {Image, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import {Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
-import "./Login.css";
+import "../styles/login.css";
 
-export default class Login extends Component {
+export class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -35,34 +35,34 @@ export default class Login extends Component {
     return (
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="usuario" bsSize="large">
-          <Image src={logo} className="img-responsive center-block"  alt="" responsive/>
+          <Form.Group controlId="usuario" bsSize="large">
+          <Image src={logo} width="320" className="img-responsive center-block "  alt="" responsive/>
            <p></p>
-            <ControlLabel>Usuario</ControlLabel>
-            <FormControl
+            <Form.Control
               autoFocus
               type="usuario"
               value={this.state.usuario}
               onChange={this.handleChange}
               inputRef ={inputElement => this.inputEmail = inputElement}
+              placeholder = "Usuario"
             />
-          </FormGroup>
-          <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
+          </Form.Group>
+          <Form.Group controlId="password" bsSize="large">
+            <Form.Control
               value={this.state.password}
               onChange={this.handleChange}
               type="password"
               inputRef={inputElement => this.inputPwd = inputElement}
+              placeholder = "Contraseña"
             />
-          </FormGroup>
+          </Form.Group>
           <Button
             block
             bsSize="large"
             disabled={!this.validateForm()}
             type="submit"
           >
-            Login
+            Acceder
           </Button>
         </form>
       </div>
