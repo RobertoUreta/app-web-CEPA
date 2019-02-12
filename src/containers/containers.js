@@ -13,7 +13,7 @@ export const Navigation = styled.div`
   border-right: 1px solid rgba(0, 0, 0, 0.125);
 `;
 export const Body = styled.div`
-  padding: 12px;
+  padding: 30px;
   height: 100vh;
   width: 100%;
 `;
