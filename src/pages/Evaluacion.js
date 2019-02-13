@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Card, Collapse } from 'react-bootstrap'
 import "../styles/styles.css"
+import './Paciente/evaluacion/Tamizaje'
+import { Tamizaje } from './Paciente/evaluacion/Tamizaje';
 
 
 export class Evaluacion extends Component {
@@ -165,6 +167,7 @@ export class Evaluacion extends Component {
                     </span></Card.Header>
                 <Collapse in={this.state.openTamizaje}>
                     <Card.Body>
+                        <Tamizaje/>
                     </Card.Body>
                 </Collapse>
 
