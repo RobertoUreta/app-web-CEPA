@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
-import { Form, Col, Button } from 'react-bootstrap'
+import { Form, Col, Row, Button } from 'react-bootstrap'
+import { Option } from '../../../components/Option'
+const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
+const tiposFamilias = ["Familia Nuclear", "Familia Extensa", "Familia monoparental",
+    "Familia ensamblada", "Familia homoparental", "Familia de padres separados"]
 
-export  class DatosSocioDemograficos extends Component {
+
+export class DatosSocioDemograficos extends Component {
 
     constructor(props) {
         super(props);
@@ -12,9 +17,9 @@ export  class DatosSocioDemograficos extends Component {
             provincia: "",
             ciudad: "",
             direccion: "",
-            ingresoFamiliar:0,
-            tipoFamilia:"",
-            estadoCivil:""
+            ingresoFamiliar: "",
+            tipoFamilia: "",
+            estadoCivil: ""
         };
     }
 
@@ -40,88 +45,100 @@ export  class DatosSocioDemograficos extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                            <Form.Group controlId="pais">
-                                <Form.Label>Pais</Form.Label>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="pais">
+                                        <Form.Control
+                                            value={this.state.pais}
+                                            onChange={this.handleChange}
+                                            placeholder="País"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="region">
+                                        <Form.Control
+                                            value={this.state.region}
+                                            onChange={this.handleChange}
+                                            placeholder="Región"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="provincia">
+                                        <Form.Control
+                                            value={this.state.provincia}
+                                            onChange={this.handleChange}
+                                            placeholder="Provincia"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="ciudad">
+                                        <Form.Control
+                                            value={this.state.ciudad}
+                                            onChange={this.handleChange}
+                                            placeholder="Ciudad"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Form.Group controlId="direccion">
                                 <Form.Control
-                                    type="pais"
-                                    value={this.state.pais}
+                                    value={this.state.direccion}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el pais"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="region">
-                                <Form.Label>Región</Form.Label>
-                                <Form.Control
-                                    type="region"
-                                    value={this.state.region}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccione la region"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="provincia">
-                                <Form.Label>Provincia</Form.Label>
-                                <Form.Control
-                                    type="provincia"
-                                    value={this.state.provincia}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccione la provincia"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="ciudad">
-                                <Form.Label>Ciudad</Form.Label>
-                                <Form.Control
-                                    type="ciudad"
-                                    value={this.state.ciudad}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccione la ciudad"
+                                    placeholder="Dirección"
                                 />
                             </Form.Group>
 
                         </Form.Group>
 
                         <Form.Group as={Col}>
-                            <Form.Group controlId="direccion">
-                                <Form.Label>Dirección</Form.Label>
-                                <Form.Control
-                                    type="direccion"
-                                    value={this.state.direccion}
-                                    onChange={this.handleChange}
-                                    placeholder="Inserte la direccion"
-                                />
-                            </Form.Group>
                             <Form.Group controlId="ingresoFamiliar">
-                                <Form.Label>Ingreso Familiar</Form.Label>
                                 <Form.Control
-                                    type="ingresoFamiliar"
                                     value={this.state.ingresoFamiliar}
                                     onChange={this.handleChange}
-                                    placeholder="Inserte el ingreso familiar"
+                                    placeholder="Ingreso Familiar"
                                 />
                             </Form.Group>
                             <Form.Group controlId="tipoFamilia">
-                                <Form.Label>Tipo Familia</Form.Label>
                                 <Form.Control
-                                    type="tipoFamilia"
+                                    as="select"
                                     value={this.state.tipoFamilia}
                                     onChange={this.handleChange}
-                                    placeholder="Inserte el tipo de Familia"
-                                />
+                                >
+                                    <option hidden>Tipo de Familia</option>
+                                    <Option options={tiposFamilias} />
+                                </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="estadoCivil">
-                                <Form.Label>Estado Civil</Form.Label>
                                 <Form.Control
-                                    type="estadoCivil"
+                                    as="select"
                                     value={this.state.estadoCivil}
                                     onChange={this.handleChange}
-                                    placeholder="Inserte el estado civil del paciente"
-                                />
+                                >
+                                    <option hidden>Estado Civil</option>
+                                    <Option options={estadosCiviles} />
+                                </Form.Control>
                             </Form.Group>
-                            <Button
-                                size="lg"
-                                type="submit"
-                            >
-                                Guardar
-                            </Button>
+                            <Form.Group>
+                                <Row>
+                                    <Col/>
+                                    <Col/>
+                                    <Col/>
+                                    <Col>
+                                        <Button
+                                            type="submit"
+                                        >
+                                            Guardar
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form.Group>
+
+
                         </Form.Group>
                     </Form.Row>
 

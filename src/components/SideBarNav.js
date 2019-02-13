@@ -7,7 +7,6 @@ import {
   Body
 } from "../containers/containers";
 import "../styles/styles.css";
-import { Link } from 'react-router-dom'
 import { Tratamiento } from '../pages/Tratamiento'
 import { General } from '../pages/General'
 

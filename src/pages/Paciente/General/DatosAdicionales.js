@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Col, Button } from 'react-bootstrap'
+import { Form, Row,Col, Button } from 'react-bootstrap'
 import {Option} from '../../../components/Option'
 
 
@@ -34,60 +34,58 @@ export  class DatosAdicionales extends Component {
 
     render() {
         return (
-            <div className="DatosPersonales">
+            <div className="DatosAdicionales">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="estado">
-                                <Form.Label>Estado</Form.Label>
                                 <Form.Control
                                     as="select"
-                                    type="estado"
                                     value={this.state.estado}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el estado"
                                 >
+                                    <option hidden>Estado</option>
                                     <Option options={estados}/>
                                 </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="etapa">
-                                <Form.Label>Etapa</Form.Label>
                                 <Form.Control
-                                    type="etapa"
                                     value={this.state.etapa}
                                     onChange={this.handleChange}
                                     placeholder="Ingrese la etapa"
                                 />
                             </Form.Group>
-
                         </Form.Group>
 
                         <Form.Group as={Col}>
-
                             <Form.Group controlId="tipoIngreso">
-                                <Form.Label>Tipo de Ingreso</Form.Label>
                                 <Form.Control
-                                    type="tipoIngreso"
                                     value={this.state.tipoIngreso}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el tipo de Ingreso del paciente"
+                                    placeholder="Tipo de Ingreso"
                                 />
                             </Form.Group>
                             <Form.Group controlId="institucion">
-                                <Form.Label>Institucion</Form.Label>
                                 <Form.Control
-                                    type="institucion"
                                     value={this.state.institucion}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese la institucion de procedencia"
+                                    placeholder="Institución"
                                 />
                             </Form.Group>
-                            <Button
-                                size="lg"
-                                type="submit"
-                            >
-                                Guardar
-                            </Button>
+                            <Form.Group>
+                                <Row>
+                                    <Col/>
+                                    <Col/>
+                                    <Col/>
+                                    <Col>
+                                        <Button
+                                            type="submit"
+                                        >
+                                            Guardar
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form.Group>
                         </Form.Group>
                     </Form.Row>
 
