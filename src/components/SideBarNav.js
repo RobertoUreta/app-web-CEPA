@@ -1,93 +1,82 @@
 import React, { Component } from 'react'
-import { SideNav, Nav } from 'react-sidenav'
-import styled from "styled-components";
+import { Navbar, Nav } from 'react-bootstrap'
 import {
-  AppContainer as BaseAppContainer,
-  ExampleNavigation as BaseNavigation,
+  AppContainer,
   Body
 } from "../containers/containers";
 import "../styles/styles.css";
 import { Tratamiento } from '../pages/Tratamiento'
 import { General } from '../pages/General'
+import { Evaluacion} from '../pages/Evaluacion'
 
-
-const AppContainer = styled(BaseAppContainer)`
-  height: 100vh
-  width: 100wh
-`;
-
-const Navigation = styled(BaseNavigation)`
-  background:  #f8f9fa;
-  color: #8d97ad;
-  font-size: 1em;
-  width: 130px;
-  line-height: 22px;
-`;
-
-const theme = {
-  selectionColor: "#FFF",
-  hoverBgColor: "#438C83"
-};
-
-const Text = styled.div`
-  color:  black
-  padding-left: 8px;
-`;
 
 export class NavLateral extends Component {
   state = { selectedPath: '' }
 
-  _onItemSelection = (arg) => {
-    console.log(arg.path)
-    this.setState({ selectedPath: arg.path })
+  _onItemSelection = (evt) => {
+    console.log(evt)
+    this.setState({ selectedPath: evt })
 
   }
 
   _renderSelection() {
     console.log('_renderSelection')
-    if (this.state.selectedPath === "1") {
+    if (this.state.selectedPath === "general") {
       return <General />
     }
-    if (this.state.selectedPath === "3") {
+    if (this.state.selectedPath === "tratamiento") {
       return <Tratamiento />
+    }
+    if (this.state.selectedPath === "evaluacion") {
+      return <Evaluacion />
     }
   }
 
 
   render() {
-    console.log('->render')
-    console.log(this.state.selectedPath)
     return (
       <AppContainer>
-        <Navigation>
-          <SideNav
-            defaultSelectedPath="1"
-            theme={theme}
-            onItemSelection={this._onItemSelection}
-          >
-              <Nav id="1">
-                <Text>General</Text>
-              </Nav>
-            
-              <Nav id="2">
-                <Text>Evaluación</Text>
-              </Nav>
-              <Nav id="3">
-                <Text>Tratamiento</Text>
-              </Nav>
-              <Nav id="4">
-                <Text>Derivación</Text>
-              </Nav>
-              <Nav id="5">
-                <Text>Historial</Text>
-              </Nav>
-          </SideNav>
+        <Navbar
+          className="flex-column"
+          onSelect={this._onItemSelection}
+          bg="light"
+          expand="lg"
+        >
+            <Nav className="flex-column" variant="pills" fill>
+              <Nav.Item className= "navitem-prueba" >
+                <Nav.Link eventKey="general"> General </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="evaluacion"> Evaluación </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="diagnostico"> Diagnóstico</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="tratamiento"> Tratamiento</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="registrosesion"> Registro Sesión</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="epicrisis"> Epicrisis </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="derivacion"> Derivación</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="historial"> Historial</Nav.Link>
+              </Nav.Item>
 
-        </Navigation>
+            </Nav>
+
+        </Navbar>
+
+
         <Body>
           {this._renderSelection()}
         </Body>
-      </AppContainer>
+      </AppContainer >
     )
   }
 }

@@ -2,16 +2,41 @@
 
   .navbar{
     background-color: #438C83 ;
+    
+    padding: 10px;
     border: 1px solid rgba(0, 0, 0, 0.125);  
 
   }
+
+  .nav-link .nav-pills{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 0;
   
-  .nav-link:hover{
-    background-color: #438C83;
   }
 
-  .nav-link {
-    color : white ;
+  .navbar-light .navbar-nav .nav-link.active{
+    color:white;
+    padding: 5px;
+  }
+  
+  .nav-pills .nav-link.active, .nav-pills.show > .nav-link{
+    background-color: #438C83;
+    
+  }
+  
+  .navbar-light .navbar-nav .nav-link:hover{
+    
+    background-color: #438C83;
+    padding:5px;
+    color: white
+  }
+
+
+  .nav-item{
+    padding: 2px;
   }
   
   .linkspan {
@@ -27,3 +52,14 @@
   .card-body{
     background-color:#f8f9fa
   }
+
+  .btn-accordion {
+    background:none!important;
+    color:inherit;
+    border:none; 
+    padding:0!important;
+    font: inherit;
+    /*border is optional*/
+    /*border-bottom:1px solid #444;*/
+    cursor: pointer;
+}
