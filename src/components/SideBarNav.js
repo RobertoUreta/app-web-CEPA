@@ -7,6 +7,7 @@ import {
 import "../styles/styles.css";
 import { Tratamiento } from '../pages/Tratamiento'
 import { General } from '../pages/General'
+import { Evaluacion} from '../pages/Evaluacion'
 
 
 export class NavLateral extends Component {
@@ -25,6 +26,9 @@ export class NavLateral extends Component {
     }
     if (this.state.selectedPath === "tratamiento") {
       return <Tratamiento />
+    }
+    if (this.state.selectedPath === "evaluacion") {
+      return <Evaluacion />
     }
   }
 
