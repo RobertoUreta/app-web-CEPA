@@ -50,7 +50,7 @@ export  class DatosSocioDemograficos extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="region">
-                                <Form.Label>Region</Form.Label>
+                                <Form.Label>Región</Form.Label>
                                 <Form.Control
                                     type="region"
                                     value={this.state.region}
@@ -81,7 +81,7 @@ export  class DatosSocioDemograficos extends Component {
 
                         <Form.Group as={Col}>
                             <Form.Group controlId="direccion">
-                                <Form.Label>Direccion</Form.Label>
+                                <Form.Label>Dirección</Form.Label>
                                 <Form.Control
                                     type="direccion"
                                     value={this.state.direccion}

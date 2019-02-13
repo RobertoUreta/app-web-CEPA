@@ -99,7 +99,7 @@ export class DatosPersonales extends Component {
                                 
                             </Form.Group>
                             <Form.Group controlId="telefonoMovil">
-                                <Form.Label>Telefono Movil</Form.Label>
+                                <Form.Label>Teléfono Móvil</Form.Label>
                                 <Form.Control
                                     type="telefonoMovil"
                                     value={this.state.telefonoMovil}
@@ -108,7 +108,7 @@ export class DatosPersonales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="telefonoTrabajo">
-                                <Form.Label>Telefono Trabajo</Form.Label>
+                                <Form.Label>Teléfono Trabajo</Form.Label>
                                 <Form.Control
                                     type="telefonoTrabajo"
                                     value={this.state.telefonoTrabajo}
@@ -130,7 +130,7 @@ export class DatosPersonales extends Component {
 
                         <Form.Group as={Col}>
                             <Form.Group controlId="nivelInstruccion">
-                                <Form.Label>Nivel Instruccion</Form.Label>
+                                <Form.Label>Nivel Instrucción</Form.Label>
                                 <Form.Control
                                     type="nivelInstruccion"
                                     value={this.state.nivelInstruccion}
@@ -148,7 +148,7 @@ export class DatosPersonales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="tipoEstablecimiento">
-                                <Form.Label>tipo de Establecimiento</Form.Label>
+                                <Form.Label>Tipo de Establecimiento</Form.Label>
                                 <Form.Control
                                     type="tipoEstablecimiento"
                                     value={this.state.tipoEstablecimiento}
@@ -157,7 +157,7 @@ export class DatosPersonales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="prevision">
-                                <Form.Label>Prevision</Form.Label>
+                                <Form.Label>Previsión</Form.Label>
                                 <Form.Control
                                     type="prevision"
                                     value={this.state.prevision}
@@ -166,7 +166,7 @@ export class DatosPersonales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="ocupacion">
-                                <Form.Label>Ocupacion</Form.Label>
+                                <Form.Label>Ocupación</Form.Label>
                                 <Form.Control
                                     type="ocupacion"
                                     value={this.state.ocupacion}
@@ -175,7 +175,7 @@ export class DatosPersonales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="relacionContractual">
-                                <Form.Label>Relacion contractual</Form.Label>
+                                <Form.Label>Relación Contractual</Form.Label>
                                 <Form.Control
                                     as="select"
                                     type="relacionContractual"
@@ -196,7 +196,7 @@ export class DatosPersonales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="valorSesion">
-                                <Form.Label>Valor de sesion</Form.Label>
+                                <Form.Label>Valor de sesión</Form.Label>
                                 <Form.Control
                                     as="select"
                                     type="valorSesion"

@@ -41,7 +41,7 @@ export class General extends Component {
                 <Card.Header
                     onClick={() => this.setState({ openAdultoContacto: !this.state.openAdultoContacto })} >
                     <span className="linkspan">
-                        <strong>Adulto AdultoContacto</strong>
+                        <strong>Adulto Contacto</strong>
                     </span></Card.Header>
 
                 <Collapse in={this.state.openAdultoContacto}>

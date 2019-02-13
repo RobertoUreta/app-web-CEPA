@@ -70,7 +70,7 @@ export  class AdultoContacto extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="parentezco">
-                                <Form.Label>Parentezco</Form.Label>
+                                <Form.Label>Parentesco</Form.Label>
                                 <Form.Control
                                     type="parentezco"
                                     value={this.state.parentezco}

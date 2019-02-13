@@ -71,7 +71,7 @@ export class NavLateral extends Component {
               </Nav>
             
               <Nav id="2">
-                <Text>Evaluacion</Text>
+                <Text>Evaluación</Text>
               </Nav>
               <Nav id="3">
                 <Text>Tratamiento</Text>
