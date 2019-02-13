@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Col, Button } from 'react-bootstrap'
+import { Form, Col, Row, Button } from 'react-bootstrap'
 
-export  class AdultoContacto extends Component {
+export class AdultoContacto extends Component {
 
     constructor(props) {
         super(props);
@@ -33,66 +33,70 @@ export  class AdultoContacto extends Component {
 
     render() {
         return (
-            <div className="DatosPersonales">
+            <div className="AdultoContacto">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nombre">
-                                <Form.Label>Nombre</Form.Label>
                                 <Form.Control
-                                    type="nombre"
                                     value={this.state.nombre}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el nombre del usuario"
+                                    placeholder="Nombre"
                                 />
                             </Form.Group>
                             <Form.Group controlId="apellidoPaterno">
-                                <Form.Label>Apellido Paterno</Form.Label>
                                 <Form.Control
-                                    type="apellidoPaterno"
                                     value={this.state.apellidoPaterno}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el apellido paterno del usuario"
+                                    placeholder="Apellido Paterno"
                                 />
                             </Form.Group>
-
                         </Form.Group>
 
                         <Form.Group as={Col}>
 
                             <Form.Group controlId="apellidoMaterno">
-                                <Form.Label>Apellido Materno</Form.Label>
                                 <Form.Control
                                     type="apellidoMaterno"
                                     value={this.state.apellidoMaterno}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el apellido materno del usuario"
+                                    placeholder="Apellido Materno"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="parentezco">
-                                <Form.Label>Parentezco</Form.Label>
-                                <Form.Control
-                                    type="parentezco"
-                                    value={this.state.parentezco}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el parentezco"
-                                />
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="parentezco">
+                                        <Form.Control
+                                            value={this.state.parentezco}
+                                            onChange={this.handleChange}
+                                            placeholder="Parentesco"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="telefonoMovil">
+                                        <Form.Control
+                                            value={this.state.telefonoMovil}
+                                            onChange={this.handleChange}
+                                            placeholder="Teléfono Móvil"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Form.Group>
+                                <Row>
+                                    <Col />
+                                    <Col />
+                                    <Col />
+                                    <Col>
+                                        <Button
+                                            type="submit"
+                                        >
+                                            Guardar
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Form.Group>
-                            <Form.Group controlId="telefonoMovil">
-                                <Form.Label>Telefono Movil</Form.Label>
-                                <Form.Control
-                                    type="telefonoMovil"
-                                    value={this.state.telefonoMovil}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono movil del usuario"
-                                />
-                            </Form.Group>
-                            <Button
-                                size="lg"
-                                type="submit"
-                            >
-                                Guardar
-                            </Button>
                         </Form.Group>
                     </Form.Row>
 

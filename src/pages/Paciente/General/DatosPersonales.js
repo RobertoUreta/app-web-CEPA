@@ -1,9 +1,14 @@
-import React, {Component} from 'react'
-import {Form,Col,Button} from 'react-bootstrap'
-import {Option} from '../../../components/Option'
-
-const valoresSesion = [0,3000,8000,15000]
-const relacionesContractuales = ["Sin contrato","Honorarios","Pension de vejez"]
+import React, { Component } from 'react'
+import { Form, Col, Button, Row } from 'react-bootstrap'
+import { Option } from '../../../components/Option'
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
+const valoresSesion = [0, 3000, 8000, 15000]
+const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
+const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
+    "Isapre Banmédica", "Isapre Consalud", "Isapre Colmena",
+    "Isapre CruzBlanca", "Isapre Nueva Masvida", "Isapre Vida Tres"]
+const tiposEstablecimientos = ["Municipal", "Particular-Subvencionado", "Particular"]
 
 export class DatosPersonales extends Component {
 
@@ -15,18 +20,18 @@ export class DatosPersonales extends Component {
             apellidoPaterno: "",
             apellidoMaterno: "",
             rut: "",
-            fechaNacimiento: "",
+            fechaNacimiento: new Date(),
             telefonoMovil: "",
             telefonoFijo: "",
             correo: "",
-            nivelInstruccion:"",
-            establecimientoEducacional:"",
-            tipoEstablecimiento:"",
-            prevision:"",
-            ocupacion:"",
-            relacionContractual:"",
-            tipoPaciente:"",
-            valorSesion:0,
+            nivelInstruccion: "",
+            establecimientoEducacional: "",
+            tipoEstablecimiento: "",
+            prevision: "",
+            ocupacion: "",
+            relacionContractual: "",
+            tipoPaciente: "",
+            valorSesion: 0,
         };
     }
 
@@ -53,166 +58,183 @@ export class DatosPersonales extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nombre">
-                                <Form.Label>Nombre</Form.Label>
                                 <Form.Control
-                                    type="nombre"
                                     value={this.state.nombre}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el nombre del usuario"
+                                    placeholder="Nombre"
                                 />
                             </Form.Group>
                             <Form.Group controlId="apellidoPaterno">
-                                <Form.Label>Apellido Paterno</Form.Label>
                                 <Form.Control
-                                    type="apellidoPaterno"
                                     value={this.state.apellidoPaterno}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el apellido paterno del usuario"
+                                    placeholder="Apellido Paterno"
                                 />
                             </Form.Group>
                             <Form.Group controlId="apellidoMaterno">
-                                <Form.Label>Apellido Materno</Form.Label>
                                 <Form.Control
-                                    type="apellidoMaterno"
                                     value={this.state.apellidoMaterno}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el apellido materno del usuario"
+                                    placeholder="Apellido Materno"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="rut">
-                                <Form.Label>Rut</Form.Label>
-                                <Form.Control
-                                    type="rut"
-                                    value={this.state.rut}
-                                    onChange={this.handleChange}
-                                    placeholder="19275731-2"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="fechaNacimiento">
-                                <Form.Label>Fecha de nacimiento</Form.Label>
-                                <Form.Control
-                                    type="fechaNacimiento"
-                                    value={this.state.fechaNacimiento}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccione la fechaNacimiento del usuario">
-                                </Form.Control>
-                                
-                            </Form.Group>
-                            <Form.Group controlId="telefonoMovil">
-                                <Form.Label>Telefono Movil</Form.Label>
-                                <Form.Control
-                                    type="telefonoMovil"
-                                    value={this.state.telefonoMovil}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono movil del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="telefonoTrabajo">
-                                <Form.Label>Telefono Trabajo</Form.Label>
-                                <Form.Control
-                                    type="telefonoTrabajo"
-                                    value={this.state.telefonoTrabajo}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono de trabajo del usuario"
-                                />
-                            </Form.Group>
+                            <Row>
+
+                                <Col>
+                                    <Form.Group controlId="fechaNacimiento">
+                                        <div>
+                                            <DatePicker
+                                                customInput={<Form.Control block />}
+                                                selected={this.state.fechaNacimiento}
+                                                onChange={this.handleChange}
+                                                placeholderText="Fecha de Nacimiento"
+                                            />
+                                        </div>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="rut">
+                                        <Form.Control
+                                            value={this.state.rut}
+                                            onChange={this.handleChange}
+                                            placeholder="Rut"
+                                        />
+                                    </Form.Group>
+                                </Col>
+
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="telefonoMovil">
+                                        <Form.Control
+                                            value={this.state.telefonoMovil}
+                                            onChange={this.handleChange}
+                                            placeholder="Teléfono Móvil"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="telefonoTrabajo">
+                                        <Form.Control
+                                            value={this.state.telefonoTrabajo}
+                                            onChange={this.handleChange}
+                                            placeholder="Teléfono Fijo"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
                             <Form.Group controlId="correo">
-                                <Form.Label>Correo</Form.Label>
                                 <Form.Control
-                                    type="Correo"
+                                    type="email"
                                     value={this.state.correo}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el correo del usuario"
+                                    placeholder="Correo"
                                 />
                             </Form.Group>
-                        
+
                         </Form.Group>
 
                         <Form.Group as={Col}>
                             <Form.Group controlId="nivelInstruccion">
-                                <Form.Label>Nivel Instruccion</Form.Label>
                                 <Form.Control
-                                    type="nivelInstruccion"
                                     value={this.state.nivelInstruccion}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el nivel de Instruccion"
+                                    placeholder="Nivel de Instrucción"
                                 />
                             </Form.Group>
                             <Form.Group controlId="establecimientoEducacional">
-                                <Form.Label>Establecimiento Educacional</Form.Label>
                                 <Form.Control
-                                    type="establecimientoEducacional"
                                     value={this.state.establecimientoEducacional}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el establecimiento educacional"
+                                    placeholder="Establecimiento educacional"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="tipoEstablecimiento">
-                                <Form.Label>tipo de Establecimiento</Form.Label>
-                                <Form.Control
-                                    type="tipoEstablecimiento"
-                                    value={this.state.tipoEstablecimiento}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el tipo de establecimiento"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="prevision">
-                                <Form.Label>Prevision</Form.Label>
-                                <Form.Control
-                                    type="prevision"
-                                    value={this.state.prevision}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese la prevision"
-                                />
-                            </Form.Group>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="tipoEstablecimiento">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.tipoEstablecimiento}
+                                            onChange={this.handleChange}
+                                        >
+                                            <option hidden>Tipo de Establecimiento</option>
+                                            <Option options={tiposEstablecimientos} />
+                                        </Form.Control>
+                                    </Form.Group>
+
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="prevision">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.prevision}
+                                            onChange={this.handleChange}
+                                        >
+                                            <option hidden>Previsión</option>
+                                            <Option options={previsiones} />
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+
                             <Form.Group controlId="ocupacion">
-                                <Form.Label>Ocupacion</Form.Label>
                                 <Form.Control
-                                    type="ocupacion"
                                     value={this.state.ocupacion}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese la ocupacion"
+                                    placeholder="Ocupación"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="relacionContractual">
-                                <Form.Label>Relacion contractual</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    type="relacionContractual"
-                                    value={this.state.relacionContractual}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese la relacion contractual"
-                                >
-                                    <Option options={relacionesContractuales}/>
-                                </Form.Control>
-                            </Form.Group>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="relacionContractual">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.relacionContractual}
+                                            onChange={this.handleChange}
+                                        >
+                                            <option hidden>Relación Contractual</option>
+                                            <Option options={relacionesContractuales} />
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="valorSesion">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.valorSesion}
+                                            onChange={this.handleChange}
+                                        >
+                                            <option hidden>Valor de Sesión</option>
+                                            <Option options={valoresSesion} />
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
                             <Form.Group controlId="tipoPaciente">
-                                <Form.Label>Tipo paciente</Form.Label>
                                 <Form.Control
-                                    type="tipoPaciente"
                                     value={this.state.tipoPaciente}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el tipo de paciente"
+                                    placeholder="Tipo de paciente"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="valorSesion">
-                                <Form.Label>Valor de sesion</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    type="valorSesion"
-                                    value={this.state.valorSesion}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el valor de la sesion"
-                                >
-                                    <Option options={valoresSesion}/>
-                                </Form.Control>
+
+                            <Form.Group>
+                                <Row>
+                                    <Col/>
+                                    <Col/>
+                                    <Col/>
+                                    <Col>
+                                        <Button
+                                            type="submit"
+                                        >
+                                            Guardar
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Form.Group>
-                            <Button
-                                size="lg"
-                                type="submit"
-                            >
-                                Guardar
-                            </Button>
+
 
                         </Form.Group>
                     </Form.Row>
