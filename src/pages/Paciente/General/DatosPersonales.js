@@ -3,6 +3,8 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+
+
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
 const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
@@ -20,7 +22,7 @@ export class DatosPersonales extends Component {
             apellidoPaterno: "",
             apellidoMaterno: "",
             rut: "",
-            fechaNacimiento: new Date(),
+            fechaNacimiento: null,//Esto para mostrar el placeholder del datepicker
             telefonoMovil: "",
             telefonoFijo: "",
             correo: "",
@@ -35,8 +37,11 @@ export class DatosPersonales extends Component {
         };
     }
 
-
-
+    _handleChange=(date)=> {
+        this.setState({
+          fechaNacimiento: date
+        });
+      }
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
@@ -84,10 +89,11 @@ export class DatosPersonales extends Component {
                                     <Form.Group controlId="fechaNacimiento">
                                         <div>
                                             <DatePicker
-                                                customInput={<Form.Control block />}
+                                                customInput={<Form.Control/>}
+                                                dateFormat="dd/MM/yyyy"
                                                 selected={this.state.fechaNacimiento}
-                                                onChange={this.handleChange}
-                                                placeholderText="Fecha de Nacimiento"
+                                                onChange={this._handleChange}
+                                                placeholderText="FechaNacimiento"
                                             />
                                         </div>
                                     </Form.Group>
