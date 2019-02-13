@@ -57,7 +57,6 @@ export class AdultoContacto extends Component {
 
                             <Form.Group controlId="apellidoMaterno">
                                 <Form.Control
-                                    type="apellidoMaterno"
                                     value={this.state.apellidoMaterno}
                                     onChange={this.handleChange}
                                     placeholder="Apellido Materno"

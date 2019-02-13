@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Button, Col } from "react-bootstrap";
-import {Option} from '../components/Option'
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { Option } from '../components/Option'
 
-const generos = ["Masculino","Femenino","Otro"]
+const generos = ["Masculino", "Femenino", "Otro"]
 
 export default class CrearUsuario extends Component {
 
@@ -17,10 +17,10 @@ export default class CrearUsuario extends Component {
             genero: "",
             usuario: "",
             password: "",
-            telefonoMovil:"",
+            telefonoMovil: "",
             telefonoTrabajo: "",
             correo: "",
-            horasSemanales: 0,
+            horasSemanales: "",
             nombreContactoEmergencia: "",
             telefonoContactoEmergencia: "",
             rol: "",
@@ -51,159 +51,178 @@ export default class CrearUsuario extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nombre">
-                                <Form.Label>Nombre</Form.Label>
                                 <Form.Control
-                                    type="nombre"
                                     value={this.state.nombre}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el nombre del usuario"
+                                    placeholder="Nombre"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="apellidoPaterno">
-                                <Form.Label>Apellido Paterno</Form.Label>
-                                <Form.Control
-                                    type="apellidoPaterno"
-                                    value={this.state.apellidoPaterno}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el apellido paterno del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="apellidoMaterno">
-                                <Form.Label>Apellido Materno</Form.Label>
-                                <Form.Control
-                                    type="apellidoMaterno"
-                                    value={this.state.apellidoMaterno}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el apellido materno del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="rut">
-                                <Form.Label>Rut</Form.Label>
-                                <Form.Control
-                                    type="rut"
-                                    value={this.state.rut}
-                                    onChange={this.handleChange}
-                                    placeholder="19275731-2"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="genero">
-                                <Form.Label>Genero</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    type="genero"
-                                    value={this.state.genero}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccione el genero del usuario">
-                                    <Option options= {generos}></Option>
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId="usuario">
-                                <Form.Label>Usuario</Form.Label>
-                                <Form.Control
-                                    type="usuario"
-                                    value={this.state.usuario}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el username/alias del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="password">
-                                <Form.Label>Contraseña</Form.Label>
-                                <Form.Control
-                                    value={this.state.password}
-                                    onChange={this.handleChange}
-                                    type="password"
-                                    inputRef={inputElement => this.inputPwd = inputElement}
-                                    placeholder="Ingrese la contraseña del usuario"
-                                />
-                            </Form.Group>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="apellidoPaterno">
+                                        <Form.Control
+                                            value={this.state.apellidoPaterno}
+                                            onChange={this.handleChange}
+                                            placeholder="Apellido Paterno"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="apellidoMaterno">
+                                        <Form.Control
+                                            value={this.state.apellidoMaterno}
+                                            onChange={this.handleChange}
+                                            placeholder="Apellido Materno"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="rut">
+                                        <Form.Control
+                                            value={this.state.rut}
+                                            onChange={this.handleChange}
+                                            placeholder="Rut"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="genero">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.genero}
+                                            onChange={this.handleChange}>
+                                            <option hidden>Genero</option>
+                                            <Option options={generos}></Option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="usuario">
+                                        <Form.Control
+                                            type="usuario"
+                                            value={this.state.usuario}
+                                            onChange={this.handleChange}
+                                            placeholder="Nombre de usuario"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="password">
+                                        <Form.Control
+                                            value={this.state.password}
+                                            onChange={this.handleChange}
+                                            type="password"
+                                            inputRef={inputElement => this.inputPwd = inputElement}
+                                            placeholder="Contraseña"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
                         </Form.Group>
 
                         <Form.Group as={Col}>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="telefonoMovil">
+                                        <Form.Control
+                                            value={this.state.telefonoMovil}
+                                            onChange={this.handleChange}
+                                            placeholder="Teléfono Móvil"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="telefonoTrabajo">
+                                        <Form.Control
+                                            value={this.state.telefonoTrabajo}
+                                            onChange={this.handleChange}
+                                            placeholder="Teléfono de Trabajo"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-                            <Form.Group controlId="telefonoMovil">
-                                <Form.Label>Telefono Movil</Form.Label>
-                                <Form.Control
-                                    type="telefonoMovil"
-                                    value={this.state.telefonoMovil}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono movil del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="telefonoTrabajo">
-                                <Form.Label>Telefono Trabajo</Form.Label>
-                                <Form.Control
-                                    type="telefonoTrabajo"
-                                    value={this.state.telefonoTrabajo}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono de trabajo del usuario"
-                                />
-                            </Form.Group>
+
+
                             <Form.Group controlId="correo">
-                                <Form.Label>Correo</Form.Label>
                                 <Form.Control
-                                    type="Correo"
+                                    type="email"
                                     value={this.state.correo}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese el correo del usuario"
+                                    placeholder="Correo"
                                 />
                             </Form.Group>
                             <Form.Group controlId="horasSemanales">
-                                <Form.Label>Horas Semanales</Form.Label>
                                 <Form.Control
-                                    type="HorasSemanales"
                                     value={this.state.horasSemanales}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese las horas semanales del usuario"
+                                    placeholder="Horas Semanales"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="nombreContactoEmergencia">
-                                <Form.Label>Nombre Contacto Emergencia</Form.Label>
-                                <Form.Control
-                                    type="nombreContactoEmergencia"
-                                    value={this.state.nombreContactoEmergencia}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el nombre de contacto de emergencia del usuario"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="telefonoContactoEmergencia">
-                                <Form.Label>Telefono Contacto Emergencia</Form.Label>
-                                <Form.Control
-                                    type="telefonoContactoEmergencia"
-                                    value={this.state.telefonoContactoEmergencia}
-                                    onChange={this.handleChange}
-                                    placeholder="Ingrese el telefono de contacto de emergencia"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="rol">
-                                <Form.Label>Rol</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    type="rol"
-                                    value={this.state.rol}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccione un rol">
-                                    <option>...</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId="supervisor">
-                                <Form.Label>Supervisor</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    type="supervisor"
-                                    value={this.state.rol}
-                                    onChange={this.handleChange}
-                                    placeholder="Seleccion un supervisor">
-                                    <option>...</option>
-                                </Form.Control>
+                            <Row>
 
-                            </Form.Group>
+                                <Col>
+                                    <Form.Group controlId="nombreContactoEmergencia">
+                                        <Form.Control
+                                            value={this.state.nombreContactoEmergencia}
+                                            onChange={this.handleChange}
+                                            placeholder="Nombre contacto de emergencia"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="telefonoContactoEmergencia">
+                                        <Form.Control
+                                            value={this.state.telefonoContactoEmergencia}
+                                            onChange={this.handleChange}
+                                            placeholder="Teléfono contacto de emergencia"
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-                            <Button
-                                size="lg"
-                                type="submit"
-                            >
-                                Guardar
-                                </Button>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId="rol">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.rol}
+                                            onChange={this.handleChange}>
+                                            <option hidden>Rol</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="supervisor">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.supervisor}
+                                            onChange={this.handleChange}>
+                                            <option hidden>Supervisor</option>
+                                        </Form.Control>
+
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Form.Group>
+                                <Row>
+                                    <Col />
+                                    <Col />
+                                    <Col />
+                                    <Col>
+                                        <Button
+                                            type="submit"
+                                        >
+                                            Guardar
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form.Group>
 
                         </Form.Group>
                     </Form.Row>
