@@ -3,6 +3,7 @@ import { Card, Collapse } from 'react-bootstrap'
 import "../styles/styles.css"
 import './Paciente/evaluacion/Tamizaje'
 import { Tamizaje } from './Paciente/evaluacion/Tamizaje';
+import { EntrevistaIngreso } from './Paciente/evaluacion/EntrevistaIngreso';
 
 
 export class Evaluacion extends Component {
@@ -180,6 +181,7 @@ export class Evaluacion extends Component {
                     </span></Card.Header>
                 <Collapse in={this.state.openEvIngreso}>
                     <Card.Body>
+                        <EntrevistaIngreso />
                     </Card.Body>
                 </Collapse>
 
