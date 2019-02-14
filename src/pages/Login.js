@@ -38,9 +38,7 @@ export class Login extends Component {
           <Form.Group controlId="usuario">
             <Image src={logo} className="logo img-fluid center-block" alt="" responsive />
             <p></p>
-            <div className="text-container">
-              <h4>Acceder</h4>
-            </div>
+           
             <Form.Control
               autoFocus
               type="usuario"
