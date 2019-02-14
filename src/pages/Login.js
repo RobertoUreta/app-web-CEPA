@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Image, Button, Form } from "react-bootstrap";
+import { Col, Row, Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
 import "../styles/login.css";
 
@@ -27,43 +27,61 @@ export class Login extends Component {
     event.preventDefault();
     const email = this.inputEmail.value
     const pwd = this.inputPwd.value
-    console.log({email,pwd});
-    
+    console.log({ email, pwd });
+
   }
 
   render() {
     return (
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
-          <Form.Group controlId="usuario" bsSize="large">
-          <Image src={logo} width="320" className="img-responsive center-block "  alt="" responsive/>
-           <p></p>
+          <Form.Group controlId="usuario">
+            <Image src={logo} className="logo img-fluid center-block" alt="" responsive />
+            <p></p>
+            <div className="text-container">
+              <h4>Acceder</h4>
+            </div>
             <Form.Control
               autoFocus
               type="usuario"
               value={this.state.usuario}
               onChange={this.handleChange}
-              inputRef ={inputElement => this.inputEmail = inputElement}
-              placeholder = "Usuario"
+              inputRef={inputElement => this.inputEmail = inputElement}
+              placeholder="Usuario"
             />
           </Form.Group>
-          <Form.Group controlId="password" bsSize="large">
+          <Form.Group controlId="password">
             <Form.Control
               value={this.state.password}
               onChange={this.handleChange}
               type="password"
               inputRef={inputElement => this.inputPwd = inputElement}
-              placeholder = "Contraseña"
+              placeholder="Contraseña"
             />
           </Form.Group>
-          <Button
-            block
-            bsSize="large"
-            disabled={!this.validateForm()}
-            type="submit"
-          >
-            Acceder
-          </Button>
+
+          <div className="button-container">
+            <div className="div-link-forgot-pwd">
+              <Button
+                className="btn-link"
+                variant="link">
+                ¿Olvidó su contraseña?
+            </Button>
+            </div>
+
+            <div className="div-btn-submit">
+              <Button
+                className="btn-submit"
+                size="sm"
+                disabled={!this.validateForm()}
+                type="submit"
+              >
+                Acceder
+              </Button>
+            </div>
+          </div>
+
+
         </form>
       </div>
     );

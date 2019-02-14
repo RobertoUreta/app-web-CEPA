@@ -1,10 +1,59 @@
 @media all and (min-width: 400px) {
     .Login {
       padding: 60px 0;
+
     }
   
     .Login form {
-      margin: 0 auto;
-      max-width: 320px;
+      display: block;
+      padding-top: 100px;
+      padding-left: 35px;
+      padding-right: 35px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-top: auto;
+      margin-bottom: auto;
+      width: 450px;
+      height: 500px;
+      border: 1px solid rgba(0, 0, 0, 0.125);  
+
+    }
+
+    .logo{
+      width: 170px;
+      display: block;
+      margin-left: auto;
+      margin-right:auto;
+    }
+
+    .btn-submit {
+      background-color: #438C83; 
+    }
+    
+
+    .btn-submit:hover {
+
+      background-color: #3a7871
+    }
+    .btn-submit:disabled{
+      background-color: #438C83
+
+    }
+
+    .button-container{
+      align-items: flex-start;
+      flex-grow: 0;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-left: -8px;
+      margin-top: 32px;
+      min-height: 48px;
+      padding-bottom: 20px;
+      display: flex;
+    }
+
+    .text-container{
+      text-align: center;
+      padding: 10px;
     }
   }
