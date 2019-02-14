@@ -39,7 +39,7 @@ export class Historial extends Component {
                     id="1"
                     onClick={this._onClickAction} >
                     <span className="linkspan">
-                        <strong>Historial Psicológico</strong>
+                        <strong>Psicológico</strong>
                     </span>
                 </Card.Header>
 
@@ -54,7 +54,7 @@ export class Historial extends Component {
                     id="2"
                     onClick={this._onClickAction} >
                     <span className="linkspan">
-                        <strong>Historial Psiquiátrico</strong>
+                        <strong>Psiquiátrico</strong>
                     </span></Card.Header>
                 <Collapse in={this.state.openHistorialPsiquiatra}>
                     <Card.Body>
