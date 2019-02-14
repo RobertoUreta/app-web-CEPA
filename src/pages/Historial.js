@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Collapse } from 'react-bootstrap'
-
+import { HistorialPaciente} from '../pages/Paciente/historial/HistorialPaciente'
 
 export class Historial extends Component {
 
@@ -45,7 +45,7 @@ export class Historial extends Component {
 
                 <Collapse in={this.state.openHistorialPsico}>
                     <Card.Body>
-                        Esse minim aliqua proident dolore esse deserunt aliqua cillum duis quis. Ullamco id dolor do Lorem quis consectetur reprehenderit adipisicing duis. Fugiat deserunt quis elit quis. Elit officia cupidatat in in ad id. Pariatur laborum laborum veniam eu ut officia in.
+                        <HistorialPaciente />
                     </Card.Body>
                 </Collapse>
 
@@ -58,7 +58,7 @@ export class Historial extends Component {
                     </span></Card.Header>
                 <Collapse in={this.state.openHistorialPsiquiatra}>
                     <Card.Body>
-                        Amet elit sint pariatur ut ex Lorem eiusmod esse mollit mollit irure dolor. Magna do mollit Lorem et sit aliquip eu. Lorem in aliquip nostrud excepteur velit non fugiat in laboris deserunt dolor eiusmod. Veniam officia laborum nisi Lorem eu officia.
+                        <HistorialPaciente />
                     </Card.Body>
                 </Collapse>
 

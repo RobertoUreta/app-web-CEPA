@@ -75,3 +75,26 @@
     display: flex;
     margin-left: auto;
   }
+
+  .pagination-historial{
+    display: flex;
+    justify-content:center;
+  }
+
+  .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+
+  .page-item:hover .page-link{
+    background-color:  #87c5be;
+    color:white;
+  }
+
+  .page-item.active .page-link{
+    background-color: #438C83;
+    color:white;
+
+  }
