@@ -37,11 +37,11 @@ export class DatosPersonales extends Component {
         };
     }
 
-    _handleChange=(date)=> {
+    _handleChange = (date) => {
         this.setState({
-          fechaNacimiento: date
+            fechaNacimiento: date
         });
-      }
+    }
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
@@ -89,7 +89,7 @@ export class DatosPersonales extends Component {
                                     <Form.Group controlId="fechaNacimiento">
                                         <div>
                                             <DatePicker
-                                                customInput={<Form.Control/>}
+                                                customInput={<Form.Control />}
                                                 dateFormat="dd/MM/yyyy"
                                                 selected={this.state.fechaNacimiento}
                                                 onChange={this._handleChange}
@@ -227,18 +227,15 @@ export class DatosPersonales extends Component {
                             </Form.Group>
 
                             <Form.Group>
-                                <Row>
-                                    <Col/>
-                                    <Col/>
-                                    <Col/>
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
+
                             </Form.Group>
 
 

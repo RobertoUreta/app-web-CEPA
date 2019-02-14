@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Form, Row,Col, Button } from 'react-bootstrap'
-import {Option} from '../../../components/Option'
+import { Form, Row, Col, Button } from 'react-bootstrap'
+import { Option } from '../../../components/Option'
 
 
-const estados = ["Abierto","Cerrado","En proceso de alta"]
-export  class DatosAdicionales extends Component {
+const estados = ["Abierto", "Cerrado", "En proceso de alta"]
+export class DatosAdicionales extends Component {
     constructor(props) {
         super(props);
 
@@ -45,7 +45,7 @@ export  class DatosAdicionales extends Component {
                                     onChange={this.handleChange}
                                 >
                                     <option hidden>Estado</option>
-                                    <Option options={estados}/>
+                                    <Option options={estados} />
                                 </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="etapa">
@@ -73,18 +73,14 @@ export  class DatosAdicionales extends Component {
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <Row>
-                                    <Col/>
-                                    <Col/>
-                                    <Col/>
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
