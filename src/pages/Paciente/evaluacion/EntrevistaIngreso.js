@@ -4,6 +4,12 @@ import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 
+//--Para cambiar el calendario a español--
+import {registerLocale,setDefaultLocale} from 'react-datepicker'
+import es from 'date-fns/locale/es';
+registerLocale("es",es)
+setDefaultLocale("es")
+//---------------------------------------
 const tiposFamilias = ["Familia Nuclear", "Familia Extensa", "Familia monoparental",
     "Familia ensamblada", "Familia homoparental", "Familia de padres separados"]
 
@@ -33,7 +39,7 @@ export class EntrevistaIngreso extends Component {
             observacionesFinales: ""
         };
     }
-
+    
 
     _handleChange = (date) => {
         this.setState({

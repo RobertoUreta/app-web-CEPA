@@ -3,6 +3,7 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+import { addYears } from 'date-fns/esm';
 
 
 const valoresSesion = [0, 3000, 8000, 15000]
@@ -37,11 +38,11 @@ export class DatosPersonales extends Component {
         };
     }
 
-    _handleChange=(date)=> {
+    _handleChange = (date) => {
         this.setState({
-          fechaNacimiento: date
+            fechaNacimiento: date
         });
-      }
+    }
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
@@ -89,10 +90,14 @@ export class DatosPersonales extends Component {
                                     <Form.Group controlId="fechaNacimiento">
                                         <div>
                                             <DatePicker
-                                                customInput={<Form.Control/>}
+                                                customInput={<Form.Control />}
                                                 dateFormat="dd/MM/yyyy"
                                                 selected={this.state.fechaNacimiento}
                                                 onChange={this._handleChange}
+                                                showMonthDropdown
+                                                showYearDropdown
+                                                maxDate={addYears(new Date(),0)}
+                                                dropdownMode="select"
                                                 placeholderText="FechaNacimiento"
                                             />
                                         </div>
@@ -228,9 +233,9 @@ export class DatosPersonales extends Component {
 
                             <Form.Group>
                                 <Row>
-                                    <Col/>
-                                    <Col/>
-                                    <Col/>
+                                    <Col />
+                                    <Col />
+                                    <Col />
                                     <Col>
                                         <Button
                                             type="submit"
