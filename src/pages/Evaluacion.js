@@ -4,6 +4,7 @@ import "../styles/styles.css"
 import './Paciente/evaluacion/Tamizaje'
 import { Tamizaje } from './Paciente/evaluacion/Tamizaje';
 import { EntrevistaIngreso } from './Paciente/evaluacion/EntrevistaIngreso';
+import { EntrevistaPsiquiatrica } from './Paciente/evaluacion/EntrevistaPsiquiatrica';
 
 
 export class Evaluacion extends Component {
@@ -218,6 +219,7 @@ export class Evaluacion extends Component {
                     </span></Card.Header>
                 <Collapse in={this.state.openPsiquiatrica}>
                     <Card.Body>
+                        <EntrevistaPsiquiatrica />
                     </Card.Body>
                 </Collapse>
 
