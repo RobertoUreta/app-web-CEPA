@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Col, Row, Image, Button, Form } from "react-bootstrap";
+import { Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
 import "../styles/login.css";
 
