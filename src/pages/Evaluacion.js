@@ -6,7 +6,6 @@ import { Tamizaje } from './Paciente/evaluacion/Tamizaje';
 import { EntrevistaIngreso } from './Paciente/evaluacion/EntrevistaIngreso';
 import { EntrevistaPsiquiatrica } from './Paciente/evaluacion/EntrevistaPsiquiatrica';
 
-
 export class Evaluacion extends Component {
     constructor(props) {
         super(props);
@@ -208,6 +207,7 @@ export class Evaluacion extends Component {
                 <Collapse in={this.state.openPsico}>
                     <Card.Body>
                     </Card.Body>
+
                 </Collapse>
 
                 <br></br>
