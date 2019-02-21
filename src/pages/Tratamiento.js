@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Card, Collapse } from 'react-bootstrap'
 import "../styles/styles.css"
+import {TratamientoPsicologico} from './Paciente/tratamiento/TratamientoPsicologico'
+import {TratamientoPsiquiatrico} from './Paciente/tratamiento/TratamientoPsiquiatrico'
 
 
 export class Tratamiento extends Component {
@@ -27,8 +29,7 @@ export class Tratamiento extends Component {
           </span></Card.Header>
         <Collapse in={this.state.openPsicologico}>
           <Card.Body>
-            Cupidatat sint laboris qui amet ipsum sunt cupidatat. Sint proident est eu anim minim laborum laboris pariatur. Non ex est adipisicing et. Do sunt occaecat irure nisi minim laboris eu culpa officia et voluptate enim magna anim. Fugiat duis Lorem laborum minim duis dolor non.
-            Velit excepteur dolore amet cupidatat sit consectetur dolor cupidatat dolore. Excepteur consectetur dolore deserunt ipsum nostrud id cillum nulla deserunt nisi. Elit ipsum ipsum eiusmod adipisicing nulla quis amet sit id.
+            <TratamientoPsicologico />
           </Card.Body>
         </Collapse>
 
@@ -42,9 +43,7 @@ export class Tratamiento extends Component {
 
         <Collapse in={this.state.openPsiquiatria}>
           <Card.Body >
-            Aliquip amet proident culpa id dolor ut laborum tempor. Ut esse amet nostrud consectetur enim nostrud. Est velit eiusmod irure laborum excepteur velit. Dolore laborum nulla anim adipisicing dolor id et consequat duis minim incididunt officia eiusmod. Nulla labore adipisicing aliqua sit. Laboris nostrud non anim ex in.
-            Cillum esse cupidatat irure aute excepteur consectetur reprehenderit. Fugiat amet aute ad consectetur ex ipsum magna ipsum duis. Incididunt officia nisi duis laboris id fugiat. Ea deserunt culpa aute magna aliqua cillum.
-            Fugiat veniam dolore anim eu sit. Magna est est qui ad nisi ullamco commodo ad irure tempor pariatur. Consequat aliquip nulla culpa veniam dolore non velit deserunt officia mollit. Minim in velit quis pariatur commodo voluptate.
+            <TratamientoPsiquiatrico />
           </Card.Body>
         </Collapse>
 
