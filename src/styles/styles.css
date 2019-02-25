@@ -86,6 +86,20 @@
     background-color: #438C83; 
   }
 
+  .btn-primary {
+    background-color: #438C83; 
+
+  }
+  
+  .btn-primary:active {
+    background-color: #98cdc7;
+
+  }
+
+  .btn-primary:hover{
+    background-color: #98cdc7;
+  }
+
   .btn-container{
     align-items: flex-start;
     flex-grow: 0;

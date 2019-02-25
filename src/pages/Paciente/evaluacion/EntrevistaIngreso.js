@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
-import { Form, Col, Button, Row } from 'react-bootstrap'
+import { Modal, Form, Col, Button } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import { ModalFamiliar } from '../../../components/ModalFamiliar'
+import { TablaFamiliar } from '../../../components/TablaFamiliar'
 //--Para cambiar el calendario a español--
-import {registerLocale,setDefaultLocale} from 'react-datepicker'
+import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
-registerLocale("es",es)
+registerLocale("es", es)
 setDefaultLocale("es")
 //---------------------------------------
 const tiposFamilias = ["Familia Nuclear", "Familia Extensa", "Familia monoparental",
     "Familia ensamblada", "Familia homoparental", "Familia de padres separados"]
+
+const familia = []
 
 export class EntrevistaIngreso extends Component {
 
@@ -20,13 +23,15 @@ export class EntrevistaIngreso extends Component {
     constructor(props) {
         super(props);
 
+        this._handleShow = this._handleShow.bind(this);
+        
         this.state = {
             fechaEntrevista: null,
             grupoFamiliar: "",
             observaciones: "",
             genograma: "",//imagen
             ecomapa: "",//imagen
-            solicitante: "",
+            solicitante: "",    
             motivoConsultaPaciente: "",
             motivoConsultaInstitucion: "",
             motivoConsultaFamilia: "",
@@ -37,10 +42,27 @@ export class EntrevistaIngreso extends Component {
             impresionesClinicas: "",
             relacionesInterpersonales: "",
             relacionTerapeuta: "",
-            observacionesFinales: ""
+            observacionesFinales: "",
+            show: false,
         };
     }
-    
+
+
+    _handleClose = (modalEvt) => {
+        this.setState({ show: modalEvt });
+    }
+
+    _handleModalSubmit = (modalInfo ) => {
+
+        console.log("_handleModalSubmit")
+        const {algo } = modalInfo.name
+        console.log(modalInfo)
+    }
+
+    _handleShow() {
+        this.setState({ show: true })
+    }
+
 
     _handleChange = (date) => {
         this.setState({
@@ -55,10 +77,10 @@ export class EntrevistaIngreso extends Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
+        /*event.preventDefault();
         const email = this.inputEmail.value
         const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        console.log({ email, pwd });*/
 
     }
 
@@ -70,34 +92,44 @@ export class EntrevistaIngreso extends Component {
                         <Form.Group as={Col}>
                             <Form.Group controlId="fechaEntrevista">
                                 <div>
-                                <TextoAyuda 
-                                    nombre="fechaEntrevista"
-                                    tooltip="Fecha de Entrevista"
-                                    componente={<DatePicker
-                                        customInput={<Form.Control />}
-                                        dateFormat="dd/MM/yyyy"
-                                        selected={this.state.fechaEntrevista}
-                                        onChange={this._handleChange}
-                                        placeholderText="Fecha de entrevista"
-                                    />}
-                                />
-                                    
+                                    <TextoAyuda
+                                        nombre="fechaEntrevista"
+                                        tooltip="Fecha de Entrevista"
+                                        componente={<DatePicker
+                                            customInput={<Form.Control />}
+                                            dateFormat="dd/MM/yyyy"
+                                            selected={this.state.fechaEntrevista}
+                                            onChange={this._handleChange}
+                                            placeholderText="Fecha de entrevista"
+                                        />}
+                                    />
+
                                 </div>
                             </Form.Group>
                             <Form.Group controlId="grupoFamiliar">
-                            <TextoAyuda 
+                                <TextoAyuda
                                     nombre="grupoFamiliar"
                                     tooltip="Grupo familiar"
                                     componente={<Form.Control
-                                    as="select"
-                                    value={this.state.grupoFamiliar}
-                                    onChange={this.handleChange}
-                                >
-                                    <option hidden>Grupo Familiar</option>
-                                    <Option options={tiposFamilias} />
-                                </Form.Control>}
+                                        as="select"
+                                        value={this.state.grupoFamiliar}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option hidden>Grupo Familiar</option>
+                                        <Option options={tiposFamilias} />
+                                    </Form.Control>}
                                 />
-                                
+
+
+                            </Form.Group>
+
+                            <Form.Group controlId="modalGrupoFamiliar">
+                                <TablaFamiliar />
+                                <Button onClick={this._handleShow}> Agregar integrante familia</Button>
+                                <ModalFamiliar 
+                                    show = {this.state.show}
+                                    fnCerrar = {this._handleClose}
+                                    onSubmit = {this._handleModalSubmit}  />
                             </Form.Group>
                             <Form.Group controlId="Genograma">
                                 <Form.Label>Genograma</Form.Label>
@@ -240,7 +272,7 @@ export class EntrevistaIngreso extends Component {
                                 />
                             </Form.Group>
                             <Form.Group>
-                            <div className="btn-container">
+                                <div className="btn-container">
                                     <Button
                                         className="btn-submit"
                                         type="submit"
