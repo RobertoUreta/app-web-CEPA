@@ -178,8 +178,8 @@ export class EntrevistaMedica extends Component {
                             <Form.Group controlId="laboresRealizadas">
                                 <Form.Label>2. Historia Laboral</Form.Label>
                                 <TextoAyuda
-                                    nombre=""
-                                    tooltip=""
+                                    nombre="laboresRealizadas"
+                                    tooltip="Labores realizadas en los ultimos tres puestos de trabajo (con énfasis en el más reciente)."
                                     componente={<Form.Control
                                         as="textarea"
                                         rows="5"
@@ -193,7 +193,7 @@ export class EntrevistaMedica extends Component {
                                 <Form.Label>Dificultades referidas</Form.Label>
                                 <TextoAyuda
                                     nombre="dificultadesReferidas"
-                                    tooltip=""
+                                    tooltip="Con énfasis en los últimos 10 años."
                                     componente={<Form.Control
                                         as="textarea"
                                         rows="5"
