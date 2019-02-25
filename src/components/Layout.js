@@ -1,26 +1,31 @@
-import React , { Component } from 'react'
+import React, { Component } from 'react'
 import { NavBar } from './NavBar'
 import { NavLateral } from './SideBarNav'
 
 export class Layout extends Component {
-    
-    _renderSideNav(){
+
+    _renderSideNav() {
         return (
+
             <NavLateral />
+
         )
     }
 
 
-    state = { mustBeSideNav : true}
-    
-    render (){ 
+    state = { mustBeSideNav: true }
+
+    render() {
         return (
             <div>
-                <NavBar />
-                {this.state.mustBeSideNav 
-                ? this._renderSideNav()
-                : null}
-
+                <div>
+                    <NavBar />
+                </div>
+                <div>
+                    {this.state.mustBeSideNav
+                        ? this._renderSideNav()
+                        : null}
+                </div>
             </div>
         )
     }

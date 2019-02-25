@@ -11,7 +11,7 @@ export class NavBar extends Component {
         return (
 
             <div className="Layout">
-                <Navbar bg="light" expand="lg">
+                <Navbar bg="light" expand="lg" fixed="top">
                     <Link to="/">
                         <Navbar.Brand >
 

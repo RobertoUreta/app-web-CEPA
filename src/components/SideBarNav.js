@@ -50,9 +50,9 @@ export class NavLateral extends Component {
 
   render() {
     return (
-      <AppContainer>
+      <div id="layout-container">
         <Navbar
-          className="flex-column"
+          className="sidenav"
           onSelect={this._onItemSelection}
           bg="light"
           expand="lg"
@@ -88,10 +88,10 @@ export class NavLateral extends Component {
         </Navbar>
 
 
-        <Body>
+        <div id="body">
           {this._renderSelection()}
-        </Body>
-      </AppContainer >
+        </div>
+      </div>
     )
   }
 }
