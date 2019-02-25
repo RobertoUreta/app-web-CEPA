@@ -9,6 +9,6 @@ export const AppContainer = styled.div`
 
 export const Body = styled.div`
   padding: 30px;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 `;

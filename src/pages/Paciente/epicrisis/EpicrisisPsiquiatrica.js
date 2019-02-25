@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 
 
-const tiposEpicrisis=["Alta terapéutica","Alta administrativa","Renuncia voluntaria","Alta por abandono","Derivación","Otra"]
+const tiposEpicrisis = ["Alta terapéutica", "Alta administrativa", "Renuncia voluntaria", "Alta por abandono", "Derivación", "Otra"]
 export class EpicrisisPsiquiatrica extends Component {
 
 
@@ -15,10 +15,10 @@ export class EpicrisisPsiquiatrica extends Component {
 
         this.state = {
             fecha: null,
-            tipoEpicrisis:"",
-            motivos:"",
-            diagnotiscoEgreso:"",
-            indicaciones:""
+            tipoEpicrisis: "",
+            motivos: "",
+            diagnotiscoEgreso: "",
+            indicaciones: ""
         };
     }
 
@@ -86,7 +86,7 @@ export class EpicrisisPsiquiatrica extends Component {
                             </Form.Group>
                                 </Col>
                             </Row>
-                            
+
                             <Form.Group controlId="motivos">
                                 <Form.Label>Detallar motivos</Form.Label>
                                 <Form.Control
@@ -117,26 +117,20 @@ export class EpicrisisPsiquiatrica extends Component {
                                     placeholder="Indicaciones"
                                 />
                             </Form.Group>
-                            
-                            
-        
+
+
+
 
 
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

@@ -11,8 +11,8 @@ export class SesionPsiquiatrica extends Component {
 
         this.state = {
             numSesion: "",
-            tipoTratamiento:"",
-            notasSesion:""
+            tipoTratamiento: "",
+            notasSesion: ""
         };
     }
 
@@ -37,7 +37,7 @@ export class SesionPsiquiatrica extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Row>
-                                    <Col>
+                                <Col>
                                     <Form.Group controlId="numSesion">
                                     <TextoAyuda
                                             nombre="numSesion"
@@ -80,20 +80,14 @@ export class SesionPsiquiatrica extends Component {
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
