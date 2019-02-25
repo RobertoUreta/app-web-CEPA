@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 
-export class EpicrisisPsicologica extends Component {
+export class DiagnosticoPsiquiatrico extends Component {
 
 
     constructor(props) {

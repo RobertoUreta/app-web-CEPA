@@ -11,7 +11,7 @@ import { Evaluacion} from '../pages/Evaluacion'
 import { Historial } from '../pages/Historial'
 import { Epicrisis } from '../pages/Epicrisis'
 import { Sesion } from '../pages/Sesion'
-
+import { Diagnostico } from '../pages/Diagnostico'
 
 export class NavLateral extends Component {
   state = { selectedPath: '' }
@@ -44,6 +44,10 @@ export class NavLateral extends Component {
 
     if(this.state.selectedPath ==="registrosesion"){
       return <Sesion />
+    }
+
+    if(this.state.selectedPath === "diagnostico"){
+      return <Diagnostico />
     }
   }
 
