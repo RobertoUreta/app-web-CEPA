@@ -3,6 +3,7 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
 const motivos = ["Derivación", "Consulta espontanea"]
 const anamnesisRemotaLista = ["hta",
@@ -123,14 +124,20 @@ export class EntrevistaPsiquiatrica extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="fechaEntrevista">
+                            
                                 <div>
-                                    <DatePicker
+                                <TextoAyuda 
+                                    nombre="fecha de entrevista"
+                                    tooltip="Fecha de entrevista"
+                                    componente={<DatePicker
                                         customInput={<Form.Control />}
                                         dateFormat="dd/MM/yyyy"
                                         selected={this.state.fechaEntrevista}
                                         onChange={this._handleChange}
                                         placeholderText="Fecha de entrevista"
-                                    />
+                                    />}
+                                />
+                                    
                                 </div>
                             </Form.Group>
                             <Form.Group controlId="motivo">
@@ -144,13 +151,18 @@ export class EntrevistaPsiquiatrica extends Component {
                                 </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="observacion">
-                                <Form.Control
+                            <TextoAyuda 
+                                    nombre="observacion"
+                                    tooltip="Observación"
+                                    componente={<Form.Control
                                     as="textarea"
                                     rows="3"
                                     value={this.state.observacion}
                                     onChange={this.handleChange}
                                     placeholder="Observación"
+                                />}
                                 />
+                                
                             </Form.Group>
                             <Form.Group controlId="detalleMotivoPaciente">
                                 <Form.Label>Detallar motivo de consulta del paciente</Form.Label>
@@ -228,13 +240,18 @@ export class EntrevistaPsiquiatrica extends Component {
 
                                 </Row>
                                 <Form.Group controlId="observacionesAnamnesisRemota">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="observacionesAnamnesisRemota"
+                                    tooltip="Observación"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.observacionesAnamnesisRemota}
                                         onChange={this.handleChange}
                                         placeholder="Observación"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                             </Form.Group>
 
@@ -275,13 +292,18 @@ export class EntrevistaPsiquiatrica extends Component {
                                     </Col>
                                 </Row>
                                 <Form.Group controlId="observacionesAntGinecoObstetricos">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="observacionesAntGinecoObstetricos"
+                                    tooltip="Observación"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.observacionesAntGinecoObstetricos}
                                         onChange={this.handleChange}
                                         placeholder="Observación"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                             </Form.Group>
 
@@ -320,78 +342,123 @@ export class EntrevistaPsiquiatrica extends Component {
                                             </Col>
                                         </Form.Group>
                                         <Form.Group controlId="otro">
-                                            <Form.Control
+                                        <TextoAyuda 
+                                    nombre="otro"
+                                    tooltip="Otros"
+                                    componente={<Form.Control
                                                 value={this.state.otro}
                                                 onChange={this.handleChange}
                                                 placeholder="Otros (indicar)"
-                                            />
+                                            />}
+                                />
+                                            
                                         </Form.Group>
                                     </Col>
                                 </Row>
                                 <Form.Group controlId="observacionesHabitos">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="observacionesHabitos"
+                                    tooltip="Observación"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.observacionesHabitos}
                                         onChange={this.handleChange}
                                         placeholder="Observación"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group controlId="antecedentesFamiliares">
                                 <Form.Label>Antecedentes familiares</Form.Label>
                                 <Form.Group controlId="medicos">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="medicos"
+                                    tooltip="Médicos"
+                                    componente={ <Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.medicos}
                                         onChange={this.handleChange}
                                         placeholder="Médicos"
-                                    />
+                                    />}
+                                />
+                                   
                                 </Form.Group>
                                 <Form.Group controlId="psiquiatricos">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="psiquiatricos"
+                                    tooltip="Psiquiátricos"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.psiquiatricos}
                                         onChange={this.handleChange}
                                         placeholder="Psiquiátricos"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="depresion">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="depresion"
+                                    tooltip="Depresión"
+                                    componente={<Form.Control
                                         value={this.state.depresion}
                                         onChange={this.handleChange}
                                         placeholder="Depresión"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="ohDrogas">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="ohDrogas"
+                                    tooltip="OH/Drogas"
+                                    componente={<Form.Control
                                         value={this.state.ohDrigas}
                                         onChange={this.handleChange}
                                         placeholder="OH/Drogas"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="suicidios">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="suicidios"
+                                    tooltip="Suicidios"
+                                    componente={<Form.Control
                                         value={this.state.suicidios}
                                         onChange={this.handleChange}
                                         placeholder="Suicidios"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="homicidios">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="homicidios"
+                                    tooltip="Homicidios"
+                                    componente={<Form.Control
                                         value={this.state.homicidios}
                                         onChange={this.handleChange}
                                         placeholder="Homicidios"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="otrosAntecedentesFamiliares">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="otrosAntecedentesFamiliares"
+                                    tooltip="Otros"
+                                    componente={<Form.Control
                                         value={this.state.otrosAntecedesFamiliares}
                                         onChange={this.handleChange}
                                         placeholder="Otros"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                             </Form.Group>
 
@@ -407,106 +474,161 @@ export class EntrevistaPsiquiatrica extends Component {
                                     />
                                 </Form.Group>
                                 <Form.Group controlId="impresionesClinicas">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="impresionesClinicas"
+                                    tooltip="Impresiones Clínicas"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.impresionesClinicas}
                                         onChange={this.handleChange}
                                         placeholder="Impresiones Clínicas"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group controlId="indicacionesPlanTratamiento">
                                 <Form.Label>Indicaciones y plan de tratamiento</Form.Label>
                                 <Form.Group controlId="farmacos">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="farmacos"
+                                    tooltip="Fármacos"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.farmacos}
                                         onChange={this.handleChange}
                                         placeholder="Fármacos"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="entrevistaSignificantesAfectivos">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="entrevistaSignificantesAfectivos"
+                                    tooltip="Entrevista a significantes afectivos"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.entrevistaSignificantesAfectivos}
                                         onChange={this.handleChange}
                                         placeholder="Entrevista a significantes afectivos"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="examenesLaboratorio">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="examenesLaboratorio"
+                                    tooltip="Exámenes laboratorio"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.examenesLaboratorio}
                                         onChange={this.handleChange}
                                         placeholder="Exámenes laboratorio"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="derivacion">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="derivacion"
+                                    tooltip="Derivación"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.derivacion}
                                         onChange={this.handleChange}
                                         placeholder="Derivación"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="coordinacionPsicoterapeuta">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="coordinacionPsicoterapeuta"
+                                    tooltip="Coordinación con psicoterapeuta"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.coordinacionPsicoterapeuta}
                                         onChange={this.handleChange}
                                         placeholder="Coordinación con psicoterapeuta"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="coordinacionCentroDerivacion">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="coordinacionCentroDerivacion"
+                                    tooltip="Coordinación con centro de derivación"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.coordinacionCentroDerivacion}
                                         onChange={this.handleChange}
                                         placeholder="Coordinación con Centro de Derivación"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="instrumentosAplicar">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="instrumentosAplicar"
+                                    tooltip="Instrumentos a aplicar"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.instrumentosAplicar}
                                         onChange={this.handleChange}
                                         placeholder="Instrumentos a aplicar"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="cuidadoFamiliar">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="cuidadoFamiliar"
+                                    tooltip="Cuidado familiar"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.cuidadoFamiliar}
                                         onChange={this.handleChange}
                                         placeholder="Cuidado familiar"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="proximoControl">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="proximoControl"
+                                    tooltip="Próximo control"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.proximoControl}
                                         onChange={this.handleChange}
                                         placeholder="Próximo control"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                                 <Form.Group controlId="observacionesIndicacionesPlanTratamiento">
-                                    <Form.Control
+                                <TextoAyuda 
+                                    nombre="observacionesIndicacionesPlanTratamiento"
+                                    tooltip="Observaciones"
+                                    componente={<Form.Control
                                         as="textarea"
                                         rows="3"
                                         value={this.state.observacionesIndicacionesPlanTratamiento}
                                         onChange={this.handleChange}
                                         placeholder="Observaciones"
-                                    />
+                                    />}
+                                />
+                                    
                                 </Form.Group>
                             </Form.Group>
 

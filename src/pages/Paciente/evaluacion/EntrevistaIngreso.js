@@ -3,6 +3,7 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
 //--Para cambiar el calendario a español--
 import {registerLocale,setDefaultLocale} from 'react-datepicker'
@@ -69,24 +70,34 @@ export class EntrevistaIngreso extends Component {
                         <Form.Group as={Col}>
                             <Form.Group controlId="fechaEntrevista">
                                 <div>
-                                    <DatePicker
+                                <TextoAyuda 
+                                    nombre="fechaEntrevista"
+                                    tooltip="Fecha de Entrevista"
+                                    componente={<DatePicker
                                         customInput={<Form.Control />}
                                         dateFormat="dd/MM/yyyy"
                                         selected={this.state.fechaEntrevista}
                                         onChange={this._handleChange}
                                         placeholderText="Fecha de entrevista"
-                                    />
+                                    />}
+                                />
+                                    
                                 </div>
                             </Form.Group>
                             <Form.Group controlId="grupoFamiliar">
-                                <Form.Control
+                            <TextoAyuda 
+                                    nombre="grupoFamiliar"
+                                    tooltip="Grupo familiar"
+                                    componente={<Form.Control
                                     as="select"
                                     value={this.state.grupoFamiliar}
                                     onChange={this.handleChange}
                                 >
                                     <option hidden>Grupo Familiar</option>
                                     <Option options={tiposFamilias} />
-                                </Form.Control>
+                                </Form.Control>}
+                                />
+                                
                             </Form.Group>
                             <Form.Group controlId="Genograma">
                                 <Form.Label>Genograma</Form.Label>

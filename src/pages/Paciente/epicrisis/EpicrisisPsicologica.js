@@ -3,7 +3,7 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
-
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
 const tiposEpicrisis = ["Alta terapéutica", "Alta administrativa", "Renuncia voluntaria", "Alta por abandono", "Derivación", "Otra"]
 const nivelesRemision = ["Menos del 50%", "Más del 50%", "Más del 75%"]
@@ -62,26 +62,36 @@ export class EpicrisisPsicologica extends Component {
                                 <Col>
                                     <Form.Group controlId="fecha">
                                         <div>
-                                            <DatePicker
-                                                customInput={<Form.Control />}
-                                                dateFormat="dd/MM/yyyy"
-                                                selected={this.state.fecha}
-                                                onChange={this._handleChange}
-                                                placeholderText="Fecha"
+                                            <TextoAyuda
+                                                nombre="fecha"
+                                                tooltip="Fecha"
+                                                componente={<DatePicker
+                                                    customInput={<Form.Control />}
+                                                    dateFormat="dd/MM/yyyy"
+                                                    selected={this.state.fecha}
+                                                    onChange={this._handleChange}
+                                                    placeholderText="Fecha"
+                                                />}
                                             />
+
                                         </div>
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group controlId="tipoEpicrisis">
-                                        <Form.Control
-                                            as="select"
-                                            value={this.state.tipoEpicrisis}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Tipo epicrisis</option>
-                                            <Option options={tiposEpicrisis} />
-                                        </Form.Control>
+                                        <TextoAyuda
+                                            nombre="tipoEpicrisis"
+                                            tooltip="Tipo epicrisis"
+                                            componente={<Form.Control
+                                                as="select"
+                                                value={this.state.tipoEpicrisis}
+                                                onChange={this.handleChange}
+                                            >
+                                                <option hidden>Tipo epicrisis</option>
+                                                <Option options={tiposEpicrisis} />
+                                            </Form.Control>}
+                                        />
+
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -99,52 +109,52 @@ export class EpicrisisPsicologica extends Component {
                             <Form.Group controlId="resultadosTestBateriaEstandar">
                                 <Form.Label>Resultados aplicación de test Batería Estándar</Form.Label>
                                 <Row>
-                                {tiposBateriaEstandar.map((name) => (
-                                    <Form.Group>
-                                        <Form.Label>{name}</Form.Label>
-                                        <Col>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.oq452}
-                                                onChange={this.handleChange}
-                                                placeholder="OQ-45.2"
-                                            />
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.sclr90}
-                                                onChange={this.handleChange}
-                                                placeholder="SCLR-90"
-                                            />    
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.des}
-                                                onChange={this.handleChange}
-                                                placeholder="DES"
-                                            />
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.lec}
-                                                onChange={this.handleChange}
-                                                placeholder="LEC"
-                                            />
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.pcl}
-                                                onChange={this.handleChange}
-                                                placeholder="PCL"
-                                            />
-                                            </Form.Group>
-                                            
-                                            
-                                            
-                                            
-                                        </Col>
-                                    </Form.Group>
-                                ))}
+                                    {tiposBateriaEstandar.map((name) => (
+                                        <Form.Group>
+                                            <Form.Label>{name}</Form.Label>
+                                            <Col>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.oq452}
+                                                        onChange={this.handleChange}
+                                                        placeholder="OQ-45.2"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.sclr90}
+                                                        onChange={this.handleChange}
+                                                        placeholder="SCLR-90"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.des}
+                                                        onChange={this.handleChange}
+                                                        placeholder="DES"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.lec}
+                                                        onChange={this.handleChange}
+                                                        placeholder="LEC"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.pcl}
+                                                        onChange={this.handleChange}
+                                                        placeholder="PCL"
+                                                    />
+                                                </Form.Group>
+
+
+
+
+                                            </Col>
+                                        </Form.Group>
+                                    ))}
                                 </Row>
                             </Form.Group>
 
@@ -160,23 +170,33 @@ export class EpicrisisPsicologica extends Component {
                             </Form.Group>
                             <Row>
                                 <Col>
-                                <Form.Group controlId="nivelRemision">
-                                        <Form.Control
-                                            as="select"
-                                            value={this.state.nivelRemision}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Nivel Remisión</option>
-                                            <Option options={nivelesRemision} />
-                                        </Form.Control>
+                                    <Form.Group controlId="nivelRemision">
+                                        <TextoAyuda
+                                            nombre="nivelRemision"
+                                            tooltip="Nivel Remisión"
+                                            componente={<Form.Control
+                                                as="select"
+                                                value={this.state.nivelRemision}
+                                                onChange={this.handleChange}
+                                            >
+                                                <option hidden>Nivel Remisión</option>
+                                                <Option options={nivelesRemision} />
+                                            </Form.Control>}
+                                        />
+
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                <Form.Control
-                                    value={this.state.observacionesFinales}
-                                    onChange={this.handleChange}
-                                    placeholder="Observaciones Finales"
-                                />
+                                    <TextoAyuda
+                                        nombre="observacionesFinales"
+                                        tooltip="Observaciones Finales"
+                                        componente={<Form.Control
+                                            value={this.state.observacionesFinales}
+                                            onChange={this.handleChange}
+                                            placeholder="Observaciones Finales"
+                                        />}
+                                    />
+
                                 </Col>
                             </Row>
                             <Form.Group controlId="logroAlcanzado">

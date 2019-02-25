@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Button } from 'react-bootstrap'
-import { Option } from '../../../components/Option'
+import { Form, Row,Col, Button } from 'react-bootstrap'
+import {Option} from '../../../components/Option'
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
-
-const estados = ["Abierto", "Cerrado", "En proceso de alta"]
-export class DatosAdicionales extends Component {
+const estados = ["Abierto","Cerrado","En proceso de alta"]
+export  class DatosAdicionales extends Component {
     constructor(props) {
         super(props);
 
@@ -39,38 +39,58 @@ export class DatosAdicionales extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="estado">
-                                <Form.Control
+                            <TextoAyuda 
+                                    nombre="estado"
+                                    tooltip="Estado"
+                                    componente={ <Form.Control
                                     as="select"
                                     value={this.state.estado}
                                     onChange={this.handleChange}
                                 >
                                     <option hidden>Estado</option>
-                                    <Option options={estados} />
-                                </Form.Control>
+                                    <Option options={estados}/>
+                                </Form.Control>}
+                                />
+                               
                             </Form.Group>
                             <Form.Group controlId="etapa">
-                                <Form.Control
+                            <TextoAyuda 
+                                    nombre="etapa"
+                                    tooltip="Etapa"
+                                    componente={<Form.Control
                                     value={this.state.etapa}
                                     onChange={this.handleChange}
-                                    placeholder="Ingrese la etapa"
+                                    placeholder="Etapa"
+                                />}
                                 />
+                                
                             </Form.Group>
                         </Form.Group>
 
                         <Form.Group as={Col}>
                             <Form.Group controlId="tipoIngreso">
-                                <Form.Control
+                            <TextoAyuda 
+                                    nombre="tipoIngreso"
+                                    tooltip="Tipo de Ingreso"
+                                    componente={<Form.Control
                                     value={this.state.tipoIngreso}
                                     onChange={this.handleChange}
                                     placeholder="Tipo de Ingreso"
+                                />}
                                 />
+                                
                             </Form.Group>
                             <Form.Group controlId="institucion">
-                                <Form.Control
+                            <TextoAyuda 
+                                    nombre="institucion"
+                                    tooltip="Institución"
+                                    componente={<Form.Control
                                     value={this.state.institucion}
                                     onChange={this.handleChange}
                                     placeholder="Institución"
+                                />}
                                 />
+                                
                             </Form.Group>
                             <Form.Group>
                                 <div className="btn-container">

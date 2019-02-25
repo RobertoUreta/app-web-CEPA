@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
-
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
 const tiposTratamiento = ["Terapia individual", "Taller", "Intervención grupal", "Derivación asistida"]
 export class TratamientoPsicologico extends Component {
@@ -40,14 +40,19 @@ export class TratamientoPsicologico extends Component {
                             <Row>
                                 <Col>
                                     <Form.Group controlId="tipoTratamiento">
-                                        <Form.Control
+                                    <TextoAyuda
+                                            nombre="tipoTratamiento"
+                                            tooltip="Tipo Tratamiento"
+                                            componente={<Form.Control
                                             as="select"
                                             value={this.state.tipoTratamiento}
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Tipo Tratamiento</option>
                                             <Option options={tiposTratamiento} />
-                                        </Form.Control>
+                                        </Form.Control>}
+                                        />
+                                        
                                     </Form.Group>
                                 </Col>
                                 <Col>
