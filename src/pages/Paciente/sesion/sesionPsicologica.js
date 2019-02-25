@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
 
 const asistentes = ["PI","Adulto responsable","Familia","Otro significativo"];
@@ -50,11 +51,16 @@ export class SesionPsicologica extends Component {
                             <Row>
                                     <Col>
                                     <Form.Group controlId="numSesion">
-                                        <Form.Control
+                                    <TextoAyuda
+                                        nombre="numSesion"
+                                        tooltip="N° de sesión"
+                                        componente={<Form.Control
                                             value={this.state.numSesion}
                                             onChange={this.handleChange}
                                             placeholder="N° de Sesión"
-                                        />
+                                        />}
+                                    />
+                                        
                                     </Form.Group> 
                                     </Col>
                                     <Col>
@@ -91,27 +97,37 @@ export class SesionPsicologica extends Component {
                             <Row>
                                 <Col>
                                     <Form.Group controlId="tipoTratamiento">
-                                        <Form.Control
+                                        <TextoAyuda
+                                            nombre="tipoTratamiento"
+                                            tooltip="Tipo Tratamiento"
+                                            componente={<Form.Control
                                             as="select"
                                             value={this.state.tipoTratamiento}
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Tipo Tratamiento</option>
                                             <Option options={tiposTratamiento} />
-                                        </Form.Control>
+                                        </Form.Control>}
+                                        />
+                                        
                                     </Form.Group>
                                 </Col>
 
                                 <Col>
                                     <Form.Group controlId="quienAsiste">
-                                        <Form.Control
+                                    <TextoAyuda
+                                            nombre="quienAsiste"
+                                            tooltip="Asiste"
+                                            componente={<Form.Control
                                             as="select"
                                             value={this.state.quienAsiste}
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Asiste</option>
                                             <Option options={asistentes} />
-                                        </Form.Control>
+                                        </Form.Control>}
+                                        />
+                                        
                                     </Form.Group>
                                 </Col>
                             </Row>

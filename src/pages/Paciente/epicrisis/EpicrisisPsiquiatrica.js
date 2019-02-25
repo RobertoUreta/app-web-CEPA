@@ -3,6 +3,7 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+import { TextoAyuda } from '../../../components/TextoAyuda'
 
 
 const tiposEpicrisis=["Alta terapéutica","Alta administrativa","Renuncia voluntaria","Alta por abandono","Derivación","Otra"]
@@ -52,26 +53,36 @@ export class EpicrisisPsiquiatrica extends Component {
                                 <Col>
                                     <Form.Group controlId="fecha">
                                         <div>
-                                            <DatePicker
+                                        <TextoAyuda
+                                            nombre="fecha"
+                                            tooltip="Fecha"
+                                            componente={<DatePicker
                                                 customInput={<Form.Control />}
                                                 dateFormat="dd/MM/yyyy"
                                                 selected={this.state.fecha}
                                                 onChange={this._handleChange}
                                                 placeholderText="Fecha"
-                                            />
+                                            />}
+                                        />
+                                            
                                         </div>
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                 <Form.Group controlId="tipoEpicrisis">
-                                <Form.Control
+                                <TextoAyuda
+                                            nombre="tipoEpicrisis"
+                                            tooltip="Tipo epicrisis"
+                                            componente={<Form.Control
                                     as="select"
                                     value={this.state.tipoEpicrisis}
                                     onChange={this.handleChange}
                                 >
                                     <option hidden>Tipo epicrisis</option>
                                     <Option options={tiposEpicrisis} />
-                                </Form.Control>
+                                </Form.Control>}
+                                        />
+                                
                             </Form.Group>
                                 </Col>
                             </Row>
