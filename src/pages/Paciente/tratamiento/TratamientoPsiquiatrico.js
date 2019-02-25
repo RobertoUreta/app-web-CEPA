@@ -36,7 +36,7 @@ export class TratamientoPsiquiatrico extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                            
+
                             <Form.Group controlId="tipoTratamiento">
                                 <Form.Control
                                     as="select"
@@ -47,7 +47,7 @@ export class TratamientoPsiquiatrico extends Component {
                                     <Option options={tiposTratamiento} />
                                 </Form.Control>
                             </Form.Group>
-                                
+
                             <Form.Group controlId="motivoTratamiento">
                                 <Form.Label>Motivo consulta psiquiatrico</Form.Label>
                                 <Form.Control
@@ -68,22 +68,16 @@ export class TratamientoPsiquiatrico extends Component {
                                     placeholder="Detallar Motivos"
                                 />
                             </Form.Group>
-                     
+
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

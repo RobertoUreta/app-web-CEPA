@@ -99,52 +99,52 @@ export class EpicrisisPsicologica extends Component {
                             <Form.Group controlId="resultadosTestBateriaEstandar">
                                 <Form.Label>Resultados aplicación de test Batería Estándar</Form.Label>
                                 <Row>
-                                {tiposBateriaEstandar.map((name) => (
-                                    <Form.Group>
-                                        <Form.Label>{name}</Form.Label>
-                                        <Col>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.oq452}
-                                                onChange={this.handleChange}
-                                                placeholder="OQ-45.2"
-                                            />
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.sclr90}
-                                                onChange={this.handleChange}
-                                                placeholder="SCLR-90"
-                                            />    
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.des}
-                                                onChange={this.handleChange}
-                                                placeholder="DES"
-                                            />
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.lec}
-                                                onChange={this.handleChange}
-                                                placeholder="LEC"
-                                            />
-                                            </Form.Group>
-                                            <Form.Group>
-                                            <Form.Control
-                                                value={this.state.pcl}
-                                                onChange={this.handleChange}
-                                                placeholder="PCL"
-                                            />
-                                            </Form.Group>
-                                            
-                                            
-                                            
-                                            
-                                        </Col>
-                                    </Form.Group>
-                                ))}
+                                    {tiposBateriaEstandar.map((name) => (
+                                        <Form.Group>
+                                            <Form.Label>{name}</Form.Label>
+                                            <Col>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.oq452}
+                                                        onChange={this.handleChange}
+                                                        placeholder="OQ-45.2"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.sclr90}
+                                                        onChange={this.handleChange}
+                                                        placeholder="SCLR-90"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.des}
+                                                        onChange={this.handleChange}
+                                                        placeholder="DES"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.lec}
+                                                        onChange={this.handleChange}
+                                                        placeholder="LEC"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        value={this.state.pcl}
+                                                        onChange={this.handleChange}
+                                                        placeholder="PCL"
+                                                    />
+                                                </Form.Group>
+
+
+
+
+                                            </Col>
+                                        </Form.Group>
+                                    ))}
                                 </Row>
                             </Form.Group>
 
@@ -160,7 +160,7 @@ export class EpicrisisPsicologica extends Component {
                             </Form.Group>
                             <Row>
                                 <Col>
-                                <Form.Group controlId="nivelRemision">
+                                    <Form.Group controlId="nivelRemision">
                                         <Form.Control
                                             as="select"
                                             value={this.state.nivelRemision}
@@ -172,11 +172,11 @@ export class EpicrisisPsicologica extends Component {
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                <Form.Control
-                                    value={this.state.observacionesFinales}
-                                    onChange={this.handleChange}
-                                    placeholder="Observaciones Finales"
-                                />
+                                    <Form.Control
+                                        value={this.state.observacionesFinales}
+                                        onChange={this.handleChange}
+                                        placeholder="Observaciones Finales"
+                                    />
                                 </Col>
                             </Row>
                             <Form.Group controlId="logroAlcanzado">
@@ -205,20 +205,14 @@ export class EpicrisisPsicologica extends Component {
 
 
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

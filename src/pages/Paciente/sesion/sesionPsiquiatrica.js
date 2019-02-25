@@ -10,8 +10,8 @@ export class SesionPsiquiatrica extends Component {
 
         this.state = {
             numSesion: "",
-            tipoTratamiento:"",
-            notasSesion:""
+            tipoTratamiento: "",
+            notasSesion: ""
         };
     }
 
@@ -36,27 +36,27 @@ export class SesionPsiquiatrica extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Row>
-                                    <Col>
+                                <Col>
                                     <Form.Group controlId="numSesion">
                                         <Form.Control
                                             value={this.state.numSesion}
                                             onChange={this.handleChange}
                                             placeholder="N° de Sesión"
                                         />
-                                    </Form.Group> 
-                                    </Col>
-                                    <Col>
-                                        <Form.Group controlId="tipoTratamiento">
-                                            <Form.Control
-                                                as="select"
-                                                value={this.state.tipoTratamiento}
-                                                onChange={this.handleChange}
-                                            >
-                                                <option hidden>Tipo Tratamiento</option>
-                                                <Option options={tiposTratamiento} />
-                                            </Form.Control>
-                                        </Form.Group>
-                                    </Col>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="tipoTratamiento">
+                                        <Form.Control
+                                            as="select"
+                                            value={this.state.tipoTratamiento}
+                                            onChange={this.handleChange}
+                                        >
+                                            <option hidden>Tipo Tratamiento</option>
+                                            <Option options={tiposTratamiento} />
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
                             </Row>
                             <Form.Group controlId="notasSesion">
                                 <Form.Label>Notas de la sesión</Form.Label>
@@ -69,20 +69,14 @@ export class SesionPsiquiatrica extends Component {
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

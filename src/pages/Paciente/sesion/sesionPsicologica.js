@@ -3,7 +3,7 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 
 
-const asistentes = ["PI","Adulto responsable","Familia","Otro significativo"];
+const asistentes = ["PI", "Adulto responsable", "Familia", "Otro significativo"];
 const tiposTratamiento = ["Terapia individual", "Taller", "Intervención grupal", "Derivación asistida"];
 export class SesionPsicologica extends Component {
 
@@ -15,15 +15,15 @@ export class SesionPsicologica extends Component {
             diagnostico: false,
             tratamiento: false,
             seguimiento: false,
-            tipoTratamiento:"",
-            quienAsiste:"",
-            descripcionLlegada:"",
-            objetivoSesion:"",
-            intervencionResultado:"",
-            conductaObservada:"",
-            descripcionRetiro:"",
-            indicaciones:"",
-            notasSesion:""
+            tipoTratamiento: "",
+            quienAsiste: "",
+            descripcionLlegada: "",
+            objetivoSesion: "",
+            intervencionResultado: "",
+            conductaObservada: "",
+            descripcionRetiro: "",
+            indicaciones: "",
+            notasSesion: ""
         };
     }
 
@@ -48,16 +48,16 @@ export class SesionPsicologica extends Component {
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Row>
-                                    <Col>
+                                <Col>
                                     <Form.Group controlId="numSesion">
                                         <Form.Control
                                             value={this.state.numSesion}
                                             onChange={this.handleChange}
                                             placeholder="N° de Sesión"
                                         />
-                                    </Form.Group> 
-                                    </Col>
-                                    <Col>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
                                     <Form.Check
                                         custom
                                         value={this.state.diagnostico}
@@ -66,8 +66,8 @@ export class SesionPsicologica extends Component {
                                         type="checkbox"
                                         id="checkbox-diagnostico"
                                     />
-                                    </Col>
-                                    <Col>
+                                </Col>
+                                <Col>
                                     <Form.Check
                                         custom
                                         value={this.state.tratamiento}
@@ -76,8 +76,8 @@ export class SesionPsicologica extends Component {
                                         type="checkbox"
                                         id="checkbox-tratamiento"
                                     />
-                                    </Col> 
-                                    <Col>
+                                </Col>
+                                <Col>
                                     <Form.Check
                                         custom
                                         value={this.state.seguimiento}
@@ -86,7 +86,7 @@ export class SesionPsicologica extends Component {
                                         type="checkbox"
                                         id="checkbox-seguimiento"
                                     />
-                                    </Col>
+                                </Col>
                             </Row>
                             <Row>
                                 <Col>
@@ -115,7 +115,7 @@ export class SesionPsicologica extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                           
+
                             <Form.Group controlId="descripcionLlegada">
                                 <Form.Label>Descripción del usuario a su llegada</Form.Label>
                                 <Form.Control
@@ -186,22 +186,16 @@ export class SesionPsicologica extends Component {
                                     placeholder="Notas de la sesión"
                                 />
                             </Form.Group>
-                     
+
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

@@ -9,6 +9,8 @@ import { Tratamiento } from '../pages/Tratamiento'
 import { General } from '../pages/General'
 import { Evaluacion} from '../pages/Evaluacion'
 import { Historial } from '../pages/Historial'
+import { Epicrisis } from '../pages/Epicrisis'
+import { Sesion } from '../pages/Sesion'
 
 
 export class NavLateral extends Component {
@@ -34,6 +36,14 @@ export class NavLateral extends Component {
 
     if(this.state.selectedPath === "historial"){
       return <Historial />
+    }
+
+    if(this.state.selectedPath === "epicrisis"){
+      return <Epicrisis />
+    }
+
+    if(this.state.selectedPath ==="registrosesion"){
+      return <Sesion />
     }
   }
 
