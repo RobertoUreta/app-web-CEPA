@@ -8,6 +8,7 @@ import "../styles/styles.css";
 import { Tratamiento } from '../pages/Tratamiento'
 import { General } from '../pages/General'
 import { Evaluacion} from '../pages/Evaluacion'
+import { Historial } from '../pages/Historial'
 
 
 export class NavLateral extends Component {
@@ -29,6 +30,10 @@ export class NavLateral extends Component {
     }
     if (this.state.selectedPath === "evaluacion") {
       return <Evaluacion />
+    }
+
+    if(this.state.selectedPath === "historial"){
+      return <Historial />
     }
   }
 

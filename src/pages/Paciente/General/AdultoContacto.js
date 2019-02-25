@@ -83,18 +83,14 @@ export class AdultoContacto extends Component {
                                 </Col>
                             </Row>
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                            <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

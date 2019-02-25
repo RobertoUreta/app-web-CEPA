@@ -37,7 +37,6 @@ export class Login extends Component {
         <form onSubmit={this.handleSubmit}>
           <Form.Group controlId="usuario">
             <Image src={logo} className="logo img-fluid center-block" alt="" responsive />
-            <p></p>
            
             <Form.Control
               autoFocus

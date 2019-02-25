@@ -64,7 +64,7 @@ export class Tamizaje extends Component {
                                     <Form.Group controlId="fechaSolicitud">
                                         <div>
                                             <DatePicker
-                                                
+
                                                 customInput={<Form.Control />}
                                                 dateFormat="dd/MM/yyyy"
                                                 selected={this.state.fechaSolicitud}
@@ -129,20 +129,14 @@ export class Tamizaje extends Component {
 
 
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
