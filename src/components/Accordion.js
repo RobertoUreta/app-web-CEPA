@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Collapse } from 'react-bootstrap'
 import '../styles/styles.css'
 
 import AccordionSection from './AccordionSection';

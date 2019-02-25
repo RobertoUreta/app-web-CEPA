@@ -6,6 +6,7 @@ import './Paciente/evaluacion/Tamizaje'
 import { Tamizaje } from './Paciente/evaluacion/Tamizaje';
 import { EntrevistaIngreso } from './Paciente/evaluacion/EntrevistaIngreso';
 import { EntrevistaPsiquiatrica } from './Paciente/evaluacion/EntrevistaPsiquiatrica';
+import {EntrevistaMedica} from './Paciente/evaluacion/isl/EntrevistaMedica'
 
 export class Evaluacion extends Component {
 
@@ -32,6 +33,7 @@ export class Evaluacion extends Component {
                     </div>
 
                     <div label="Entrevista Médica (ISL)">
+                        <EntrevistaMedica />
                     </div>
 
                     <div label="Entrevista Psicólogo (ISL)">
