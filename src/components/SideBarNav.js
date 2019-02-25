@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
 import { Navbar, Nav } from 'react-bootstrap'
-import {
-  AppContainer,
-  Body
-} from "../containers/containers";
 import "../styles/styles.css";
 import { Tratamiento } from '../pages/Tratamiento'
 import { General } from '../pages/General'
