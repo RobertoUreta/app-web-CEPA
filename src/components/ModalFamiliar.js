@@ -2,6 +2,13 @@ import React, { Component } from 'react'
 import { Col, Form, Button, Modal } from 'react-bootstrap'
 import { TextoAyuda } from './TextoAyuda'
 
+import DatePicker from 'react-datepicker'
+import { addYears } from 'date-fns/esm';
+
+import { registerLocale, setDefaultLocale } from 'react-datepicker'
+import es from 'date-fns/locale/es';
+registerLocale("es", es)
+setDefaultLocale("es")
 export class ModalFamiliar extends Component {
 
     constructor(props) {
@@ -9,6 +16,7 @@ export class ModalFamiliar extends Component {
 
         this.state = {
             nombre: "",
+            fechaNacimiento: null,
             edad: "",
             relacionPaciente: "",
             ocupacion: "",
@@ -20,13 +28,35 @@ export class ModalFamiliar extends Component {
             [event.target.id]: event.target.value
         });
 
+
+    }
+
+    getAge(date) {
+        var today = new Date();
+        var birthDate = new Date(date);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+
+    _handleDateChange = (date) => {
+        console.log(date.toLocaleDateString());
         
+        this.setState({
+            fechaNacimiento: date,
+            edad: this.getAge(date)
+        });
     }
 
     _handleClose = () => {
         this.props.fnCerrar(false)
         this.setState({
             nombre: "",
+            fechaNacimiento: null,
             edad: "",
             relacionPaciente: "",
             ocupacion: "",
@@ -39,7 +69,7 @@ export class ModalFamiliar extends Component {
         const aux = JSON.stringify(this.state, null, '  ');
         //console.log(data)
         this.props.onSubmit(aux)
-        
+
         this._handleClose()
     }
     render() {
@@ -67,18 +97,18 @@ export class ModalFamiliar extends Component {
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Group controlId="edad">
-                                    <TextoAyuda
-                                        nombre="edad"
-                                        tooltip="Edad"
-                                        componente={
-                                            <Form.Control
-                                                value={this.state.edad}
-                                                onChange={this.handleChange}
-                                                placeholder="Edad"
-                                            />
-                                        }
-                                    />
+                                <Form.Group controlId="fechaNacimiento">
+                                    <TextoAyuda nombre="fechaNacimiento" tooltip="Fecha de Nacimiento" componente={<DatePicker
+                                        customInput={<Form.Control />}
+                                        dateFormat="dd/MM/yyyy"
+                                        selected={this.state.fechaNacimiento}
+                                        onChange={this._handleDateChange}
+                                        showMonthDropdown
+                                        showYearDropdown
+                                        maxDate={addYears(new Date(), 0)}
+                                        dropdownMode="select"
+                                        placeholderText="Fecha de Nacimiento"
+                                    />} />
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group>
