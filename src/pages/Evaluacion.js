@@ -7,6 +7,8 @@ import { Tamizaje } from './Paciente/evaluacion/Tamizaje';
 import { EntrevistaIngreso } from './Paciente/evaluacion/EntrevistaIngreso';
 import { EntrevistaPsiquiatrica } from './Paciente/evaluacion/EntrevistaPsiquiatrica';
 import {EntrevistaMedica} from './Paciente/evaluacion/isl/EntrevistaMedica'
+import {EntrevistaPsicologo} from './Paciente/evaluacion/isl/EntrevistaPsicologo'
+import {EntrevistaPsiquiatra} from './Paciente/evaluacion/isl/EntrevistaPsiquiatra'
 
 export class Evaluacion extends Component {
 
@@ -37,10 +39,11 @@ export class Evaluacion extends Component {
                     </div>
 
                     <div label="Entrevista Psicólogo (ISL)">
+                        <EntrevistaPsicologo />
                     </div>
 
                     <div label="Entrevista Psiquiatra (ISL)">
-
+                        <EntrevistaPsiquiatra />
                     </div>
 
                     <div label="Evaluación Puesto de Trabajo (ISL)">
