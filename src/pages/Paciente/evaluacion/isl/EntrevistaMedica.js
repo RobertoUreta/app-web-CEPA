@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../../components/TextoAyuda'
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
+const nivelesEducacion = ["Enseñanza Basica", "Enseñanza Media", "Educación Superior"]
 export class EntrevistaMedica extends Component {
 
 
@@ -37,7 +38,7 @@ export class EntrevistaMedica extends Component {
 
     _handleChange = (date) => {
         this.setState({
-            fecha: date
+            fechaEvaluacionMedica: date
         });
     }
 
@@ -90,7 +91,7 @@ export class EntrevistaMedica extends Component {
                                                 onChange={this.handleChange}
                                             >
                                                 <option hidden>Escolaridad</option>
-                                                <Option options={["Enseñanza Media", "etc"]} />
+                                                <Option options={nivelesEducacion} />
                                             </Form.Control>}
                                         />
 
@@ -118,7 +119,7 @@ export class EntrevistaMedica extends Component {
                             </Row>
 
                             <Form.Group controlId="anamnesis">
-                                <Form.Label>1. Anamnesis</Form.Label>
+                                <Form.Label><strong>1. Anamnesis</strong></Form.Label>
                                 <TextoAyuda
                                     nombre="anamnesis"
                                     tooltip="Breve historia familiar, antecedentes mórbidos, variables del entorno familiar que pudiesen incidir en su estado de salud mental, enfermedades importantes u otros."
@@ -176,7 +177,7 @@ export class EntrevistaMedica extends Component {
 
                             </Form.Group>
                             <Form.Group controlId="laboresRealizadas">
-                                <Form.Label>2. Historia Laboral</Form.Label>
+                                <Form.Label><strong>2. Historia Laboral</strong></Form.Label>
                                 <TextoAyuda
                                     nombre="laboresRealizadas"
                                     tooltip="Labores realizadas en los ultimos tres puestos de trabajo (con énfasis en el más reciente)."
@@ -204,8 +205,7 @@ export class EntrevistaMedica extends Component {
                                 />
                             </Form.Group>
                             <Form.Group controlId="evaluacionGeneralPreliminar">
-                                <Form.Label>3. Evaluación General Preliminar</Form.Label>
-
+                                <Form.Label><strong>3. Evaluación General Preliminar</strong></Form.Label>
                                 <Form.Group controlId="apariencia">
                                     <Form.Label>Describir cómo se presenta la persona a la entrevista, en términos de: </Form.Label>
                                     <TextoAyuda
@@ -261,7 +261,7 @@ export class EntrevistaMedica extends Component {
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Label>4. Comportamiento durante la evaluación</Form.Label>
+                                <Form.Label><strong>4. Comportamiento durante la evaluación</strong></Form.Label>
                                 <Form.Group controlId="oposicionamiento">
                                     <Form.Check
                                         custom
@@ -318,7 +318,7 @@ export class EntrevistaMedica extends Component {
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group controlId="observacionesGenerales">
-                                <Form.Label>Hipotesis Diagnósticas</Form.Label>
+                                <Form.Label><strong>Hipotesis Diagnósticas</strong></Form.Label>
                                 <TextoAyuda
                                     nombre="observacionesGenerales"
                                     tooltip="A partir de los antecedentes recopilados indicar observaciones generales e indicar si debe continuar o no con Psiquiatra."
