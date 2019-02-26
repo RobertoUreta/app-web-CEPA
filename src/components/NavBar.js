@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Navbar, Nav } from 'react-bootstrap';
+import { NavDropdown, Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
 import "../styles/styles.css"
@@ -27,19 +27,26 @@ export class NavBar extends Component {
                     </Link>
 
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
+                    <Navbar.Collapse className="justify-content-end" id="collasible-nav-dropdown">
                         <Nav className="mr-auto" variant="pills">
                             <Nav.Item>
-                                    <Nav.Link eventKey="usuarios">Usuarios</Nav.Link>
-                                </Nav.Item>
-                            <Nav.Item>
-                                    <Nav.Link eventKey="pacientes">Pacientes</Nav.Link>
+                                <Nav.Link eventKey="usuarios">Usuarios</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                    <Nav.Link eventKey="utilidades">Utilidades</Nav.Link>
+                                <Nav.Link eventKey="pacientes">Pacientes</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="utilidades">Utilidades</Nav.Link>
                             </Nav.Item>
 
                         </Nav>
+                        <NavDropdown className="dropdown-menu-nav" title="Nombre Usuario" id="basic-nav-dropdown">
+                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                        </NavDropdown>
 
                     </Navbar.Collapse>
                 </Navbar>
