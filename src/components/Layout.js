@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { NavBar } from './NavBar'
 import { NavLateral } from './SideBarNav'
+import PropTypes from 'prop-types'
 
 export class Layout extends Component {
 
@@ -22,12 +23,20 @@ export class Layout extends Component {
                     <NavBar />
                 </div>
                 <div>
-                    {this.state.mustBeSideNav
+                    {this.props.mustBeSideNav
                         ? this._renderSideNav()
-                        : null}
+                        : <div></div>}
                 </div>
             </div>
         )
     }
+}
+
+Layout.propTypes = {
+    mustBeSideNav: PropTypes.bool,
+}
+
+Layout.defaultProps = {
+    mustBeSideNav: true
 }
 
