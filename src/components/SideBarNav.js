@@ -10,7 +10,7 @@ import { Sesion } from '../pages/Sesion'
 import { Diagnostico } from '../pages/Diagnostico'
 
 export class NavLateral extends Component {
-  state = { selectedPath: '' }
+  state = { selectedPath: 'general' }
 
   _onItemSelection = (evt) => {
     console.log(evt)
@@ -57,7 +57,7 @@ export class NavLateral extends Component {
           bg="light"
           expand="lg"
         >
-            <Nav className="flex-column" variant="pills" fill>
+            <Nav className="flex-column" defaultActiveKey="general" variant="pills" fill>
               <Nav.Item className= "navitem-prueba" >
                 <Nav.Link eventKey="general"> General </Nav.Link>
               </Nav.Item>
@@ -88,7 +88,7 @@ export class NavLateral extends Component {
         </Navbar>
 
 
-        <div id="body">
+        <div id="index-body">
           {this._renderSelection()}
         </div>
       </div>

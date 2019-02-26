@@ -33,7 +33,7 @@ export class NavBar extends Component {
                                 <Nav.Link eventKey="usuarios">Usuarios</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link eventKey="pacientes">Pacientes</Nav.Link>
+                                    <Nav.Link eventKey="pacientes" href="/listaPacientes">Pacientes </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <Nav.Link eventKey="utilidades">Utilidades</Nav.Link>
