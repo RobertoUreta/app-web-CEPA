@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../../components/Option'
 import { TextoAyuda } from '../../../../components/TextoAyuda'
+
+import { TablaFamiliar } from '../../../../components/TablaFamiliar'
+import { ModalFamiliar } from '../../../../components/ModalFamiliar'
+
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 const nivelesEducacion = ["Enseñanza Basica", "Enseñanza Media", "Educación Superior"]
 const antGinecoObstetricosLista = ["menarquia",
@@ -15,29 +19,30 @@ export class EntrevistaPsiquiatra extends Component {
 
     constructor(props) {
         super(props);
+        this._handleShow = this._handleShow.bind(this);
 
         this.state = {
             estadoCivil: "",
-            escolaridad:"",
-            actividad:"",
-            historiaFamiliar:"",
-            patologiasComunes:"",
-            patologiasLaborales:"",
-            atencionesPatologiaMental:"",
-            antecendentesFamiliaresSaludMental:"",
-            enfermedadesActualesConsumo:"",
-            motivoConsulta:"",
-            factoresRiesgoLaboral:"",
-            sintomas:"",
-            desarrolloSintomas:"",
-            tratamientosPrevios:"",
-            examenMental:"",
-            edadInicio:"",//agregar a tabla
-            tiposTrabajos:"",
-            tiempoPermanencia:"",
-            razonesCambio:"",
-            empleoActual:"",
-            funcionesPorContrato:"",
+            escolaridad: "",
+            actividad: "",
+            historiaFamiliar: "",
+            patologiasComunes: "",
+            patologiasLaborales: "",
+            atencionesPatologiaMental: "",
+            antecendentesFamiliaresSaludMental: "",
+            enfermedadesActualesConsumo: "",
+            motivoConsulta: "",
+            factoresRiesgoLaboral: "",
+            sintomas: "",
+            desarrolloSintomas: "",
+            tratamientosPrevios: "",
+            examenMental: "",
+            edadInicio: "",//agregar a tabla
+            tiposTrabajos: "",
+            tiempoPermanencia: "",
+            razonesCambio: "",
+            empleoActual: "",
+            funcionesPorContrato: "",
             menarquia: false,
             menopausia: false,
             gpa: false,
@@ -45,13 +50,15 @@ export class EntrevistaPsiquiatra extends Component {
             fur: false,
             tipo: false,
             observacionesAntGinecoObstetricos: "",
-            eje1:"",
-            eje2:"",
-            eje3:"",
-            eje4:"",
-            eeg:"",
-            impresionesClinicas:"",
-            conclusionesEvaluacion:""//agregar a tabla
+            eje1: "",
+            eje2: "",
+            eje3: "",
+            eje4: "",
+            eeg: "",
+            impresionesClinicas: "",
+            conclusionesEvaluacion: "",//agregar a tabla,
+            show: false,
+            familia: []
 
         };
     }
@@ -60,6 +67,24 @@ export class EntrevistaPsiquiatra extends Component {
         this.setState({
             [event.target.id]: event.target.value
         });
+    }
+
+    _handleClose = (modalEvt) => {
+        this.setState({ show: modalEvt });
+    }
+
+    _handleModalSubmit = (modalInfo ) => {
+
+        console.log("_handleModalSubmit")
+        var info = JSON.parse(modalInfo)
+        this.state.familia.push(info)
+        this.setState(this.state)
+        console.log(this.state.familia)
+        console.log(modalInfo)
+    }
+
+    _handleShow() {
+        this.setState({ show: true })
     }
 
     handleSubmit = event => {
@@ -76,9 +101,9 @@ export class EntrevistaPsiquiatra extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                        <Form.Label><strong>1. Anamnesis del paciente</strong></Form.Label>
+                            <Form.Label><strong>1. Anamnesis del paciente</strong></Form.Label>
                             <Row>
-                            <Col>
+                                <Col>
                                     <Form.Group controlId="estadoCivil">
                                         <TextoAyuda
                                             nombre="estadoCivil"
@@ -126,10 +151,18 @@ export class EntrevistaPsiquiatra extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            
+
                             <Form.Label><strong>2. Datos del grupo de convivencia</strong></Form.Label>
-                            
-                            
+
+                            <Form.Group controlId="modalGrupoFamiliar">
+                                <TablaFamiliar
+                                    elements={this.state.familia} />
+                                <Button onClick={this._handleShow}> Agregar integrante familia</Button>
+                                <ModalFamiliar
+                                    show={this.state.show}
+                                    fnCerrar={this._handleClose}
+                                    onSubmit={this._handleModalSubmit} />
+                            </Form.Group>
                             <Form.Group controlId="historiaFamiliar">
                                 <TextoAyuda
                                     nombre="historiaFamiliar"
@@ -223,7 +256,7 @@ export class EntrevistaPsiquiatra extends Component {
                                     />}
                                 />
                             </Form.Group>
-                            
+
                             <Form.Label><strong>4. Antecedentes Mórbidos</strong></Form.Label>
                             <Form.Group controlId="patologiasComunes">
                                 <TextoAyuda
@@ -393,18 +426,18 @@ export class EntrevistaPsiquiatra extends Component {
                                     </Col>
                                 </Row>
                                 <Form.Group controlId="observacionesAntGinecoObstetricos">
-                                <TextoAyuda 
-                                    nombre="observacionesAntGinecoObstetricos"
-                                    tooltip="Observación"
-                                    componente={<Form.Control
-                                        as="textarea"
-                                        rows="3"
-                                        value={this.state.observacionesAntGinecoObstetricos}
-                                        onChange={this.handleChange}
-                                        placeholder="Observación"
-                                    />}
-                                />
-                                    
+                                    <TextoAyuda
+                                        nombre="observacionesAntGinecoObstetricos"
+                                        tooltip="Observación"
+                                        componente={<Form.Control
+                                            as="textarea"
+                                            rows="3"
+                                            value={this.state.observacionesAntGinecoObstetricos}
+                                            onChange={this.handleChange}
+                                            placeholder="Observación"
+                                        />}
+                                    />
+
                                 </Form.Group>
                             </Form.Group>
                             <Form.Label><strong>7. Examen Mental</strong></Form.Label>
