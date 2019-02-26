@@ -7,6 +7,18 @@
 
   }
 
+  
+  .dropdown-toggle{
+    color: rgba(0,0,0,.5)
+  }
+
+  .dropdown >.nav-item:hover{
+    color:red;
+  }
+  .dropdown-toggle:hover{
+    color: #438C83
+  }
+
   #body{
     margin-left: 160px;
     margin-top: 80px;
