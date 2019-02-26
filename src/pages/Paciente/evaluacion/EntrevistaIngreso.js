@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Modal, Form, Col, Button } from 'react-bootstrap'
+import { Image, Form, Col, Button } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { ModalFamiliar } from '../../../components/ModalFamiliar'
 import { TablaFamiliar } from '../../../components/TablaFamiliar'
+import { ImagePicker } from 'react-file-picker'
 //--Para cambiar el calendario a español--
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
@@ -23,14 +24,14 @@ export class EntrevistaIngreso extends Component {
         super(props);
 
         this._handleShow = this._handleShow.bind(this);
-        
+
         this.state = {
             fechaEntrevista: null,
             grupoFamiliar: "",
             observaciones: "",
             genograma: "",//imagen
             ecomapa: "",//imagen
-            solicitante: "",    
+            solicitante: "",
             motivoConsultaPaciente: "",
             motivoConsultaInstitucion: "",
             motivoConsultaFamilia: "",
@@ -43,16 +44,33 @@ export class EntrevistaIngreso extends Component {
             relacionTerapeuta: "",
             observacionesFinales: "",
             show: false,
-            familia: []
+            familia: [],
+            srcGenograma: '',
+            srcEcomapa: ''
         };
     }
 
+    _handleImageGenograma = (image) => {
+        console.log("_handleImage")
+        console.log(this.state.src)
+
+        this.setState({ srcGenograma: image })
+        console.log(this.state.src)
+    }
+
+    _handleImageEcomapa= (image) => {
+        console.log("_handleImage")
+        console.log(this.state.src)
+
+        this.setState({ srcGenograma: image })
+        console.log(this.state.src)
+    }
 
     _handleClose = (modalEvt) => {
         this.setState({ show: modalEvt });
     }
 
-    _handleModalSubmit = (modalInfo ) => {
+    _handleModalSubmit = (modalInfo) => {
 
         console.log("_handleModalSubmit")
         var info = JSON.parse(modalInfo)
@@ -130,30 +148,42 @@ export class EntrevistaIngreso extends Component {
                                 <TablaFamiliar
                                     elements={this.state.familia} />
                                 <Button onClick={this._handleShow}> Agregar integrante familia</Button>
-                                <ModalFamiliar 
-                                    show = {this.state.show}
-                                    fnCerrar = {this._handleClose}
-                                    onSubmit = {this._handleModalSubmit}  />
+                                <ModalFamiliar
+                                    show={this.state.show}
+                                    fnCerrar={this._handleClose}
+                                    onSubmit={this._handleModalSubmit} />
                             </Form.Group>
                             <Form.Group controlId="Genograma">
                                 <Form.Label>Genograma</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows="5"
-                                    value={this.state.genograma}
-                                    onChange={this.handleChange}
-                                    placeholder="Genograma"
-                                />
+                                <div>
+                                    <img src={this.state.srcGenograma} />
+                                </div>
+                                <ImagePicker
+                                    extensions={['jpg', 'jpeg', 'png']}
+                                    dims={{ minWidth: 100, maxWidth: 500, minHeight: 100, maxHeight: 500 }}
+                                    onChange={this._handleImageGenograma}
+                                    onError={errMsg => { alert(errMsg) }}
+                                >
+                                    <Button>
+                                        Subir Genograma
+                                    </Button>
+                                </ImagePicker>
                             </Form.Group>
                             <Form.Group controlId="ecomapa">
                                 <Form.Label>Ecomapa</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows="5"
-                                    value={this.state.ecomapa}
-                                    onChange={this.handleChange}
-                                    placeholder="ecomapa"
-                                />
+                                <div>
+                                    <img src={this.state.srcEcomapa} />
+                                </div>
+                                <ImagePicker
+                                    extensions={['jpg', 'jpeg', 'png']}
+                                    dims={{ minWidth: 100, maxWidth: 500, minHeight: 100, maxHeight: 500 }}
+                                    onChange={this._handleImageEcomapa}
+                                    onError={errMsg => { alert(errMsg) }}
+                                >
+                                    <Button>
+                                        Subir Ecomapa
+                                    </Button>
+                                </ImagePicker>
                             </Form.Group>
                             <Form.Group controlId="solicitante">
                                 <Form.Label>¿Quién solicita la consulta? (iniciativa propia, médico, instituciones, otros)</Form.Label>
