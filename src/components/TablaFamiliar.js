@@ -16,7 +16,16 @@ export class TablaFamiliar extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                
+                {this.props.elements.map((v,i) => {
+                    return (
+                        <tr key={i}>
+                            <td>{v.nombre}</td>
+                            <td>{v.edad}</td>
+                            <td>{v.relacionPaciente}</td>
+                            <td>{v.ocupacion}</td>
+                        </tr>
+                    )
+                }) }
                 </tbody>
             </Table>
         )

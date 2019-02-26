@@ -15,7 +15,6 @@ setDefaultLocale("es")
 const tiposFamilias = ["Familia Nuclear", "Familia Extensa", "Familia monoparental",
     "Familia ensamblada", "Familia homoparental", "Familia de padres separados"]
 
-const familia = []
 
 export class EntrevistaIngreso extends Component {
 
@@ -44,6 +43,7 @@ export class EntrevistaIngreso extends Component {
             relacionTerapeuta: "",
             observacionesFinales: "",
             show: false,
+            familia: []
         };
     }
 
@@ -55,7 +55,10 @@ export class EntrevistaIngreso extends Component {
     _handleModalSubmit = (modalInfo ) => {
 
         console.log("_handleModalSubmit")
-        const {algo } = modalInfo.name
+        var info = JSON.parse(modalInfo)
+        this.state.familia.push(info)
+        this.setState(this.state)
+        console.log(this.state.familia)
         console.log(modalInfo)
     }
 
@@ -124,7 +127,8 @@ export class EntrevistaIngreso extends Component {
                             </Form.Group>
 
                             <Form.Group controlId="modalGrupoFamiliar">
-                                <TablaFamiliar />
+                                <TablaFamiliar
+                                    elements={this.state.familia} />
                                 <Button onClick={this._handleShow}> Agregar integrante familia</Button>
                                 <ModalFamiliar 
                                     show = {this.state.show}

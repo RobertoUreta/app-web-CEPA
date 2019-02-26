@@ -25,14 +25,21 @@ export class ModalFamiliar extends Component {
 
     _handleClose = () => {
         this.props.fnCerrar(false)
+        this.setState({
+            nombre: "",
+            edad: "",
+            relacionPaciente: "",
+            ocupacion: "",
+        })
     }
 
     _handleModalSubmit = (evt) => {
         //console.log(this.state)
+        evt.preventDefault()
         const aux = JSON.stringify(this.state, null, '  ');
-        const data = JSON.parse(aux)
         //console.log(data)
-        this.props.onSubmit(data)
+        this.props.onSubmit(aux)
+        
         this._handleClose()
     }
     render() {
