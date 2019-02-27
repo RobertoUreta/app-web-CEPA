@@ -6,12 +6,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { addYears } from 'date-fns/esm';
 import { TextoAyuda } from '../../../components/TextoAyuda'
 
-
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
 const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
-    "Isapre Banmédica", "Isapre Consalud", "Isapre Colmena",
-    "Isapre CruzBlanca", "Isapre Nueva Masvida", "Isapre Vida Tres"]
+                        "Isapre Banmédica", "Isapre Consalud", "Isapre Colmena",
+                        "Isapre CruzBlanca", "Isapre Nueva Masvida", "Isapre Vida Tres"]
 const tiposEstablecimientos = ["Municipal", "Particular-Subvencionado", "Particular"]
 
 export class DatosPersonales extends Component {
@@ -67,6 +66,8 @@ export class DatosPersonales extends Component {
         let info = JSON.stringify(this.state, null, '  ');
 
         this.props.handlePaciente(info)
+        
+        console.log(this.state)
 
     }
 

@@ -45,6 +45,17 @@ export default class CrearUsuario extends Component {
 
     }
 
+    cambiarDigitoVerificador = event => {
+        var M=0,S=1;
+        var T= event.target.value
+	    for(;T;T=Math.floor(T/10))
+            S=(S+T%10*(9-M++%6))%11;
+        this.setState(
+            {digitoVerificador: S?S-1:'k',
+            rut:event.target.value}
+        )
+    }
+
     render() {
         return (
             <div className="CrearUsuario">
@@ -86,7 +97,7 @@ export default class CrearUsuario extends Component {
                                                 tooltip="Rut sin puntos ni digito verificador"
                                                 componente={<Form.Control
                                                     value={this.state.rut}
-                                                    onChange={this.handleChange}
+                                                    onChange={this.cambiarDigitoVerificador}
                                                     placeholder="Rut"
                                                 />} />
                                         </Form.Group>
