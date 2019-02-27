@@ -65,7 +65,7 @@ export class ModalFamiliar extends Component {
 
     _handleModalSubmit = (evt) => {
         //console.log(this.state)
-        evt.preventDefault()
+
         const aux = JSON.stringify(this.state, null, '  ');
         //console.log(data)
         this.props.onSubmit(aux)

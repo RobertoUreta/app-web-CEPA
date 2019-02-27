@@ -45,6 +45,16 @@ export class Agenda extends Component {
         this.setState({ show: modalEvt });
     }
 
+    _handleModalSubmit = (evt) => {
+
+        console.log("_handleModalSubmit")
+        let auxiliar = JSON.parse(evt)
+
+        console.log(auxiliar.horaTermino)
+
+        
+    }
+
     render() {
         const { viewModel } = this.state;
         let messages = {
@@ -73,7 +83,7 @@ export class Agenda extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button  className="btn-custom-add" onClick={this._handleShow} ><i class="fa fa-plus"></i></Button>
+                                <Button  className="btn-custom-add" onClick={this._handleShow} ><i className="fa fa-plus"></i></Button>
                                 <ModalSesion
                                     show={this.state.show}
                                     onClose={this._handleClose}

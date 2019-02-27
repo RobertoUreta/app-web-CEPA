@@ -25,20 +25,25 @@ export class RegistrarSesion extends Component {
 
     _handleChange = (date) => {
         this.setState({
-            fechaSesion: date
+            fechaSesion: date,
+
         });
     }
+
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
         });
     }
 
-    handleSubmit = event => {
+    _handleSubmit = (event) => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        console.log(event)
+        
+        const aux = JSON.stringify(this.state, null, '  ');
+        console.log(aux)
+        //console.log(data)
+        this.props.onSubmit(aux)
 
     }
 
@@ -74,7 +79,7 @@ export class RegistrarSesion extends Component {
                                             showTimeSelect
                                             showTimeSelectOnly
                                             timeIntervals={30}
-                                            dateFormat="h:mm"
+                                            dateFormat="HH:mm"
                                             timeCaption="Time"
                                             placeholderText="Hora de Inicio"
                                         />} />
@@ -86,11 +91,11 @@ export class RegistrarSesion extends Component {
                                         componente={<DatePicker
                                             customInput={<Form.Control />}
                                             selected={this.state.horaTermino}
-                                            onChange={date => { this.setState({ horaTermino: date }) }}
+                                            onChange={date => { this.setState({ horaTermino: date.getHours() }) }}
                                             showTimeSelect
                                             showTimeSelectOnly
                                             timeIntervals={30}
-                                            dateFormat="h:mm"
+                                            dateFormat="HH:mm"
                                             timeCaption="Time"
                                             placeholderText="Hora de Termino"
                                         />} />
@@ -165,19 +170,15 @@ export class RegistrarSesion extends Component {
                             </Row>
 
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            className="btn-custom"
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        onClick= {this._handleSubmit}
+                                        className="btn-submit"
+                                        variant="primary"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
 
                         </Form.Group>
