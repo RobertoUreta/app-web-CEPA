@@ -37,7 +37,7 @@ export class Paciente extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button href="/index" > Agregar Paciente</Button>
+                                <Button className= "btn-custom" href="/index" > Agregar Paciente</Button>
                             </Col>
 
                             <Col>
