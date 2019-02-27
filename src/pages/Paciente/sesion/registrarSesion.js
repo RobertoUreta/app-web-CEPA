@@ -4,6 +4,8 @@ import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+import { setHours } from 'date-fns/esm';
+import { setMinutes } from 'date-fns';
 
 export class RegistrarSesion extends Component {
 
@@ -42,10 +44,13 @@ export class RegistrarSesion extends Component {
 
     }
 
+
+
+
     render() {
         return (
             <div className="registrarSesion">
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} autoComplete="off">
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Row>
@@ -73,8 +78,10 @@ export class RegistrarSesion extends Component {
                                             onChange={date => { this.setState({ horaInicio: date }) }}
                                             showTimeSelect
                                             showTimeSelectOnly
+                                            minTime={setHours(setMinutes(new Date(), 0), 9)}
+                                            maxTime={setHours(setMinutes(new Date(), 0), 19)}
                                             timeIntervals={30}
-                                            dateFormat="h:mm"
+                                            dateFormat="HH:mm"
                                             timeCaption="Time"
                                             placeholderText="Hora de Inicio"
                                         />} />
@@ -86,11 +93,13 @@ export class RegistrarSesion extends Component {
                                         componente={<DatePicker
                                             customInput={<Form.Control />}
                                             selected={this.state.horaTermino}
-                                            onChange={date => { this.setState({ horaTermino: date }) }}
+                                            onChange={date => { this.setState({ horaTermino:date}) }}
                                             showTimeSelect
                                             showTimeSelectOnly
                                             timeIntervals={30}
-                                            dateFormat="h:mm"
+                                            minTime={setHours(setMinutes(new Date(), 0), 9)}
+                                            maxTime={setHours(setMinutes(new Date(), 0), 19)}
+                                            dateFormat="HH:mm"
                                             timeCaption="Time"
                                             placeholderText="Hora de Termino"
                                         />} />
@@ -159,7 +168,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Estado Sesión</option>
-                                            <Option options={["Asiste","No asiste"]} />
+                                            <Option options={["Asiste", "No asiste"]} />
                                         </Form.Control>} />
                                 </Form.Group>
                             </Row>
