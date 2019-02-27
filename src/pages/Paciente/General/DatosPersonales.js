@@ -52,9 +52,9 @@ export class DatosPersonales extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        let info = JSON.stringify(this.state, null, '  ');
+
+        this.props.handlePaciente(info)
 
     }
     

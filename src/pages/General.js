@@ -7,7 +7,26 @@ import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
 export class General extends Component {
-  
+    constructor(props){
+
+        super(props)
+
+        this.state = {
+            nombrePaciente: "",
+        }
+    }
+    _getNombrePaciente = (infoPaciente) => {
+        console.log("_handleModalSubmit")
+        var info = JSON.parse(infoPaciente)
+        var name = info.nombre
+        var apellidoP = info.apellidoPaterno
+        var apellidoM = info.apellidoMaterno
+
+        var nombreCompleto = name + " " + apellidoP + " " + apellidoM
+
+        this.setState( { nombrePaciente: nombreCompleto})
+    }
+
     render() {
 
 
@@ -15,10 +34,12 @@ export class General extends Component {
 
         return (
             <div>
-                <h2>Paciente</h2>
+                <h2>{this.state.nombrePaciente}</h2>
                 <Accordion>
                     <div label="Datos Personales">
-                        <DatosPersonales />
+                        <DatosPersonales 
+                            paciente = { this.state.nombrePaciente }
+                            handlePaciente = {this._getNombrePaciente} />
                     </div>
                     <div label="Adulto Contacto">
                         <AdultoContacto />
