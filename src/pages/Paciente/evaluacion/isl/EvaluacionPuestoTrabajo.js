@@ -13,7 +13,7 @@ export class EvaluacionPuestoTrabajo extends Component {
             fechaRealizacion: null,
             razonSocial: "",
             rut: "",
-            codigoCiiu: "",
+            codigoCiiu: "", 
             nombreCentroTrabajo: "",
             direccion: "",
             descripcion: "",

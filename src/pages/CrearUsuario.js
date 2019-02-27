@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from '../components/Option'
-
+import {TextoAyuda} from '../components/TextoAyuda'
 const generos = ["Masculino", "Femenino", "Otro"]
 
 export default class CrearUsuario extends Component {
@@ -14,6 +14,7 @@ export default class CrearUsuario extends Component {
             apellidoPaterno: "",
             apellidoMaterno: "",
             rut: "",
+            digitoVerificador: "",
             genero: "",
             usuario: "",
             password: "",
@@ -79,13 +80,30 @@ export default class CrearUsuario extends Component {
                             </Row>
                             <Row>
                                 <Col>
-                                    <Form.Group controlId="rut">
-                                        <Form.Control
-                                            value={this.state.rut}
-                                            onChange={this.handleChange}
-                                            placeholder="Rut"
-                                        />
-                                    </Form.Group>
+                                    <Row>
+                                    <Form.Group as={Col} md="8" controlId="rut">
+                                            <TextoAyuda nombre="rut"
+                                                tooltip="Rut sin puntos ni digito verificador"
+                                                componente={<Form.Control
+                                                    value={this.state.rut}
+                                                    onChange={this.handleChange}
+                                                    placeholder="Rut"
+                                                />} />
+                                        </Form.Group>
+                                        <strong>_</strong>
+                                        <Form.Group as={Col} md="3" controlId="digitoVerificador">
+                                            <TextoAyuda
+                                                nombre="digitoVerificador"
+                                                tooltip="Digito Verificador"
+                                                componente={<Form.Control
+                                                    value={this.state.digitoVerificador}
+                                                    onChange={this.handleChange}
+                                                />}
+                                            />
+                                        </Form.Group>
+
+                                    </Row>
+
                                 </Col>
                                 <Col>
                                     <Form.Group controlId="genero">
