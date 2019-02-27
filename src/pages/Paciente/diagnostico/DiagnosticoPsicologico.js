@@ -133,7 +133,7 @@ export class DiagnosticoPsicologico extends Component {
                                     />
                                 </Col>
                                 <Col>
-                                <Form.Group controlId="fechaTraspasoModTratamiento">
+                                    <Form.Group controlId="fechaTraspasoModTratamiento">
                                         <div>
                                             <TextoAyuda
                                                 nombre="fechaTraspasoModTratamiento"
@@ -151,7 +151,7 @@ export class DiagnosticoPsicologico extends Component {
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                <Form.Group controlId="fechaCierrePsicologico">
+                                    <Form.Group controlId="fechaCierrePsicologico">
                                         <div>
                                             <TextoAyuda
                                                 nombre="fechaCierrePsicologico"
@@ -169,23 +169,17 @@ export class DiagnosticoPsicologico extends Component {
                                 </Col>
                             </Row>
 
-                            
+
 
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>

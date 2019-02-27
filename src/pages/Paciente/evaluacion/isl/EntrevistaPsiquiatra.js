@@ -157,7 +157,7 @@ export class EntrevistaPsiquiatra extends Component {
                             <Form.Group controlId="modalGrupoFamiliar">
                                 <TablaFamiliar
                                     elements={this.state.familia} />
-                                <Button onClick={this._handleShow}> Agregar integrante familia</Button>
+                                <Button className= "btn-custom" onClick={this._handleShow}> Agregar integrante familia</Button>
                                 <ModalFamiliar
                                     show={this.state.show}
                                     fnCerrar={this._handleClose}

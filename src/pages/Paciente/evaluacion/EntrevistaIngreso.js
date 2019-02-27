@@ -147,7 +147,7 @@ export class EntrevistaIngreso extends Component {
                             <Form.Group controlId="modalGrupoFamiliar">
                                 <TablaFamiliar
                                     elements={this.state.familia} />
-                                <Button onClick={this._handleShow}> Agregar integrante familia</Button>
+                                <Button className= "btn-custom" onClick={this._handleShow}> Agregar integrante familia</Button>
                                 <ModalFamiliar
                                     show={this.state.show}
                                     fnCerrar={this._handleClose}
@@ -164,7 +164,7 @@ export class EntrevistaIngreso extends Component {
                                     onChange={this._handleImageGenograma}
                                     onError={errMsg => { alert(errMsg) }}
                                 >
-                                    <Button>
+                                    <Button className= "btn-custom">
                                         Subir Genograma
                                     </Button>
                                 </ImagePicker>
@@ -180,7 +180,7 @@ export class EntrevistaIngreso extends Component {
                                     onChange={this._handleImageEcomapa}
                                     onError={errMsg => { alert(errMsg) }}
                                 >
-                                    <Button>
+                                    <Button className= "btn-custom">
                                         Subir Ecomapa
                                     </Button>
                                 </ImagePicker>

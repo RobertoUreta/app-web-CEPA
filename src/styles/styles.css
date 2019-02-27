@@ -35,7 +35,15 @@
     height: 100%;
     position: relative;
   }
+  #body-agenda{
+    margin-top: 50px;
+    padding: 15px;
+    
+    height: 100%;
+    position: relative;
+  }
 
+  
   #layout-container{
     display: flex;
     height: 100vh;
@@ -91,6 +99,7 @@
     background-color:#f8f9fa
   }
 
+  
   .btn-accordion {
     background:none!important;
     color:inherit;
@@ -106,17 +115,32 @@
     background-color: #438C83; 
   }
 
-  .btn-primary {
+  .btn-custom {
     background-color: #438C83; 
 
   }
   
-  .btn-primary:active {
+  .btn-custom:active {
     background-color: #98cdc7;
 
   }
 
-  .btn-primary:hover{
+  .btn-custom:hover{
+    background-color: #98cdc7;
+  }
+
+  .btn-custom-add {
+    border-radius: 50%;
+    background-color: #438C83; 
+
+  }
+  
+  .btn-custom-add:active {
+    background-color: #98cdc7;
+
+  }
+
+  .btn-custom-add:hover{
     background-color: #98cdc7;
   }
 

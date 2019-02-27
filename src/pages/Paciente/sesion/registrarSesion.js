@@ -159,7 +159,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Estado Sesión</option>
-                                            <Option options={["Asiste","No asiste"]} />
+                                            <Option options={["Asiste", "No asiste"]} />
                                         </Form.Control>} />
                                 </Form.Group>
                             </Row>
@@ -171,6 +171,7 @@ export class RegistrarSesion extends Component {
                                     <Col />
                                     <Col>
                                         <Button
+                                            className="btn-custom"
                                             type="submit"
                                         >
                                             Guardar

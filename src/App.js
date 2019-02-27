@@ -4,7 +4,7 @@ import { Layout } from './components/Layout'
 import { Switch , Route} from 'react-router-dom'
 import CrearUsuario from './pages/CrearUsuario'
 import { Paciente } from './pages/Paciente'
-
+import { Agenda }  from './pages/Agenda'
 class App extends Component {
   render() {
     return (
@@ -13,6 +13,8 @@ class App extends Component {
           <Route exact path='/' component = {Login}  />
           <Route path='/index' component = {Layout} />
           <Route path='/listaPacientes' component = { Paciente } />
+          <Route path='/agenda' component = { Agenda } />
+
           <Route path='/CrearUsuario' component = {CrearUsuario} />
         </Switch>
         

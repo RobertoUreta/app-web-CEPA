@@ -234,6 +234,7 @@ export default class CrearUsuario extends Component {
                                     <Col />
                                     <Col>
                                         <Button
+                                            className= "btn-custom"
                                             type="submit"
                                         >
                                             Guardar
