@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Login } from './pages/Login';
 import { Layout } from './components/Layout'
 import { Switch , Route} from 'react-router-dom'
-import CrearUsuario from './pages/CrearUsuario'
+import { Usuario } from './pages/Usuario'
 import { Paciente } from './pages/Paciente'
 import { Agenda }  from './pages/Agenda'
 class App extends Component {
@@ -15,7 +15,7 @@ class App extends Component {
           <Route path='/listaPacientes' component = { Paciente } />
           <Route path='/agenda' component = { Agenda } />
 
-          <Route path='/CrearUsuario' component = {CrearUsuario} />
+          <Route path='/listaUsuarios' component = {Usuario} />
         </Switch>
         
       </div>

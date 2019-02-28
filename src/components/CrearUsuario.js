@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { Option } from '../components/Option'
-import {TextoAyuda} from '../components/TextoAyuda'
+import { Option } from './Option'
+import { TextoAyuda } from './TextoAyuda'
 const generos = ["Masculino", "Femenino", "Otro"]
 
-export default class CrearUsuario extends Component {
+export class CrearUsuario extends Component {
 
     constructor(props) {
         super(props);
@@ -37,22 +37,27 @@ export default class CrearUsuario extends Component {
         });
     }
 
-    handleSubmit = event => {
+    _handleSubmit = (event) => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        console.log(event)
+        
+        const aux = JSON.stringify(this.state, null, '  ');
+        console.log(aux)
+        //console.log(data)
+        this.props.onSubmit(aux)
 
     }
 
     cambiarDigitoVerificador = event => {
-        var M=0,S=1;
-        var T= event.target.value
-	    for(;T;T=Math.floor(T/10))
-            S=(S+T%10*(9-M++%6))%11;
+        var M = 0, S = 1;
+        var T = event.target.value
+        for (; T; T = Math.floor(T / 10))
+            S = (S + T % 10 * (9 - M++ % 6)) % 11;
         this.setState(
-            {digitoVerificador: S?S-1:'k',
-            rut:event.target.value}
+            {
+                digitoVerificador: S ? S - 1 : 'k',
+                rut: event.target.value
+            }
         )
     }
 
@@ -92,7 +97,7 @@ export default class CrearUsuario extends Component {
                             <Row>
                                 <Col>
                                     <Row>
-                                    <Form.Group as={Col} md="8" controlId="rut">
+                                        <Form.Group as={Col} md="8" controlId="rut">
                                             <TextoAyuda nombre="rut"
                                                 tooltip="Rut sin puntos ni digito verificador"
                                                 componente={<Form.Control
@@ -103,13 +108,11 @@ export default class CrearUsuario extends Component {
                                         </Form.Group>
                                         <strong>_</strong>
                                         <Form.Group as={Col} md="3" controlId="digitoVerificador">
-                                            <TextoAyuda
-                                                nombre="digitoVerificador"
-                                                tooltip="Digito Verificador"
-                                                componente={<Form.Control
-                                                    value={this.state.digitoVerificador}
-                                                    onChange={this.handleChange}
-                                                />}
+                                            <Form.Control
+                                                plaintext readOnly
+                                                value={this.state.digitoVerificador}
+                                                onChange={this.handleChange}
+
                                             />
                                         </Form.Group>
 
@@ -239,19 +242,15 @@ export default class CrearUsuario extends Component {
                                 </Col>
                             </Row>
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            className= "btn-custom"
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        onClick={this._handleSubmit}
+                                        className="btn-submit"
+                                        type="submit"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
 
                         </Form.Group>
