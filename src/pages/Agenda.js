@@ -37,6 +37,13 @@ export class Agenda extends Component {
         }
     }
 
+    getHora(hora) {
+        let fecha = new Date(hora)
+        var localeSpecificTime = fecha.toLocaleTimeString();
+        return localeSpecificTime.replace(/:\d+ /, ' ');
+
+    }
+
     _handleShow() {
         this.setState({ show: true })
     }
@@ -48,11 +55,31 @@ export class Agenda extends Component {
     _handleModalSubmit = (evt) => {
 
         console.log("_handleModalSubmit")
-        let auxiliar = JSON.parse(evt)
-
-        console.log(auxiliar.horaTermino)
-
+        let aux = JSON.parse(evt)
+        let fecha = new Date(aux.fechaSesion)
+        console.log(fecha)
+        let inicio = this.getHora(aux.horaInicio).split(":")
+        let termino = this.getHora(aux.horaTermino).split(":")
         
+
+        console.log(fecha.getFullYear())
+        console.log(fecha.getMonth())
+        console.log(fecha.getDate())
+
+
+        let eventoNuevo = {
+            id: events.lenghth,
+            title: aux.descripcion,
+            start: new Date(fecha.getFullYear(), fecha.getMonth()
+                , fecha.getDate(), inicio[0], inicio[1]),
+            end: new Date(fecha.getFullYear(), fecha.getMonth()
+                , fecha.getDate(), termino[0], termino[1])
+        }
+
+        events.push(eventoNuevo)
+
+
+
     }
 
     render() {
@@ -83,7 +110,7 @@ export class Agenda extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button  className="btn-custom-add" onClick={this._handleShow} ><i className="fa fa-plus"></i></Button>
+                                <Button className="btn-custom-add" onClick={this._handleShow} ><i className="fa fa-plus"></i></Button>
                                 <ModalSesion
                                     show={this.state.show}
                                     onClose={this._handleClose}

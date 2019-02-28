@@ -11,9 +11,9 @@ export class RegistrarSesion extends Component {
         super(props);
 
         this.state = {
-            fechaSesion: "",
-            horaInicio: "",
-            horaTermino: "",
+            fechaSesion: null,
+            horaInicio: null,
+            horaTermino: null,
             descripcion: "",
             valorSesion: "",//setear segun el valor de sesion agregado en la general
             sala: "",
@@ -91,7 +91,7 @@ export class RegistrarSesion extends Component {
                                         componente={<DatePicker
                                             customInput={<Form.Control />}
                                             selected={this.state.horaTermino}
-                                            onChange={date => { this.setState({ horaTermino: date.getHours() }) }}
+                                            onChange={date => { this.setState({ horaTermino: date }) }}
                                             showTimeSelect
                                             showTimeSelectOnly
                                             timeIntervals={30}
