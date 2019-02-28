@@ -43,6 +43,18 @@ export class Agenda extends Component {
 
     }
 
+    eventStyleGetter = (event) =>{
+        console.log(event);
+        var backgroundColor = '#' + event.hexColor;
+        var style = {
+            backgroundColor: backgroundColor,
+           
+        };
+        return {
+            style: style
+        };
+    }
+
     _handleShow() {
         this.setState({ show: true })
     }
@@ -61,24 +73,19 @@ export class Agenda extends Component {
         let termino = this.getHora(aux.horaTermino).split(":")
         
 
-        console.log(fecha.getFullYear())
-        console.log(fecha.getMonth())
-        console.log(fecha.getDate())
+      
 
 
         let eventoNuevo = {
-            id: events.lenghth,
+            id: events.length,
             title: aux.descripcion,
             start: new Date(fecha.getFullYear(), fecha.getMonth()
                 , fecha.getDate(), inicio[0], inicio[1]),
             end: new Date(fecha.getFullYear(), fecha.getMonth()
-                , fecha.getDate(), termino[0], termino[1])
+                , fecha.getDate(), termino[0], termino[1]),
         }
-
         events.push(eventoNuevo)
-
-
-
+        console.log(events)
     }
 
     render() {
@@ -86,12 +93,16 @@ export class Agenda extends Component {
             next: "Siguiente",
             previous: "Atrás",
             today: "Hoy",
+            work_week: "Semanal",
             month: "Mensual",
             week: "Semanal",
             day: "Día",
             date: "Fecha"
         }
 
+        const views=['month', 'work_week', 'day']
+
+        moment.locale("es",{ week: { dow: 1 }})
         let localizer = BigCalendar.momentLocalizer(moment)
         return (
             <div>
@@ -118,14 +129,18 @@ export class Agenda extends Component {
                         </Row>
                     </div>
                     <div style={{ height: '70vh' }}>
-                        <BigCalendar
+                        <BigCalendar  
+                            min={new Date(2017, 10, 0, 9, 0, 0)} 
+                            max={new Date(2017, 10, 0, 18, 0, 0)} 
+                            views={views}
                             events={events}
-
                             step={60}
                             showMultiDayTimes
                             defaultDate={new Date()}
                             localizer={localizer}
                             messages={messages}
+                            onSelectEvent={event => alert(event.title)}
+                            eventPropGetter={(this.eventStyleGetter)}
 
                         />
                     </div>
