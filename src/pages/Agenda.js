@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 
 import { Layout } from '../components/Layout'
 
-import { Button, Row, Col } from 'react-bootstrap'
+import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { ModalSesion } from '../components/ModalSesion'
+import { ModalSesionInfo } from '../components/ModalSesionInfo'
 import events from '../components/events'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import BigCalendar from 'react-big-calendar';
@@ -12,13 +13,14 @@ import "../styles/styles.css"
 import moment from 'moment'
 
 
+
 export class Agenda extends Component {
 
     constructor(props) {
 
         super(props)
         this._handleShow = this._handleShow.bind(this);
-
+        this._handleShowInfo = this._handleShowInfo.bind(this);
 
         moment.lang('es', {
             months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
@@ -32,7 +34,10 @@ export class Agenda extends Component {
 
         this.state = {
 
-            show: false
+            show: false,
+            showInfo: false,
+            eventos: events,
+            clickedId: 0,
         }
     }
 
@@ -43,16 +48,24 @@ export class Agenda extends Component {
 
     }
 
-    eventStyleGetter = (event) =>{
-        console.log(event);
+    eventStyleGetter = (event) => {
         var backgroundColor = '#' + event.hexColor;
         var style = {
             backgroundColor: backgroundColor,
-           
+
         };
         return {
             style: style
         };
+    }
+
+
+    _handleShowInfo(evt) {
+        console.log("hhasdfas" , evt.id)
+        
+        this.setState({ showInfo: true , clickedId: evt.id});
+        console.log(this.state.clickedId)
+        
     }
 
     _handleShow() {
@@ -71,10 +84,6 @@ export class Agenda extends Component {
         console.log(fecha)
         let inicio = this.getHora(aux.horaInicio).split(":")
         let termino = this.getHora(aux.horaTermino).split(":")
-        
-
-      
-
 
         let eventoNuevo = {
             id: events.length,
@@ -84,9 +93,11 @@ export class Agenda extends Component {
             end: new Date(fecha.getFullYear(), fecha.getMonth()
                 , fecha.getDate(), termino[0], termino[1]),
         }
-        events.push(eventoNuevo)
-        console.log(events)
+        this.state.eventos.push(eventoNuevo)
+        console.log(this.state.eventos)
     }
+
+
 
     render() {
         let messages = {
@@ -100,9 +111,11 @@ export class Agenda extends Component {
             date: "Fecha"
         }
 
-        const views=['month', 'work_week', 'day']
+        let modalClose = () => this.setState({ showInfo: false });
 
-        moment.locale("es",{ week: { dow: 1 }})
+        const views = ['month', 'work_week', 'day']
+
+        moment.locale("es", { week: { dow: 1 } })
         let localizer = BigCalendar.momentLocalizer(moment)
         return (
             <div>
@@ -129,22 +142,29 @@ export class Agenda extends Component {
                         </Row>
                     </div>
                     <div style={{ height: '70vh' }}>
-                        <BigCalendar  
-                            min={new Date(2017, 10, 0, 9, 0, 0)} 
-                            max={new Date(2017, 10, 0, 18, 0, 0)} 
+                        <BigCalendar
+                            min={new Date(2017, 10, 0, 9, 0, 0)}
+                            max={new Date(2017, 10, 0, 18, 0, 0)}
                             views={views}
-                            events={events}
+                            events={this.state.eventos}
                             step={60}
                             showMultiDayTimes
                             defaultDate={new Date()}
                             localizer={localizer}
                             messages={messages}
-                            onSelectEvent={event => alert(event.title)}
+                            onSelectEvent={this._handleShowInfo}
                             eventPropGetter={(this.eventStyleGetter)}
-
                         />
                     </div>
                 </div>
+                <ModalSesionInfo
+                    show={this.state.showInfo}
+                    onHide={modalClose}
+                    eventos = { this.state.eventos}
+                    clickeInfo = { this.state.clickedId}
+                     />
+
+
             </div>
         )
     }
