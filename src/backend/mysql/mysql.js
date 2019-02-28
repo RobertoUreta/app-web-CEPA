@@ -1,5 +1,5 @@
 const mysql = require("mysql");
-export class MySQL {
+class MySQL {
     
     constructor() {
         this.conectado = false;
@@ -31,6 +31,9 @@ export class MySQL {
             }
         });
     }
+    static cerrarConexion(){
+        this.instance.conexion.end();
+    }
     conectarDB() {
         this.conexion.connect((err) => {
             if (err) {
@@ -42,3 +45,4 @@ export class MySQL {
         });
     }
 }
+exports.default = MySQL;

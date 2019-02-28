@@ -29,7 +29,6 @@ export class Agenda extends Component {
         }
         );
 
-        let aux = new moment()
 
         this.state = {
 
@@ -46,7 +45,6 @@ export class Agenda extends Component {
     }
 
     render() {
-        const { viewModel } = this.state;
         let messages = {
             next: "Siguiente",
             previous: "Atrás",

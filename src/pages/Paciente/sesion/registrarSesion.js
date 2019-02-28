@@ -18,6 +18,7 @@ export class RegistrarSesion extends Component {
             horaTermino: "",
             descripcion: "",
             valorSesion: "",//setear segun el valor de sesion agregado en la general
+            paciente: "",
             sala: "",
             tipoSesion: "",
             estadoSesion: "",
@@ -93,7 +94,7 @@ export class RegistrarSesion extends Component {
                                         componente={<DatePicker
                                             customInput={<Form.Control />}
                                             selected={this.state.horaTermino}
-                                            onChange={date => { this.setState({ horaTermino:date}) }}
+                                            onChange={date => { this.setState({ horaTermino: date }) }}
                                             showTimeSelect
                                             showTimeSelectOnly
                                             timeIntervals={30}
@@ -105,6 +106,20 @@ export class RegistrarSesion extends Component {
                                         />} />
                                 </Form.Group>
                             </Row>
+                            <Form.Group controlId="paciente">
+                                <TextoAyuda
+                                    nombre="paciente"
+                                    tooltip="Seleccionar paciente"
+                                    componente={<Form.Control
+                                        as="select"
+                                        value={this.state.paciente}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option hidden>Seleccionar Paciente</option>
+                                        <Option options={[]} />
+                                    </Form.Control>} 
+                                />
+                            </Form.Group>
                             <Form.Group controlId="descripcion">
                                 <TextoAyuda
                                     nombre="descripcion"

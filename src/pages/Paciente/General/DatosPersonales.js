@@ -9,8 +9,8 @@ import { TextoAyuda } from '../../../components/TextoAyuda'
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
 const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
-                        "Isapre Banmédica", "Isapre Consalud", "Isapre Colmena",
-                        "Isapre CruzBlanca", "Isapre Nueva Masvida", "Isapre Vida Tres"]
+    "Isapre Banmédica", "Isapre Consalud", "Isapre Colmena",
+    "Isapre CruzBlanca", "Isapre Nueva Masvida", "Isapre Vida Tres"]
 const tiposEstablecimientos = ["Municipal", "Particular-Subvencionado", "Particular"]
 
 export class DatosPersonales extends Component {
@@ -51,13 +51,15 @@ export class DatosPersonales extends Component {
     }
 
     cambiarDigitoVerificador = event => {
-        var M=0,S=1;
-        var T= event.target.value
-	    for(;T;T=Math.floor(T/10))
-            S=(S+T%10*(9-M++%6))%11;
+        var M = 0, S = 1;
+        var T = event.target.value
+        for (; T; T = Math.floor(T / 10))
+            S = (S + T % 10 * (9 - M++ % 6)) % 11;
         this.setState(
-            {digitoVerificador: S?S-1:'k',
-            rut:event.target.value}
+            {
+                digitoVerificador: S ? S - 1 : 'k',
+                rut: event.target.value
+            }
         )
     }
 
@@ -66,7 +68,7 @@ export class DatosPersonales extends Component {
         let info = JSON.stringify(this.state, null, '  ');
 
         this.props.handlePaciente(info)
-        
+
         console.log(this.state)
 
     }
@@ -74,7 +76,7 @@ export class DatosPersonales extends Component {
     render() {
         return (
             <div className="DatosPersonales">
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} autoComplete="off">
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nombre">
@@ -85,6 +87,7 @@ export class DatosPersonales extends Component {
                                             value={this.state.nombre}
                                             onChange={this.handleChange}
                                             placeholder="Nombre"
+                                            required
                                         />
                                     }
                                 />
@@ -94,6 +97,7 @@ export class DatosPersonales extends Component {
                                     value={this.state.apellidoPaterno}
                                     onChange={this.handleChange}
                                     placeholder="Apellido Paterno"
+                                    required
                                 />} />
 
                             </Form.Group>
@@ -102,28 +106,29 @@ export class DatosPersonales extends Component {
                                     value={this.state.apellidoMaterno}
                                     onChange={this.handleChange}
                                     placeholder="Apellido Materno"
+                                    required
                                 />} />
                             </Form.Group>
                             <Row>
 
-                                <Col>
-                                    <Form.Group controlId="fechaNacimiento">
-                                        <div>
-                                            <TextoAyuda nombre="fechaNacimiento" tooltip="Fecha de Nacimiento" componente={<DatePicker
-                                                customInput={<Form.Control />}
-                                                dateFormat="dd/MM/yyyy"
-                                                selected={this.state.fechaNacimiento}
-                                                onChange={this._handleChange}
-                                                showMonthDropdown
-                                                showYearDropdown
-                                                maxDate={addYears(new Date(), 0)}
-                                                dropdownMode="select"
-                                                placeholderText="Fecha de Nacimiento"
-                                            />} />
+                                <Form.Group as={Col} controlId="fechaNacimiento">
+                                    <div>
+                                        <TextoAyuda nombre="fechaNacimiento" tooltip="Fecha de Nacimiento" componente={<DatePicker
+                                            customInput={<Form.Control />}
+                                            dateFormat="dd/MM/yyyy"
+                                            selected={this.state.fechaNacimiento}
+                                            onChange={this._handleChange}
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            maxDate={addYears(new Date(), 0)}
+                                            dropdownMode="select"
+                                            placeholderText="Fecha de Nacimiento"
+                                            required
+                                        />} />
 
-                                        </div>
-                                    </Form.Group>
-                                </Col>
+                                    </div>
+                                </Form.Group>
+
                                 <Col>
                                     <Row>
                                         <Form.Group as={Col} md="8" controlId="rut">
@@ -133,6 +138,7 @@ export class DatosPersonales extends Component {
                                                     value={this.state.rut}
                                                     onChange={this.cambiarDigitoVerificador}
                                                     placeholder="Rut"
+                                                    required
                                                 />} />
                                         </Form.Group>
                                         <strong>_</strong>
@@ -151,26 +157,21 @@ export class DatosPersonales extends Component {
 
                             </Row>
                             <Row>
-                                <Col>
-                                    <Form.Group controlId="telefonoMovil">
-                                        <TextoAyuda nombre="telefonoMovil" tooltip="Teléfono Móvil" componente={<Form.Control
-                                            value={this.state.telefonoMovil}
-                                            onChange={this.handleChange}
-                                            placeholder="Teléfono Móvil"
-                                        />} />
-
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group controlId="telefonoTrabajo">
-                                        <TextoAyuda nombre="telefonoTrabajo" tooltip="Teléfono Fijo" componente={<Form.Control
-                                            value={this.state.telefonoTrabajo}
-                                            onChange={this.handleChange}
-                                            placeholder="Teléfono Fijo"
-                                        />} />
-
-                                    </Form.Group>
-                                </Col>
+                                <Form.Group as={Col} controlId="telefonoMovil">
+                                    <TextoAyuda nombre="telefonoMovil" tooltip="Teléfono Móvil" componente={<Form.Control
+                                        value={this.state.telefonoMovil}
+                                        onChange={this.handleChange}
+                                        placeholder="Teléfono Móvil"
+                                        required
+                                    />} />
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="telefonoTrabajo">
+                                    <TextoAyuda nombre="telefonoTrabajo" tooltip="Teléfono Fijo" componente={<Form.Control
+                                        value={this.state.telefonoTrabajo}
+                                        onChange={this.handleChange}
+                                        placeholder="Teléfono Fijo"
+                                    />} />
+                                </Form.Group>
                             </Row>
                             <Form.Group controlId="correo">
                                 <TextoAyuda nombre="correo" tooltip="Correo" componente={<Form.Control
@@ -181,9 +182,7 @@ export class DatosPersonales extends Component {
                                 />} />
 
                             </Form.Group>
-
                         </Form.Group>
-
                         <Form.Group as={Col}>
                             <Form.Group controlId="nivelInstruccion">
                                 <TextoAyuda nombre="nivelInstruccion" tooltip="Nivel de Instrucción" componente={<Form.Control
@@ -191,7 +190,6 @@ export class DatosPersonales extends Component {
                                     onChange={this.handleChange}
                                     placeholder="Nivel de Instrucción"
                                 />} />
-
                             </Form.Group>
                             <Form.Group controlId="establecimientoEducacional">
                                 <TextoAyuda nombre="establecimientoEducacional" tooltip="Establecimiento educacional" componente={<Form.Control
@@ -199,36 +197,28 @@ export class DatosPersonales extends Component {
                                     onChange={this.handleChange}
                                     placeholder="Establecimiento educacional"
                                 />} />
-
                             </Form.Group>
                             <Row>
-                                <Col>
-                                    <Form.Group controlId="tipoEstablecimiento">
-                                        <TextoAyuda nombre="tipoEstablecimiento" tooltip="Tipo de establecimiento" componente={<Form.Control
-                                            as="select"
-                                            value={this.state.tipoEstablecimiento}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Tipo de Establecimiento</option>
-                                            <Option options={tiposEstablecimientos} />
-                                        </Form.Control>} />
-
-                                    </Form.Group>
-
-                                </Col>
-                                <Col>
-                                    <Form.Group controlId="prevision">
-                                        <TextoAyuda nombre="prevision" tooltip="Previsión" componente={<Form.Control
-                                            as="select"
-                                            value={this.state.prevision}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Previsión</option>
-                                            <Option options={previsiones} />
-                                        </Form.Control>} />
-
-                                    </Form.Group>
-                                </Col>
+                                <Form.Group as={Col} controlId="tipoEstablecimiento">
+                                    <TextoAyuda nombre="tipoEstablecimiento" tooltip="Tipo de establecimiento" componente={<Form.Control
+                                        as="select"
+                                        value={this.state.tipoEstablecimiento}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option hidden>Tipo de Establecimiento</option>
+                                        <Option options={tiposEstablecimientos} />
+                                    </Form.Control>} />
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="prevision">
+                                    <TextoAyuda nombre="prevision" tooltip="Previsión" componente={<Form.Control
+                                        as="select"
+                                        value={this.state.prevision}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option hidden>Previsión</option>
+                                        <Option options={previsiones} />
+                                    </Form.Control>} />
+                                </Form.Group>
                             </Row>
 
 
@@ -241,32 +231,27 @@ export class DatosPersonales extends Component {
 
                             </Form.Group>
                             <Row>
-                                <Col>
-                                    <Form.Group controlId="relacionContractual">
-                                        <TextoAyuda nombre="relacionContractual" tooltip="Relación Contractual" componente={<Form.Control
-                                            as="select"
-                                            value={this.state.relacionContractual}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Relación Contractual</option>
-                                            <Option options={relacionesContractuales} />
-                                        </Form.Control>} />
+                                <Form.Group as={Col} controlId="relacionContractual">
+                                    <TextoAyuda nombre="relacionContractual" tooltip="Relación Contractual" componente={<Form.Control
+                                        as="select"
+                                        value={this.state.relacionContractual}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option hidden>Relación Contractual</option>
+                                        <Option options={relacionesContractuales} />
+                                    </Form.Control>} />
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="valorSesion">
+                                    <TextoAyuda nombre="valorSesion" tooltip="Valor de Sesión" componente={<Form.Control
+                                        as="select"
+                                        value={this.state.valorSesion}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option hidden>Valor de Sesión</option>
+                                        <Option options={valoresSesion} />
+                                    </Form.Control>} />
 
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group controlId="valorSesion">
-                                        <TextoAyuda nombre="valorSesion" tooltip="Valor de Sesión" componente={<Form.Control
-                                            as="select"
-                                            value={this.state.valorSesion}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Valor de Sesión</option>
-                                            <Option options={valoresSesion} />
-                                        </Form.Control>} />
-
-                                    </Form.Group>
-                                </Col>
+                                </Form.Group>
                             </Row>
 
                             <Form.Group controlId="tipoPaciente">

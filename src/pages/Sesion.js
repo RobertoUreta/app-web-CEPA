@@ -3,7 +3,6 @@ import { SesionPsicologica } from './Paciente/sesion/sesionPsicologica'
 import { SesionPsiquiatrica } from './Paciente/sesion/sesionPsiquiatrica'
 import Accordion from '../components/Accordion';
 
-
 export class Sesion extends Component { 
 
     render() {
