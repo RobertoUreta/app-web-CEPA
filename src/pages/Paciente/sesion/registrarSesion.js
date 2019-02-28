@@ -84,7 +84,7 @@ export class RegistrarSesion extends Component {
                                             showTimeSelect
                                             showTimeSelectOnly
                                             minTime={setHours(setMinutes(new Date(), 0), 9)}
-                                            maxTime={setHours(setMinutes(new Date(), 0), 19)}
+                                            maxTime={setHours(setMinutes(new Date(), 0), 18)}
                                             timeIntervals={30}
                                             dateFormat="HH:mm"
                                             timeCaption="Time"
@@ -103,7 +103,7 @@ export class RegistrarSesion extends Component {
                                             showTimeSelectOnly
                                             timeIntervals={30}
                                             minTime={setHours(setMinutes(new Date(), 0), 9)}
-                                            maxTime={setHours(setMinutes(new Date(), 0), 19)}
+                                            maxTime={setHours(setMinutes(new Date(), 0), 18)}
                                             dateFormat="HH:mm"
                                             timeCaption="Time"
                                             placeholderText="Hora de Termino"

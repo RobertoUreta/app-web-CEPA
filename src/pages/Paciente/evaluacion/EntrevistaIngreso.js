@@ -165,7 +165,7 @@ export class EntrevistaIngreso extends Component {
                                     onError={errMsg => { alert(errMsg) }}
                                 >
                                     <Button className= "btn-custom">
-                                        Subir Genograma
+                                    <i className="fa fa-image"></i>
                                     </Button>
                                 </ImagePicker>
                             </Form.Group>
@@ -181,7 +181,7 @@ export class EntrevistaIngreso extends Component {
                                     onError={errMsg => { alert(errMsg) }}
                                 >
                                     <Button className= "btn-custom">
-                                        Subir Ecomapa
+                                    <i className="fa fa-image"></i>
                                     </Button>
                                 </ImagePicker>
                             </Form.Group>
