@@ -18,6 +18,18 @@ export class ModalSesion extends Component {
         
     }
 
+    _handleFormSubmit = (evt) => {
+       
+        
+        
+        //console.log(data)
+        this.props.onSubmit(evt)
+
+        this._handleClose()
+    }
+
+   
+
     render() {
 
 
@@ -27,7 +39,8 @@ export class ModalSesion extends Component {
                     <Modal.Title>Agendar Sesion</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <RegistrarSesion />
+                    <RegistrarSesion 
+                    onSubmit = {this._handleFormSubmit}/>
                 </Modal.Body>
             </Modal>
         )

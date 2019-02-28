@@ -13,9 +13,9 @@ export class RegistrarSesion extends Component {
         super(props);
 
         this.state = {
-            fechaSesion: "",
-            horaInicio: "",
-            horaTermino: "",
+            fechaSesion: null,
+            horaInicio: null,
+            horaTermino: null,
             descripcion: "",
             valorSesion: "",//setear segun el valor de sesion agregado en la general
             sala: "",
@@ -27,20 +27,25 @@ export class RegistrarSesion extends Component {
 
     _handleChange = (date) => {
         this.setState({
-            fechaSesion: date
+            fechaSesion: date,
+
         });
     }
+
     handleChange = event => {
         this.setState({
             [event.target.id]: event.target.value
         });
     }
 
-    handleSubmit = event => {
+    _handleSubmit = (event) => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        console.log(event)
+        
+        const aux = JSON.stringify(this.state, null, '  ');
+        console.log(aux)
+        //console.log(data)
+        this.props.onSubmit(aux)
 
     }
 
@@ -174,19 +179,15 @@ export class RegistrarSesion extends Component {
                             </Row>
 
                             <Form.Group>
-                                <Row>
-                                    <Col />
-                                    <Col />
-                                    <Col />
-                                    <Col>
-                                        <Button
-                                            className="btn-custom"
-                                            type="submit"
-                                        >
-                                            Guardar
+                                <div className="btn-container">
+                                    <Button
+                                        onClick= {this._handleSubmit}
+                                        className="btn-submit"
+                                        variant="primary"
+                                    >
+                                        Guardar
                                         </Button>
-                                    </Col>
-                                </Row>
+                                </div>
                             </Form.Group>
 
                         </Form.Group>
