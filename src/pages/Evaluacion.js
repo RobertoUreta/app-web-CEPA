@@ -10,7 +10,6 @@ import {EntrevistaMedica} from './Paciente/evaluacion/isl/EntrevistaMedica'
 import {EntrevistaPsicologo} from './Paciente/evaluacion/isl/EntrevistaPsicologo'
 import {EntrevistaPsiquiatra} from './Paciente/evaluacion/isl/EntrevistaPsiquiatra'
 import {EvaluacionPuestoTrabajo} from './Paciente/evaluacion/isl/EvaluacionPuestoTrabajo'
-import {RegistrarSesion} from './Paciente/sesion/registrarSesion'
 
 export class Evaluacion extends Component {
 
@@ -27,7 +26,7 @@ export class Evaluacion extends Component {
                         <EntrevistaIngreso />
                     </div>
                     <div label="Evaluación Social">
-                        <RegistrarSesion />
+
                     </div>
                     <div label="Evaluación Psicológica">
                     </div>
