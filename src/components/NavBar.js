@@ -30,7 +30,7 @@ export class NavBar extends Component {
                     <Navbar.Collapse className="justify-content-end" id="collasible-nav-dropdown">
                         <Nav className="mr-auto" variant="pills">
                             <Nav.Item>
-                                <Nav.Link eventKey="usuarios">Usuarios</Nav.Link>
+                                <Nav.Link eventKey="usuarios" href="/listaUsuarios">Usuarios</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                     <Nav.Link eventKey="pacientes" href="/listaPacientes">Pacientes </Nav.Link>
