@@ -1,5 +1,5 @@
-let mysql = require('../mysql/mysql')
-let database = mysql.default
+const mysql = require('../mysql/mysql')
+const database = mysql.default
 
 
 let obtenerUsuarios = () => {
@@ -11,12 +11,11 @@ let obtenerUsuarios = () => {
         }
         else {
             console.log("funciona");
-            console.log(data);
+            return data;
         }
     });
 }
 
-export {obtenerUsuarios}
 
 
 let insertarUsuario = (obj) => {
@@ -50,6 +49,8 @@ let objeto =  {
     estado: true,
     ref_rol: 1,
     refSupervisor: 1 }
-insertarUsuario(objeto);
-obtenerUsuarios();
+//insertarUsuario(objeto);
+//obtenerUsuarios();
+export default obtenerUsuarios
 database.cerrarConexion();
+

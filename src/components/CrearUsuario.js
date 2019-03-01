@@ -3,7 +3,6 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
 const generos = ["Masculino", "Femenino", "Otro"]
-let obtenerUsuarios = require('../backend/usuario/usuario')
 export class CrearUsuario extends Component {
 
     constructor(props) {
@@ -27,14 +26,9 @@ export class CrearUsuario extends Component {
             rol: "",
             supervisor: ""
         };
-        this.obtenerSupervisores();
     }
 
 
-    obtenerSupervisores = () => {
-        let data = obtenerUsuarios();
-        console.log(data);
-    }
 
     handleChange = event => {
         this.setState({

@@ -45,4 +45,4 @@ class MySQL {
         });
     }
 }
-exports.default = MySQL;
+export default MySQL;
