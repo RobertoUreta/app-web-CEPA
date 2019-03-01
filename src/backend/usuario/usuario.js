@@ -3,12 +3,9 @@ let database = mysql.default
 
 
 let obtenerUsuarios = () => {
-    let query = "SELECT * FROM usuario"
+    let query = "SELECT id_usuario,nombre FROM usuario"
     
     database.ejecutarQuery(query,(err, data) => {
-        if (data == null) {
-            console.log("data null");
-        }
         if (err) {
             console.log("error :(");
         }
@@ -18,6 +15,9 @@ let obtenerUsuarios = () => {
         }
     });
 }
+
+export {obtenerUsuarios}
+
 
 let insertarUsuario = (obj) => {
     let est = obj.estado;

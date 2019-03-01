@@ -143,14 +143,13 @@ export class DatosPersonales extends Component {
                                         </Form.Group>
                                         <strong>_</strong>
                                         <Form.Group as={Col} md="3" controlId="digitoVerificador">
-                                            <TextoAyuda
-                                                nombre="digitoVerificador"
-                                                tooltip="Digito Verificador"
-                                                componente={<Form.Control
-                                                    value={this.state.digitoVerificador}
-                                                    onChange={this.handleChange}
-                                                />}
+
+                                            <Form.Control
+                                                plaintext readOnly
+                                                value={this.state.digitoVerificador}
+                                                onChange={this.handleChange}
                                             />
+
                                         </Form.Group>
                                     </Row>
                                 </Col>
