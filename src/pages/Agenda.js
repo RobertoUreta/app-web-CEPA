@@ -147,7 +147,7 @@ export class Agenda extends Component {
                             max={new Date(2017, 10, 0, 18, 0, 0)}
                             views={views}
                             events={this.state.eventos}
-                            step={60}
+                            step={15}
                             showMultiDayTimes
                             defaultDate={new Date()}
                             localizer={localizer}
