@@ -40,6 +40,7 @@ export class ModalSesion extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <RegistrarSesion 
+                    defaultDate = { this.props.selectedDate}
                     onSubmit = {this._handleFormSubmit}/>
                 </Modal.Body>
             </Modal>

@@ -33,7 +33,7 @@ export class Agenda extends Component {
 
 
         this.state = {
-
+            fecha: new Date(),
             show: false,
             showInfo: false,
             eventos: events,
@@ -68,8 +68,9 @@ export class Agenda extends Component {
         
     }
 
-    _handleShow() {
-        this.setState({ show: true })
+    _handleShow(event) {
+        console.log(event)
+        this.setState({ show: true , fecha: event.start})
     }
 
     _handleClose = (modalEvt) => {
@@ -132,17 +133,19 @@ export class Agenda extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button className="btn-custom-add" onClick={this._handleShow} ><i className="fa fa-plus"></i></Button>
                                 <ModalSesion
                                     show={this.state.show}
                                     onClose={this._handleClose}
-                                    onSubmit={this._handleModalSubmit} />
+                                    onSubmit={this._handleModalSubmit}
+                                    selectedDate= { this.state.fecha} />
                             </Col>
 
                         </Row>
                     </div>
                     <div style={{ height: '70vh' }}>
                         <BigCalendar
+                            popup
+                            selectable
                             min={new Date(2017, 10, 0, 9, 0, 0)}
                             max={new Date(2017, 10, 0, 18, 0, 0)}
                             views={views}
@@ -153,6 +156,7 @@ export class Agenda extends Component {
                             localizer={localizer}
                             messages={messages}
                             onSelectEvent={this._handleShowInfo}
+                            onSelectSlot={this._handleShow}
                             eventPropGetter={(this.eventStyleGetter)}
                         />
                     </div>

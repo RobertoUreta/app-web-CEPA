@@ -13,7 +13,7 @@ export class RegistrarSesion extends Component {
         super(props);
 
         this.state = {
-            fechaSesion: null,
+            fechaSesion: this.props.defaultDate,
             horaInicio: null,
             horaTermino: null,
             descripcion: "",
