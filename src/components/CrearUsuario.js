@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
+import {obtenerSupervisores,obtenerRoles} from '../backend/usuario/usuario'
 const generos = ["Masculino", "Femenino", "Otro"]
-export class CrearUsuario extends Component {
 
+export class CrearUsuario extends Component {
     constructor(props) {
         super(props);
 
@@ -24,11 +25,11 @@ export class CrearUsuario extends Component {
             nombreContactoEmergencia: "",
             telefonoContactoEmergencia: "",
             rol: "",
-            supervisor: ""
+            supervisor: "",
+            supervisores:[],
+            roles:[]
         };
     }
-
-
 
     handleChange = event => {
         this.setState({
@@ -42,9 +43,8 @@ export class CrearUsuario extends Component {
         
         const aux = JSON.stringify(this.state, null, '  ');
         console.log(aux)
-        //console.log(data)
+        console.log(this.state);
         this.props.onSubmit(aux)
-
     }
 
     cambiarDigitoVerificador = event => {
@@ -59,7 +59,14 @@ export class CrearUsuario extends Component {
             }
         )
     }
-
+    
+    componentWillMount(){
+        this.setState({
+            supervisores: obtenerSupervisores(),
+            roles: obtenerRoles()
+        });
+    }
+    
     render() {
         return (
             <div className="CrearUsuario">
@@ -224,6 +231,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.rol}
                                             onChange={this.handleChange}>
                                             <option hidden>Rol</option>
+                                            <Option options={this.state.roles}/>
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
@@ -234,8 +242,8 @@ export class CrearUsuario extends Component {
                                             value={this.state.supervisor}
                                             onChange={this.handleChange}>
                                             <option hidden>Supervisor</option>
+                                            <Option options={this.state.supervisores}/>
                                         </Form.Control>
-
                                     </Form.Group>
                                 </Col>
                             </Row>
