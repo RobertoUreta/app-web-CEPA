@@ -47,7 +47,7 @@ export class Usuario extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button className="btn-custom" onClick={this._handleShow} > <i class="fa fa-user-plus"></i></Button>
+                                <Button className="btn-custom" onClick={this._handleShow} > <i className="fa fa-user-plus"></i></Button>
                                 <ModalUsuario
                                     show={this.state.show}
                                     onClose={this._handleClose}

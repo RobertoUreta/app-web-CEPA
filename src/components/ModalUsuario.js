@@ -38,7 +38,7 @@ export class ModalUsuario extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <CrearUsuario
-                    onSubmit = {this._handleFormSubmit}/>
+                        onSubmit = {this._handleFormSubmit}/>
                 </Modal.Body>
             </Modal>
         )
