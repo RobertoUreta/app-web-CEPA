@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Col, Form, Table, Button, Row } from 'react-bootstrap'
+import { Col, Button, Row } from 'react-bootstrap'
 import { Layout } from '../components/Layout'
 import { ModalUsuario } from '../components/ModalUsuario'
 import { TablaUsuario } from '../components/TablaUsuario'
 import "../styles/styles.css"
+
+import { obtenerListaUsuarios } from '../backend/usuario/usuario'
+
+import axios from 'axios'
 
 export class Usuario extends Component {
 
@@ -17,6 +21,7 @@ export class Usuario extends Component {
     }
 
 
+
     _handleShow() {
         this.setState({ show: true })
     }
@@ -27,13 +32,34 @@ export class Usuario extends Component {
 
     _handleModalSubmit = (evt) => {
         let aux = JSON.parse(evt)
-        this.state.usuarios.push(aux)
-        this.setState(this.state)
+        let element = {
+            
+            nombre: aux.nombre,
+            apellido_paterno: aux.apellidoPaterno,
+            apellido_materno: aux.apellidoMaterno,
+            nombre_rol: aux.rol
+            
+        }
+        this.state.usuarios.push(element)
+
+    }
+
+
+    componentWillMount() {
+        const self = this;
+        axios.get('http://localhost:3001/listaUsuario')
+            .then(res => {
+                self.setState({ usuarios: res.data.usuarios })
+                console.log("usuarios", this.state.usuarios)
+            })
+
+            .catch(err => {
+            });
+
 
     }
 
     render() {
-
         return (
             <div>
                 <div>
@@ -60,8 +86,9 @@ export class Usuario extends Component {
                         </Row>
                     </div>
                     <div>
-                        <TablaUsuario
-                            elements={this.state.usuarios} />
+                        {this.state && this.state.usuarios &&
+                            <TablaUsuario
+                                elements={this.state.usuarios} />}
                     </div>
                 </div>
             </div>

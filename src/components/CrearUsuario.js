@@ -41,6 +41,8 @@ export class CrearUsuario extends Component {
     _handleSubmit = (event) => {
         event.preventDefault();
         console.log(event)
+
+       
         this.setState({
             supervisor: this.state.supervisores.get(this.state.supervisor),
             rol: this.state.roles.get(this.state.rol)
@@ -70,6 +72,8 @@ export class CrearUsuario extends Component {
             supervisores: obtenerSupervisores(),
             roles: obtenerRoles()
         });
+
+        console.log(this.state.supervisores, this.state.roles)
     }
     
 
@@ -269,6 +273,7 @@ export class CrearUsuario extends Component {
                                         onClick={this._handleSubmit}
                                         className="btn-submit"
                                         type="submit"
+                                       
                                     >
                                         Guardar
                                         </Button>

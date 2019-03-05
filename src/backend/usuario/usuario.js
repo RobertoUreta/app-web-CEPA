@@ -7,7 +7,7 @@ export let obtenerListaUsuarios = ()=>{
     .then(res=>{
         let data = res.data;
         arr = data.usuarios;
-        console.log(arr);
+        console.log("arr en ",arr);
     })
     .catch(err=>{
         arr.push("default");
@@ -55,7 +55,7 @@ export let obtenerRoles= ()=>{
 export let insertarUsuario = (data)=>{
     axios.post('http://localhost:3001/insertar_usuario', data)
       .then(function (response) {
-        console.log(response);
+        //console.log(response);
       })
       .catch(function (error) {
         console.log(error);
