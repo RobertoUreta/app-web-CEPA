@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
-import {obtenerSupervisores,obtenerRoles} from '../backend/usuario/usuario'
+import {obtenerSupervisores,obtenerRoles,insertarUsuario} from '../backend/usuario/usuario'
 const generos = ["Masculino", "Femenino", "Otro"]
-
 export class CrearUsuario extends Component {
     constructor(props) {
         super(props);
@@ -26,8 +25,10 @@ export class CrearUsuario extends Component {
             telefonoContactoEmergencia: "",
             rol: "",
             supervisor: "",
-            supervisores:[],
-            roles:[]
+            rolID:"",
+            supervisorID:"",
+            supervisores:new Map(),
+            roles:new Map()
         };
     }
 
@@ -40,11 +41,15 @@ export class CrearUsuario extends Component {
     _handleSubmit = (event) => {
         event.preventDefault();
         console.log(event)
-        
+        this.setState({
+            supervisor: this.state.supervisores.get(this.state.supervisor),
+            rol: this.state.roles.get(this.state.rol)
+        })
         const aux = JSON.stringify(this.state, null, '  ');
         console.log(aux)
         console.log(this.state);
         this.props.onSubmit(aux)
+        insertarUsuario(JSON.parse(aux));
     }
 
     cambiarDigitoVerificador = event => {
@@ -67,6 +72,7 @@ export class CrearUsuario extends Component {
         });
     }
     
+
     render() {
         return (
             <div className="CrearUsuario">
@@ -229,9 +235,14 @@ export class CrearUsuario extends Component {
                                         <Form.Control
                                             as="select"
                                             value={this.state.rol}
-                                            onChange={this.handleChange}>
+                                            onChange={event => {
+                                                this.setState({
+                                                    [event.target.id]: event.target.value,
+                                                    rolID: this.state.roles.get(event.target.value)
+                                                });
+                                            }}>
                                             <option hidden>Rol</option>
-                                            <Option options={this.state.roles}/>
+                                            <Option options={Array.from(this.state.roles.keys())}/>
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
@@ -240,9 +251,14 @@ export class CrearUsuario extends Component {
                                         <Form.Control
                                             as="select"
                                             value={this.state.supervisor}
-                                            onChange={this.handleChange}>
+                                            onChange={event => {
+                                                this.setState({
+                                                    [event.target.id]: event.target.value,
+                                                    supervisorID: this.state.supervisores.get(event.target.value)
+                                                });
+                                            }}>
                                             <option hidden>Supervisor</option>
-                                            <Option options={this.state.supervisores}/>
+                                            <Option options={Array.from(this.state.supervisores.keys())}/>
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>

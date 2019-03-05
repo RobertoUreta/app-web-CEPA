@@ -1,15 +1,30 @@
 
 import axios from 'axios';
 
+export let obtenerListaUsuarios = ()=>{
+    let arr;
+    axios.get('http://localhost:3001/listaUsuario')
+    .then(res=>{
+        let data = res.data;
+        arr = data.usuarios;
+        console.log(arr);
+    })
+    .catch(err=>{
+        arr.push("default");
+        console.log(err);
+    });
+    console.log(arr);
+    return arr;
+}
 
 export let obtenerSupervisores= ()=>{
-    let supervisores = [];
+    let supervisores = new Map();
     axios.get('http://localhost:3001/usuario')
     .then(res=>{
         let data = res.data;
         let arr = data.usuarios;
         arr.forEach(element => {
-            supervisores.push(element.nombre +' '+element.apellido_paterno)
+            supervisores.set( element.nombre +' '+element.apellido_paterno,element.id_usuario)
         });
         console.log(supervisores);
     })
@@ -20,13 +35,13 @@ export let obtenerSupervisores= ()=>{
     return supervisores;
 }
 export let obtenerRoles= ()=>{
-    let roles = []
+    let roles = new Map();
     axios.get('http://localhost:3001/rol_usuario')
     .then(res=>{
         let data = res.data;
         let arr = data.roles;
         arr.forEach(element => {
-            roles.push(element.nombre_rol)
+            roles.set( element.nombre_rol,element.id_rol_usuario)
         });
         console.log(roles);
     })
@@ -37,3 +52,12 @@ export let obtenerRoles= ()=>{
     return roles;
 }
 
+export let insertarUsuario = (data)=>{
+    axios.post('http://localhost:3001/insertar_usuario', data)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
