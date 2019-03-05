@@ -5,6 +5,11 @@ import { Option } from '../components/Option'
 import { TextoAyuda } from '../components/TextoAyuda'
 import "../styles/styles.css"
 
+import axios from 'axios'
+
+
+
+
 export class Paciente extends Component {
 
     constructor(props) {
@@ -12,12 +17,34 @@ export class Paciente extends Component {
 
         this.state = {
             filtro: "",
+            idUsuario: "",
+            rows:[]
         }
     }
+
+    componentDidMount() {
+        console.log("componentWillMount")
+        axios.get('http://localhost:3001/obtener_id_paciente')
+        .then(res => {
+            console.log(res.data)
+            let id = res.data.rows[0].id + 1
+            let enlace= "/index/" + id
+            
+            this.setState({rows: res.data.rows, idUsuario: enlace})
+        })
+            
+        .catch(err => {
+            console.log(err);
+        });
+
+    }
+
+ 
 
     render() {
 
         var filtros = ["Todos los pacientes", "Pacientes Asociados", "Pacientes en Lista de Espera"]
+        console.log("render", this.state.rows)
         return (
             <div>
                 <div>
@@ -37,7 +64,7 @@ export class Paciente extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button className= "btn-custom" href="/index" > Agregar Paciente</Button>
+                                <Button className="btn-custom" href={this.state.idUsuario}> Agregar Paciente</Button>
                             </Col>
 
                             <Col>

@@ -6,25 +6,43 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
+import { insertarIngreso } from '../backend/ingreso/ingreso'
+
 export class General extends Component {
     constructor(props){
 
         super(props)
 
         this.state = {
-            nombrePaciente: "",
+            datosGenerales: {},
+            adultoContacto: {},
+            datosSocioDemograficos: {},
+            datosAdicionales: {}
         }
     }
-    _getNombrePaciente = (infoPaciente) => {
+    _handleDatosGenerales = (infoPaciente) => {
         console.log("_handleModalSubmit")
         var info = JSON.parse(infoPaciente)
-        var name = info.nombre
-        var apellidoP = info.apellidoPaterno
-        var apellidoM = info.apellidoMaterno
+        
+        this.setState( { datosGenerales: info})
+        insertarIngreso(info)
+    }
 
-        var nombreCompleto = name + " " + apellidoP + " " + apellidoM
+    _handleDatosAdicionales = (data) => {
 
-        this.setState( { nombrePaciente: nombreCompleto})
+        var info = JSON.parse(data)
+        this.setState ({ datosAdicionales: info })
+    }
+
+    _handleDatosSocio = (data) => {
+        var info = JSON.parse(data)
+        this.setState ({ datosSocioDemograficos: info })
+    }
+
+    _handleAdulto = (data) => {
+        
+        var info = JSON.parse(data)
+        this.setState({adultoContacto: info})
     }
 
     render() {
@@ -34,23 +52,27 @@ export class General extends Component {
 
         return (
             <div>
-                <h2>{this.state.nombrePaciente}</h2>
+                <h2>{this.state.datosGenerales.nombre + " " + this.state.datosGenerales.apellidoPaterno +" " 
+            + this.state.datosGenerales.apellidoMaterno }</h2>
                 <Accordion>
                     <div label="Datos Personales">
                         <DatosPersonales 
                             paciente = { this.state.nombrePaciente }
-                            handlePaciente = {this._getNombrePaciente} />
+                            handlePaciente = {this._handleDatosGenerales} />
                     </div>
                     <div label="Adulto Contacto">
-                        <AdultoContacto />
+                        <AdultoContacto
+                        handleAdultoContacto = {this._handleAdulto} />
                     </div>
 
                     <div label="Datos Socio-demográficos">
-                        <DatosSocioDemograficos />
+                        <DatosSocioDemograficos 
+                        handleDatosSocio = {this._handleDatosSocio} />
                     </div>
 
                     <div label="Datos Adicionales">
-                        <DatosAdicionales />
+                        <DatosAdicionales 
+                        handleDatosAdicionales = {this._handleDatosAdicionales}/>
                     </div>
                 </Accordion>
                 
