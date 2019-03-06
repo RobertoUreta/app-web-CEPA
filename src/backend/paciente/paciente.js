@@ -1,8 +1,8 @@
-import axios from 'axios';
+import request from '../config'
 
 export let obtenerPacientes = ()=>{
     let arr;
-    axios.get('http://localhost:3001/listaPacientes')
+    request.get('/listaPacientes')
     .then(res=>{
         let data = res.data;
         arr = data.pacientes;

@@ -8,7 +8,7 @@ import {verificarSesion} from '../backend/login'
 
 import { obtenerListaUsuarios } from '../backend/usuario/usuario'
 
-import axios from 'axios'
+import request from '../backend/config'
 
 export class Usuario extends Component {
 
@@ -48,7 +48,7 @@ export class Usuario extends Component {
 
     componentWillMount() {
         const self = this;
-        axios.get('http://localhost:3001/listaUsuario')
+        request.get('/listaUsuario')
             .then(res => {
                 self.setState({ usuarios: res.data.usuarios })
                 console.log("usuarios", this.state.usuarios)

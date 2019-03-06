@@ -1,9 +1,9 @@
 
-import axios from 'axios';
+import request from '../config'
 
 
 export let insertarIngreso = (data, id) => {
-    axios.post('http://localhost:3001/insertarPaciente', {
+    request.post('/insertarPaciente', {
         data, id
     }).then(function (response) {
         console.log(data.apellido)
@@ -15,7 +15,7 @@ export let insertarIngreso = (data, id) => {
 }
 
 export let obtenerIdIngreso = (data, id) => {
-    axios.get('http://localhost:3001/obtenerIngreso', {
+    request.get('/obtenerIngreso', {
         params: {
             id: id
         }
@@ -29,7 +29,7 @@ export let obtenerIdIngreso = (data, id) => {
 }
 
 export let updateDatosAdicionales = (data, id) => {
-    axios.put('http://localhost:3001/update_datosadicionales', {
+    request.put('/update_datosadicionales', {
         data, id
     }).then(function (response) {
         console.log(response);
@@ -39,7 +39,7 @@ export let updateDatosAdicionales = (data, id) => {
 }
 
 export let updateDatosSocioDemo = (data, id) => {
-    axios.put('http://localhost:3001/update_datossociodemo', {
+    request.put('/update_datossociodemo', {
         data, id
     }).then(function (response) {
         console.log(response);
@@ -49,7 +49,7 @@ export let updateDatosSocioDemo = (data, id) => {
 }
 
 export let updateAdultoContacto = (data, id) => {
-    axios.put('http://localhost:3001/update_adultocontacto', {
+    request.put('/update_adultocontacto', {
         data, id
     }).then(function (response) {
         console.log(response);

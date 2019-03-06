@@ -6,7 +6,7 @@ import { TextoAyuda } from '../components/TextoAyuda'
 import { TablaPaciente } from '../components/TablaPacientes'
 import "../styles/styles.css"
 
-import axios from 'axios'
+import request from '../backend/config'
 import { obtenerPacientes } from '../backend/paciente/paciente'
 
 
@@ -28,7 +28,7 @@ export class Paciente extends Component {
     componentWillMount() {
         
         const self = this
-        axios.get('http://localhost:3001/listaPacientes')
+        request.get('/listaPacientes')
             .then(res => {
                 self.setState({ pacientes: res.data.pacientes })
                 console.log("pacientes", this.state.pacientes)
@@ -38,7 +38,7 @@ export class Paciente extends Component {
 
     componentDidMount() {
         console.log("componentDidMount")
-        axios.get('http://localhost:3001/obtener_id_paciente')
+        request.get('/obtener_id_paciente')
             .then(res => {
                 console.log(res.data)
                 let id = res.data.rows[0].id + 1
