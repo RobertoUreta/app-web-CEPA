@@ -36,6 +36,8 @@ export class DatosPersonales extends Component {
             relacionContractual: "",
             tipoPaciente: "",
             valorSesion: 0,
+            nacimiento: "",
+            fechaIngreso: new Date()
         };
     }
 
@@ -66,15 +68,13 @@ export class DatosPersonales extends Component {
     handleSubmit = event => {
         event.preventDefault();
         let fecha = new Date(this.state.fechaNacimiento)
-        let nacimiento = fecha.toJSON().slice(0,19).replace('T',' ')
-        this.setState({fechaNacimiento: nacimiento})
-        console.log(this.state.fechaNacimiento)
+        let nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')       
+        console.log(this.state.fechaIngreso)
 
         let info = JSON.stringify(this.state, null, '  ');
 
         this.props.handlePaciente(info)
 
-        console.log(this.state)
 
     }
 

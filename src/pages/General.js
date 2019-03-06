@@ -6,7 +6,7 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
-import { insertarIngreso } from '../backend/ingreso/ingreso'
+import { insertarIngreso, obtenerIdIngreso } from '../backend/ingreso/ingreso'
 
 export class General extends Component {
     constructor(props){
@@ -14,6 +14,7 @@ export class General extends Component {
         super(props)
 
         this.state = {
+            id: this.props.userId,
             datosGenerales: {},
             adultoContacto: {},
             datosSocioDemograficos: {},
@@ -23,9 +24,14 @@ export class General extends Component {
     _handleDatosGenerales = (infoPaciente) => {
         console.log("_handleModalSubmit")
         var info = JSON.parse(infoPaciente)
-        
+        let fecha = new Date(info.fechaNacimiento)
+        let ingreso = new Date(info.fechaIngreso)
+        info.fechaIngreso = ingreso.toJSON().slice(0, 19).replace('T', ' ')  
+        info.nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')  
+        console.log(info.nacimiento)
+        console.log(info.fechaIngreso)
         this.setState( { datosGenerales: info})
-        insertarIngreso(info)
+        insertarIngreso(info,this.state.id)
     }
 
     _handleDatosAdicionales = (data) => {
@@ -49,11 +55,17 @@ export class General extends Component {
 
 
         console.log(this.state)
-
+        const {nombre} = this.state.datosGenerales
+        let {verificador} = false;
+        if(this.state.datosGenerales.nombre === undefined) {
+            console.log("no definido")
+        } else{
+            verificador = true;
+        }
         return (
             <div>
-                <h2>{this.state.datosGenerales.nombre + " " + this.state.datosGenerales.apellidoPaterno +" " 
-            + this.state.datosGenerales.apellidoMaterno }</h2>
+                <h2>{verificador ? this.state.datosGenerales.nombre + " " + this.state.datosGenerales.apellidoPaterno +" " 
+            + this.state.datosGenerales.apellidoMaterno : "" }</h2>
                 <Accordion>
                     <div label="Datos Personales">
                         <DatosPersonales 

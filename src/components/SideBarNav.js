@@ -21,29 +21,29 @@ export class NavLateral extends Component {
   _renderSelection() {
     console.log('_renderSelection')
     if (this.state.selectedPath === "general") {
-      return <General />
+      return <General userId={this.props.userId}/>
     }
     if (this.state.selectedPath === "tratamiento") {
-      return <Tratamiento />
+      return <Tratamiento userId={this.props.userId}/>
     }
     if (this.state.selectedPath === "evaluacion") {
-      return <Evaluacion />
+      return <Evaluacion userId={this.props.userId}/>
     }
 
     if(this.state.selectedPath === "historial"){
-      return <Historial />
+      return <Historial userId={this.props.userId}/>
     }
 
     if(this.state.selectedPath === "epicrisis"){
-      return <Epicrisis />
+      return <Epicrisis userId={this.props.userId}/>
     }
 
     if(this.state.selectedPath ==="registrosesion"){
-      return <Sesion />
+      return <Sesion userId={this.props.userId}/>
     }
 
     if(this.state.selectedPath === "diagnostico"){
-      return <Diagnostico />
+      return <Diagnostico userId={this.props.userId}/>
     }
   }
 
