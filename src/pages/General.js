@@ -6,7 +6,7 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
-import { insertarIngreso, obtenerIdIngreso } from '../backend/ingreso/ingreso'
+import { insertarIngreso, obtenerIdIngreso, updateAdultoContacto, updateDatosSocioDemo, updateDatosAdicionales } from '../backend/ingreso/ingreso'
 
 export class General extends Component {
     constructor(props){
@@ -38,17 +38,21 @@ export class General extends Component {
 
         var info = JSON.parse(data)
         this.setState ({ datosAdicionales: info })
+        updateDatosAdicionales(info,this.state.id)
     }
 
     _handleDatosSocio = (data) => {
         var info = JSON.parse(data)
         this.setState ({ datosSocioDemograficos: info })
+        updateDatosSocioDemo(info,this.state.id)
     }
 
     _handleAdulto = (data) => {
         
         var info = JSON.parse(data)
         this.setState({adultoContacto: info})
+        updateAdultoContacto(info,this.state.id)
+
     }
 
     render() {
