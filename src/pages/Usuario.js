@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout'
 import { ModalUsuario } from '../components/ModalUsuario'
 import { TablaUsuario } from '../components/TablaUsuario'
 import "../styles/styles.css"
+import {verificarSesion} from '../backend/login'
 
 export class Usuario extends Component {
 
@@ -32,9 +33,21 @@ export class Usuario extends Component {
 
     }
 
-    render() {
+    componentWillMount(){
+        let id = this.props.match.params.id;
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                console.log('entro aqui');
+                this.props.history.push('/')
+            }
+        })
+    }
 
+    render() {
+        
         return (
+
             <div>
                 <div>
 

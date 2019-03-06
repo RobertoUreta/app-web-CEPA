@@ -15,7 +15,7 @@ class App extends Component {
           <Route path='/listaPacientes' component = { Paciente } />
           <Route path='/agenda' component = { Agenda } />
 
-          <Route path='/listaUsuarios' component = {Usuario} />
+          <Route path='/:id/listaUsuarios' component = {Usuario} />
         </Switch>
         
       </div>

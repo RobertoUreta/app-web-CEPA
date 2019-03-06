@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
-import {obtenerSupervisores,obtenerRoles,insertarUsuario} from '../backend/usuario/usuario'
+import {obtenerSupervisores,obtenerRoles,insertarUsuario,revisarRestricted} from '../backend/usuario/usuario'
 const generos = ["Masculino", "Femenino", "Otro"]
 export class CrearUsuario extends Component {
     constructor(props) {
