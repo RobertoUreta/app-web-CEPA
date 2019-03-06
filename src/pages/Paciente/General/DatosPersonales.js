@@ -169,8 +169,8 @@ export class DatosPersonales extends Component {
                                         required
                                     />} />
                                 </Form.Group>
-                                <Form.Group as={Col} controlId="telefonoTrabajo">
-                                    <TextoAyuda nombre="telefonoTrabajo" tooltip="Teléfono Fijo" componente={<Form.Control
+                                <Form.Group as={Col} controlId="telefonoFijo">
+                                    <TextoAyuda nombre="telefonoFijo" tooltip="Teléfono Fijo" componente={<Form.Control
                                         value={this.state.telefonoFijo}
                                         onChange={this.handleChange}
                                         placeholder="Teléfono Fijo"

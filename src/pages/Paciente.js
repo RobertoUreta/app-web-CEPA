@@ -3,9 +3,11 @@ import { Col, Form, Table, Button, Row } from 'react-bootstrap'
 import { Layout } from '../components/Layout'
 import { Option } from '../components/Option'
 import { TextoAyuda } from '../components/TextoAyuda'
+import { TablaPaciente } from '../components/TablaPacientes'
 import "../styles/styles.css"
 
 import axios from 'axios'
+import { obtenerPacientes } from '../backend/paciente/paciente'
 
 
 
@@ -18,33 +20,44 @@ export class Paciente extends Component {
         this.state = {
             filtro: "",
             idUsuario: "",
-            rows:[]
+            rows: [],
+            pacientes: []
         }
     }
 
+    componentWillMount() {
+        
+        const self = this
+        axios.get('http://localhost:3001/listaPacientes')
+            .then(res => {
+                self.setState({ pacientes: res.data.pacientes })
+                console.log("pacientes", this.state.pacientes)
+            }).catch(err => {
+            });
+    }
+
     componentDidMount() {
-        console.log("componentWillMount")
+        console.log("componentDidMount")
         axios.get('http://localhost:3001/obtener_id_paciente')
-        .then(res => {
-            console.log(res.data)
-            let id = res.data.rows[0].id + 1
-            let enlace= "/index/" + id
-            
-            this.setState({rows: res.data.rows, idUsuario: enlace})
-        })
-            
-        .catch(err => {
-            console.log(err);
-        });
+            .then(res => {
+                console.log(res.data)
+                let id = res.data.rows[0].id + 1
+                let enlace = "/index/" + id
+
+                this.setState({ rows: res.data.rows, idUsuario: enlace })
+            })
+
+            .catch(err => {
+                console.log(err);
+            });
 
     }
 
- 
+
 
     render() {
 
         var filtros = ["Todos los pacientes", "Pacientes Asociados", "Pacientes en Lista de Espera"]
-        console.log("render", this.state.rows)
         return (
             <div>
                 <div>
@@ -88,14 +101,8 @@ export class Paciente extends Component {
                         </Row>
                     </div>
                     <div>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th>Rut</th>
-                                    <th>Nombre</th>
-                                </tr>
-                            </thead>
-                        </Table>
+                        <TablaPaciente
+                            elements={this.state.pacientes} />
                     </div>
                 </div>
             </div>
