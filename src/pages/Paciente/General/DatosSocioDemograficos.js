@@ -34,9 +34,11 @@ export class DatosSocioDemograficos extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        let info = JSON.stringify(this.state, null, '  ');
+
+        this.props.handleDatosSocio(info)
+
+        console.log(this.state)
 
     }
 

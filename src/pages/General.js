@@ -6,51 +6,85 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
+import { insertarIngreso, obtenerIdIngreso } from '../backend/ingreso/ingreso'
+
 export class General extends Component {
     constructor(props){
 
         super(props)
 
         this.state = {
-            nombrePaciente: "",
+            id: this.props.userId,
+            datosGenerales: {},
+            adultoContacto: {},
+            datosSocioDemograficos: {},
+            datosAdicionales: {}
         }
     }
-    _getNombrePaciente = (infoPaciente) => {
+    _handleDatosGenerales = (infoPaciente) => {
         console.log("_handleModalSubmit")
         var info = JSON.parse(infoPaciente)
-        var name = info.nombre
-        var apellidoP = info.apellidoPaterno
-        var apellidoM = info.apellidoMaterno
+        let fecha = new Date(info.fechaNacimiento)
+        let ingreso = new Date(info.fechaIngreso)
+        info.fechaIngreso = ingreso.toJSON().slice(0, 19).replace('T', ' ')  
+        info.nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')  
+        console.log(info.nacimiento)
+        console.log(info.fechaIngreso)
+        this.setState( { datosGenerales: info})
+        insertarIngreso(info,this.state.id)
+    }
 
-        var nombreCompleto = name + " " + apellidoP + " " + apellidoM
+    _handleDatosAdicionales = (data) => {
 
-        this.setState( { nombrePaciente: nombreCompleto})
+        var info = JSON.parse(data)
+        this.setState ({ datosAdicionales: info })
+    }
+
+    _handleDatosSocio = (data) => {
+        var info = JSON.parse(data)
+        this.setState ({ datosSocioDemograficos: info })
+    }
+
+    _handleAdulto = (data) => {
+        
+        var info = JSON.parse(data)
+        this.setState({adultoContacto: info})
     }
 
     render() {
 
 
         console.log(this.state)
-
+        const {nombre} = this.state.datosGenerales
+        let {verificador} = false;
+        if(this.state.datosGenerales.nombre === undefined) {
+            console.log("no definido")
+        } else{
+            verificador = true;
+        }
         return (
             <div>
-                <h2>{this.state.nombrePaciente}</h2>
+                <h2>{verificador ? this.state.datosGenerales.nombre + " " + this.state.datosGenerales.apellidoPaterno +" " 
+            + this.state.datosGenerales.apellidoMaterno : "" }</h2>
                 <Accordion>
                     <div label="Datos Personales">
                         <DatosPersonales 
                             paciente = { this.state.nombrePaciente }
-                            handlePaciente = {this._getNombrePaciente} />
+                            handlePaciente = {this._handleDatosGenerales} />
                     </div>
                     <div label="Adulto Contacto">
-                        <AdultoContacto />
+                        <AdultoContacto
+                        handleAdultoContacto = {this._handleAdulto} />
                     </div>
 
                     <div label="Datos Socio-demográficos">
-                        <DatosSocioDemograficos />
+                        <DatosSocioDemograficos 
+                        handleDatosSocio = {this._handleDatosSocio} />
                     </div>
 
                     <div label="Datos Adicionales">
-                        <DatosAdicionales />
+                        <DatosAdicionales 
+                        handleDatosAdicionales = {this._handleDatosAdicionales}/>
                     </div>
                 </Accordion>
                 

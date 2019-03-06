@@ -36,6 +36,8 @@ export class DatosPersonales extends Component {
             relacionContractual: "",
             tipoPaciente: "",
             valorSesion: 0,
+            nacimiento: "",
+            fechaIngreso: new Date()
         };
     }
 
@@ -65,11 +67,14 @@ export class DatosPersonales extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
+        let fecha = new Date(this.state.fechaNacimiento)
+        let nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')       
+        console.log(this.state.fechaIngreso)
+
         let info = JSON.stringify(this.state, null, '  ');
 
         this.props.handlePaciente(info)
 
-        console.log(this.state)
 
     }
 
@@ -166,7 +171,7 @@ export class DatosPersonales extends Component {
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="telefonoTrabajo">
                                     <TextoAyuda nombre="telefonoTrabajo" tooltip="Teléfono Fijo" componente={<Form.Control
-                                        value={this.state.telefonoTrabajo}
+                                        value={this.state.telefonoFijo}
                                         onChange={this.handleChange}
                                         placeholder="Teléfono Fijo"
                                     />} />
