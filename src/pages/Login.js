@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
 import "../styles/login.css";
+import { obtenerSesion } from '../backend/login'
+import { Link } from 'react-router-dom'
 
 export class Login extends Component {
   constructor(props) {
@@ -25,19 +27,34 @@ export class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const email = this.inputEmail.value
-    const pwd = this.inputPwd.value
-    console.log({ email, pwd });
+    let path = "/listaUsuarios"
+
+    const aux = JSON.stringify(this.state, null, '  ');
+    console.log(aux)
+    console.log(this.state);
+    let auth = obtenerSesion(JSON.parse(aux));
+    auth 
+      .then((res) => {
+        console.log(res.data);
+        path='/'+res.data.usuario.id_usuario+path;
+        if (res.data.ok) {
+          this.props.history.push(path)
+        }
+        else{
+          alert("Usuario o Contraseña incorrectos manco qlo")
+        }
+      }
+    );
 
   }
 
   render() {
     return (
       <div className="Login">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this._handleSubmit}>
           <Form.Group controlId="usuario">
             <Image src={logo} className="logo img-fluid center-block" alt="" responsive />
-           
+
             <Form.Control
               autoFocus
               type="usuario"
@@ -67,14 +84,17 @@ export class Login extends Component {
             </div>
 
             <div className="div-btn-submit">
-              <Button
-                className="btn-submit"
-                size="sm"
-                disabled={!this.validateForm()}
-                type="submit"
-              >
-                Acceder
+              <Link to=''>
+                <Button
+                  onClick={this.handleSubmit}
+                  className="btn-submit"
+                  size="sm"
+                  disabled={!this.validateForm()}
+                  type="submit"
+                >
+                  Acceder
               </Button>
+              </Link>
             </div>
           </div>
 

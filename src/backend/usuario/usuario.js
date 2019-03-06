@@ -1,9 +1,8 @@
-
-import axios from 'axios';
+import request from '../config'
 
 export let obtenerListaUsuarios = ()=>{
     let arr;
-    axios.get('http://localhost:3001/listaUsuario')
+    request.get('/listaUsuario')
     .then(res=>{
         let data = res.data;
         arr = data.usuarios;
@@ -19,7 +18,7 @@ export let obtenerListaUsuarios = ()=>{
 
 export let obtenerSupervisores= ()=>{
     let supervisores = new Map();
-    axios.get('http://localhost:3001/usuario')
+    request.get('/usuario')
     .then(res=>{
         let data = res.data;
         let arr = data.usuarios;
@@ -36,7 +35,7 @@ export let obtenerSupervisores= ()=>{
 }
 export let obtenerRoles= ()=>{
     let roles = new Map();
-    axios.get('http://localhost:3001/rol_usuario')
+    request.get('/rol_usuario')
     .then(res=>{
         let data = res.data;
         let arr = data.roles;
@@ -52,8 +51,18 @@ export let obtenerRoles= ()=>{
     return roles;
 }
 
+export let revisarRestricted = ()=>{
+    request.get('/restricted')
+      .then(res=>{
+            console.log(res.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
+
 export let insertarUsuario = (data)=>{
-    axios.post('http://localhost:3001/insertar_usuario', data)
+    request.post('/insertar_usuario', data)
       .then(function (response) {
         //console.log(response);
       })
