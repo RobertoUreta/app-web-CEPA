@@ -32,9 +32,7 @@ export class Paciente extends Component {
             .then(res => {
                 self.setState({ pacientes: res.data.pacientes })
                 console.log("pacientes", this.state.pacientes)
-            })
-
-            .catch(err => {
+            }).catch(err => {
             });
     }
 

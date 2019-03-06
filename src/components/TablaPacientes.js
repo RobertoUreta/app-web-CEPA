@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import { Table } from 'react-bootstrap'
-import { } from '../backend/usuario/usuario'
 
 
 export class TablaPaciente extends Component {
