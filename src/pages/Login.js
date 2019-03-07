@@ -27,7 +27,7 @@ export class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    let path = "/listaUsuarios"
+    let path = "/home"
 
     const aux = JSON.stringify(this.state, null, '  ');
     console.log(aux)
@@ -36,7 +36,7 @@ export class Login extends Component {
     auth 
       .then((res) => {
         console.log(res.data);
-        path='/'+res.data.usuario.id_usuario+path;
+        path=path+'/'+res.data.usuario.id_usuario
         if (res.data.ok) {
           this.props.history.push(path)
         }

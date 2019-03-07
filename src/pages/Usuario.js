@@ -76,7 +76,7 @@ export class Usuario extends Component {
 
                     <Layout
                         mustBeSideNav={false} 
-                        idUser = {id}/>
+                        loggedUser= {id}/>
 
                 </div>
                 <div id="body">

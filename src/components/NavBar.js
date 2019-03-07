@@ -6,7 +6,6 @@ import "../styles/styles.css"
 
 import { obtenerDatosUsuario } from '../backend/usuario/usuario'
 
-
 export class NavBar extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +16,7 @@ export class NavBar extends Component {
     }
     componentWillMount() {
 
-        let promesa = obtenerDatosUsuario(this.props.idUser);
+        let promesa = obtenerDatosUsuario(this.props.loggedUser);
         promesa.
             then((res) => {
                 console.log("resdatapromesa", res.data)
@@ -28,6 +27,9 @@ export class NavBar extends Component {
 
     render() {
         const { nombre, apellido_paterno, apellido_materno } = this.state.usuario
+        const hrefListaUsuarios= `/${this.props.loggedUser}/listaUsuarios`
+        const hrefListaPacientes = `/${this.props.loggedUser}/listaPacientes/`
+        const hrefAgenda = `/${this.props.loggedUser}/agenda`
         return (
 
             <div className="Layout">
@@ -50,13 +52,13 @@ export class NavBar extends Component {
                     <Navbar.Collapse className="justify-content-end" id="collasible-nav-dropdown">
                         <Nav className="mr-auto" variant="pills">
                             <Nav.Item>
-                                <Nav.Link eventKey="usuarios" href="/listaUsuarios">Usuarios</Nav.Link>
+                                <Nav.Link eventKey="usuarios" href={hrefListaUsuarios}>Usuarios</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link eventKey="pacientes" href="/listaPacientes">Pacientes </Nav.Link>
+                                <Nav.Link eventKey="pacientes" href={hrefListaPacientes}>Pacientes </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link eventKey="utilidades" href="/agenda">Agenda</Nav.Link>
+                                <Nav.Link eventKey="utilidades" href={hrefAgenda}>Agenda</Nav.Link>
                             </Nav.Item>
 
                         </Nav>
