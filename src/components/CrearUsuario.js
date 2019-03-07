@@ -80,7 +80,7 @@ export class CrearUsuario extends Component {
     render() {
         return (
             <div className="CrearUsuario">
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this._handleSubmit} autoComplete="off">
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nombre">
@@ -88,6 +88,7 @@ export class CrearUsuario extends Component {
                                     value={this.state.nombre}
                                     onChange={this.handleChange}
                                     placeholder="Nombre"
+                                    required
                                 />
                             </Form.Group>
                             <Row>
@@ -97,6 +98,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.apellidoPaterno}
                                             onChange={this.handleChange}
                                             placeholder="Apellido Paterno"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -106,6 +108,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.apellidoMaterno}
                                             onChange={this.handleChange}
                                             placeholder="Apellido Materno"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -120,6 +123,7 @@ export class CrearUsuario extends Component {
                                                     value={this.state.rut}
                                                     onChange={this.cambiarDigitoVerificador}
                                                     placeholder="Rut"
+                                                    required
                                                 />} />
                                         </Form.Group>
                                         <strong>_</strong>
@@ -139,7 +143,9 @@ export class CrearUsuario extends Component {
                                         <Form.Control
                                             as="select"
                                             value={this.state.genero}
-                                            onChange={this.handleChange}>
+                                            onChange={this.handleChange}
+                                            required
+                                            >
                                             <option hidden>Genero</option>
                                             <Option options={generos}></Option>
                                         </Form.Control>
@@ -155,6 +161,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.usuario}
                                             onChange={this.handleChange}
                                             placeholder="Nombre de usuario"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -166,6 +173,7 @@ export class CrearUsuario extends Component {
                                             type="password"
                                             inputRef={inputElement => this.inputPwd = inputElement}
                                             placeholder="Contraseña"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -180,6 +188,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.telefonoMovil}
                                             onChange={this.handleChange}
                                             placeholder="Teléfono Móvil"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -202,6 +211,7 @@ export class CrearUsuario extends Component {
                                     value={this.state.correo}
                                     onChange={this.handleChange}
                                     placeholder="Correo"
+                                    required
                                 />
                             </Form.Group>
                             <Form.Group controlId="horasSemanales">
@@ -209,6 +219,7 @@ export class CrearUsuario extends Component {
                                     value={this.state.horasSemanales}
                                     onChange={this.handleChange}
                                     placeholder="Horas Semanales"
+                                    required
                                 />
                             </Form.Group>
                             <Row>
@@ -219,6 +230,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.nombreContactoEmergencia}
                                             onChange={this.handleChange}
                                             placeholder="Nombre contacto de emergencia"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -228,6 +240,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.telefonoContactoEmergencia}
                                             onChange={this.handleChange}
                                             placeholder="Teléfono contacto de emergencia"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -244,7 +257,8 @@ export class CrearUsuario extends Component {
                                                     [event.target.id]: event.target.value,
                                                     rolID: this.state.roles.get(event.target.value)
                                                 });
-                                            }}>
+                                            }}
+                                            required>
                                             <option hidden>Rol</option>
                                             <Option options={Array.from(this.state.roles.keys())}/>
                                         </Form.Control>
@@ -270,10 +284,8 @@ export class CrearUsuario extends Component {
                             <Form.Group>
                                 <div className="btn-container">
                                     <Button
-                                        onClick={this._handleSubmit}
                                         className="btn-submit"
                                         type="submit"
-                                       
                                     >
                                         Guardar
                                         </Button>

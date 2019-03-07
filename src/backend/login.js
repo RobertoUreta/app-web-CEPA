@@ -13,6 +13,17 @@ export let verificarSesion = async () =>{
         let res = await request.get('/auth');
         return res;
     } catch (error) {
-        
+        console.log(error);
+    }
+}
+
+
+export let cerrarSesion = async ()=> {
+    try {
+        let res = await request.get('/logout');
+        console.log(res.data);
+        return res;
+    } catch (error) {
+        console.log(error);
     }
 }

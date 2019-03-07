@@ -3,13 +3,29 @@ import { NavDropdown, Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
 import "../styles/styles.css"
+import {cerrarSesion} from '../backend/login'
 
-
-
-export class NavBar extends Component {
+export class NavBar extends Component{
+    constructor(props){
+        super(props)
+    }
+    _cerrarSesion = () => {
+        console.log('logouooottt');
+        let res = cerrarSesion();
+        res.then(resp=>{
+            if (resp.data.ok) {
+                return true;
+            }
+            return false;
+        })
+        .catch(err =>{
+            console.log(err);
+        }
+        )
+    
+    }
     render() {
         return (
-
             <div className="Layout">
                 <Navbar bg="light" expand="lg" fixed="top">
                     <Link to="/">
@@ -47,7 +63,7 @@ export class NavBar extends Component {
                             <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Cerrar Sesión</NavDropdown.Item>
+                            <NavDropdown.Item onClick={this._cerrarSesion} href="/">Cerrar Sesión</NavDropdown.Item>
                         </NavDropdown>
 
                     </Navbar.Collapse>
