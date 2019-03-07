@@ -35,7 +35,7 @@ export class Login extends Component {
       .then((res) => {
         //console.log(res.data);
         if (res.data.ok) {
-          path='/'+res.data.usuario.id_usuario+path;
+          path=path+'/'+res.data.usuario.id_usuario;
           this.props.history.push(path);
         }
         else{
