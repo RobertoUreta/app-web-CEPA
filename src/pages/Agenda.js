@@ -61,16 +61,16 @@ export class Agenda extends Component {
 
 
     _handleShowInfo(evt) {
-        console.log("hhasdfas" , evt.id)
-        
-        this.setState({ showInfo: true , clickedId: evt.id});
+        console.log("hhasdfas", evt.id)
+
+        this.setState({ showInfo: true, clickedId: evt.id });
         console.log(this.state.clickedId)
-        
+
     }
 
     _handleShow(event) {
         console.log(event)
-        this.setState({ show: true , fecha: event.start})
+        this.setState({ show: true, fecha: event.start })
     }
 
     _handleClose = (modalEvt) => {
@@ -110,7 +110,10 @@ export class Agenda extends Component {
             week: "Semanal",
             day: "Día",
             date: "Fecha"
-        }
+        }        
+        
+        const id = this.props.match.params.id
+
 
         let modalClose = () => this.setState({ showInfo: false });
 
@@ -124,7 +127,8 @@ export class Agenda extends Component {
                     <div>
 
                         <Layout
-                            mustBeSideNav={false} />
+                            mustBeSideNav={false}
+                            loggedUser={id} />
 
                     </div>
                 </div>
@@ -137,7 +141,7 @@ export class Agenda extends Component {
                                     show={this.state.show}
                                     onClose={this._handleClose}
                                     onSubmit={this._handleModalSubmit}
-                                    selectedDate= { this.state.fecha} />
+                                    selectedDate={this.state.fecha} />
                             </Col>
 
                         </Row>
@@ -164,9 +168,9 @@ export class Agenda extends Component {
                 <ModalSesionInfo
                     show={this.state.showInfo}
                     onHide={modalClose}
-                    eventos = { this.state.eventos}
-                    clickeInfo = { this.state.clickedId}
-                     />
+                    eventos={this.state.eventos}
+                    clickeInfo={this.state.clickedId}
+                />
 
 
             </div>

@@ -42,7 +42,7 @@ export class Paciente extends Component {
             .then(res => {
                 console.log(res.data)
                 let id = res.data.rows[0].id + 1
-                let enlace = "/index/" + id
+                let enlace = this.props.match.params.id + "/index/" + id
 
                 this.setState({ rows: res.data.rows, idUsuario: enlace })
             })
@@ -56,14 +56,17 @@ export class Paciente extends Component {
 
 
     render() {
-
+        const id = this.props.match.params.id
+        console.log(this.state.idUsuario)
+        const href = "/" + this.state.idUsuario
         var filtros = ["Todos los pacientes", "Pacientes Asociados", "Pacientes en Lista de Espera"]
         return (
             <div>
                 <div>
 
                     <Layout
-                        mustBeSideNav={false} />
+                        mustBeSideNav={false} 
+                        loggedUser= {id}/>
 
                 </div>
                 <div id="body">
@@ -77,7 +80,7 @@ export class Paciente extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button className="btn-custom" href={this.state.idUsuario}> Agregar Paciente</Button>
+                                <Button className="btn-custom" href={href}> Agregar Paciente</Button>
                             </Col>
 
                             <Col>

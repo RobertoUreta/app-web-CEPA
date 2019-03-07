@@ -70,3 +70,14 @@ export let insertarUsuario = (data)=>{
         console.log(error);
       });
 }
+
+export let obtenerDatosUsuario = async (id) => {
+    try {
+        let res = await request.get('/datosUsuario', {params:{
+            idUser: id
+        }});
+        return res;
+    } catch (error) {
+        console.log(error);
+    }   
+}
