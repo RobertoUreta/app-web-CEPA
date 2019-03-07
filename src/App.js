@@ -5,6 +5,7 @@ import { Switch , Route} from 'react-router-dom'
 import { Usuario } from './pages/Usuario'
 import { Paciente } from './pages/Paciente'
 import { Agenda }  from './pages/Agenda'
+import { NavBar } from './components/NavBar'
 class App extends Component {
   render() {
     return (
