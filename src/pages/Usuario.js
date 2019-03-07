@@ -6,8 +6,6 @@ import { TablaUsuario } from '../components/TablaUsuario'
 import "../styles/styles.css"
 import {verificarSesion} from '../backend/login'
 
-import { obtenerListaUsuarios } from '../backend/usuario/usuario'
-
 import request from '../backend/config'
 
 export class Usuario extends Component {
@@ -62,7 +60,7 @@ export class Usuario extends Component {
         let res = verificarSesion();
         res.then(resp => {
             if (!resp.data.ok) {
-                console.log('entro aqui');
+                //console.log('entro aqui');
                 this.props.history.push('/')
             }
         })

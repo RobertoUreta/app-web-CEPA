@@ -3,6 +3,7 @@ import { InputGroup, Button, Form, NavDropdown, Navbar, Nav } from 'react-bootst
 import { Link , Redirect } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
 import "../styles/styles.css"
+import {cerrarSesion} from '../backend/login'
 
 import { obtenerDatosUsuario } from '../backend/usuario/usuario'
 
@@ -37,13 +38,27 @@ export class NavBar extends Component {
         evt.preventDefault()
     }  
 
+    _cerrarSesion = () => {
+        console.log('logouooottt');
+        let res = cerrarSesion();
+        res.then(resp=>{
+            if (resp.data.ok) {
+                return true;
+            }
+            return false;
+        })
+        .catch(err =>{
+            console.log(err);
+        }
+        )
+    
+    }
     render() {
         const { nombre, apellido_paterno, apellido_materno } = this.state.usuario
         const hrefListaUsuarios= `/${this.props.loggedUser}/listaUsuarios`
         const hrefListaPacientes = `/${this.props.loggedUser}/listaPacientes/`
         const hrefAgenda = `/${this.props.loggedUser}/agenda`
         return (
-
             <div className="Layout">
                 <Navbar bg="light" expand="lg" fixed="top">
                     <Link to="/">
@@ -100,7 +115,7 @@ export class NavBar extends Component {
                             <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Cerrar Sesión</NavDropdown.Item>
+                            <NavDropdown.Item onClick={this._cerrarSesion} href="/">Cerrar Sesión</NavDropdown.Item>
                         </NavDropdown>
 
 

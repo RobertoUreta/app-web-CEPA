@@ -3,8 +3,6 @@ import { Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
 import "../styles/login.css";
 import { obtenerSesion } from '../backend/login'
-import { Link } from 'react-router-dom'
-
 export class Login extends Component {
   constructor(props) {
     super(props);
@@ -30,18 +28,18 @@ export class Login extends Component {
     let path = "/home"
 
     const aux = JSON.stringify(this.state, null, '  ');
-    console.log(aux)
-    console.log(this.state);
+    console.log('AUXILIAR'+aux)
+    //console.log(this.state);
     let auth = obtenerSesion(JSON.parse(aux));
     auth 
       .then((res) => {
-        console.log(res.data);
-        path=path+'/'+res.data.usuario.id_usuario
+        //console.log(res.data);
         if (res.data.ok) {
-          this.props.history.push(path)
+          path='/'+res.data.usuario.id_usuario+path;
+          this.props.history.push(path);
         }
         else{
-          alert("Usuario o Contraseña incorrectos manco qlo")
+          alert("Usuario o Contraseña incorrecta")
         }
       }
     );
@@ -51,7 +49,7 @@ export class Login extends Component {
   render() {
     return (
       <div className="Login">
-        <form onSubmit={this._handleSubmit}>
+        <form onSubmit={this._handleSubmit} autoComplete="off">
           <Form.Group controlId="usuario">
             <Image src={logo} className="logo img-fluid center-block" alt="" responsive />
 
@@ -84,7 +82,6 @@ export class Login extends Component {
             </div>
 
             <div className="div-btn-submit">
-              <Link to=''>
                 <Button
                   onClick={this.handleSubmit}
                   className="btn-submit"
@@ -94,7 +91,6 @@ export class Login extends Component {
                 >
                   Acceder
               </Button>
-              </Link>
             </div>
           </div>
 
