@@ -26,7 +26,8 @@ export class Layout extends Component {
         return (
             <div>
                 <div>
-                    <NavBar />
+                    <NavBar
+                    idUser = { this.props.idUser} />
                 </div>
                 <div>
                     {this.props.mustBeSideNav

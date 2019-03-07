@@ -69,13 +69,14 @@ export class Usuario extends Component {
     }
 
     render() {
-
+        const id = this.props.match.params.id
         return (
             <div>
                 <div>
 
                     <Layout
-                        mustBeSideNav={false} />
+                        mustBeSideNav={false} 
+                        idUser = {id}/>
 
                 </div>
                 <div id="body">
