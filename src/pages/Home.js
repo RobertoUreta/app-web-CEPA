@@ -32,7 +32,8 @@ export class Home extends Component {
 
                     <Layout
                         mustBeSideNav={false} 
-                        loggedUser = {id}/>
+                        loggedUser = {id}
+                        history={this.props.history}/>
 
                 </div>
                 <div id="body">
