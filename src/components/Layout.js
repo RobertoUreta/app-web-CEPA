@@ -27,7 +27,8 @@ export class Layout extends Component {
             <div>
                 <div>
                     <NavBar
-                    loggedUser = { this.props.loggedUser} />
+                    loggedUser = { this.props.loggedUser} 
+                    history = {this.props.history}/>
                 </div>
                 <div>
                     {this.props.mustBeSideNav

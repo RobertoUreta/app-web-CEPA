@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Table } from 'react-bootstrap'
 
-
+let elements = []
 export class TablaPaciente extends Component {
     constructor(props) {
         super(props)
@@ -22,7 +22,17 @@ export class TablaPaciente extends Component {
 
     }
 
-    render() {
+
+
+    componentWillReceiveProps(props){
+        const {usuarios, refresh} = this.props;
+
+        if(props.refresh !== refresh){
+            elements = usuarios;
+        }
+    }
+
+    render() {            
         return (
             <Table striped bordered hover size="sm">
                 <thead>
