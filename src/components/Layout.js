@@ -17,7 +17,10 @@ export class Layout extends Component {
         return (
 
             <NavLateral
-                userId = {id}/>
+                userId = {id}
+                history = {this.props.history}
+                loggedUser= {this.props.match.params.id}
+                />
 
         )
     }

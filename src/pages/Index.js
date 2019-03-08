@@ -17,25 +17,27 @@ export class Index extends Component {
         return (
 
             <NavLateral
-                userId={id} />
+                userId={id} 
+                />
 
         )
     }
 
     render() {
         const id = this.props.match.params.userId
-        console.log("loggedUser",this.props.match.params.id)
-        console.log("idpaciente",id)
-
+       
         return (
             <div>
                 <div>
                     <NavBar
-                        loggedUser={this.props.match.params.id} />
+                        loggedUser={this.props.match.params.id}
+                        history={this.props.history} />
                 </div>
                 <div>
                     <NavLateral
-                        userId={id} />
+                        userId={id} 
+                        history = {this.props.history}
+                        loggedUser= {this.props.match.params.id}/>
 
                 </div>
             </div>

@@ -12,7 +12,9 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route exact path='/' component={Login} />
-          <Route path='/:id/index/:userId' component={Index} />
+          {['/:id/editPaciente/:userId', '/:id/crearPaciente/:userId'].map((path, index) =>
+            <Route path={path} component={Index} key={index} />
+          )}
           {['/:id/listaPacientes', '/:id/busquedaPaciente/:search'].map((path, index) =>
             <Route path={path} component={Paciente} key={index} />
           )}

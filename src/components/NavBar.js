@@ -62,10 +62,11 @@ export class NavBar extends Component {
         const hrefListaUsuarios= `/${this.props.loggedUser}/listaUsuarios`
         const hrefListaPacientes = `/${this.props.loggedUser}/listaPacientes/`
         const hrefAgenda = `/${this.props.loggedUser}/agenda`
+        const hrefHome = `/home/${this.props.loggedUser}`
         return (
             <div className="Layout">
                 <Navbar bg="light" expand="lg" fixed="top">
-                    <Link to="/">
+                    <Link to={hrefHome}>
                         <Navbar.Brand >
 
                             <img

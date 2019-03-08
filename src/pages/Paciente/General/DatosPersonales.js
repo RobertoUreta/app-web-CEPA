@@ -41,6 +41,31 @@ export class DatosPersonales extends Component {
         };
     }
 
+
+    componentWillMount() {
+        let paciente = this.props.paciente
+        if (paciente !== undefined) {
+            console.log("no es undefined", paciente)
+            this.setState({
+                nombre: paciente.nombre,
+                apellidoPaterno: paciente.apellido_paterno,
+                apellidoMaterno: paciente.apellido_materno,
+                rut: paciente.rut,
+                fechaNacimiento: paciente.fecha_nacimiento,
+                telefonoMovil: paciente.telefono_movil,
+                telefonoFijo: paciente.telefono_fijo,
+                correo: paciente.correo,
+               
+                establecimientoEducacional: paciente.establecimiento_educacional,
+                tipoEstablecimiento: paciente.tipo_establecimiento,
+                prevision: paciente.prevision,
+                ocupacion: paciente.ocupacion,
+                relacionContractual: paciente.relacion_contractual,
+                tipoPaciente: paciente.tipo_paciente,
+                valorSesion: paciente.valor_sesion,
+            })
+        }
+    }
     _handleChange = (date) => {
         this.setState({
             fechaNacimiento: date
@@ -68,8 +93,7 @@ export class DatosPersonales extends Component {
     handleSubmit = event => {
         event.preventDefault();
         let fecha = new Date(this.state.fechaNacimiento)
-        let nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')       
-        console.log(this.state.fechaIngreso)
+        let nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
 
         let info = JSON.stringify(this.state, null, '  ');
 
@@ -79,6 +103,7 @@ export class DatosPersonales extends Component {
     }
 
     render() {
+
         return (
             <div className="DatosPersonales">
                 <form onSubmit={this.handleSubmit} autoComplete="off">

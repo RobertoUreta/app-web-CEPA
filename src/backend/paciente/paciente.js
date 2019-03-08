@@ -39,3 +39,12 @@ export let obtenerIdPaciente = async () => {
         console.log(error);
     }   
 }
+
+export let obtenerDatosPaciente = async (id) => {
+    try{
+        let res = await request.get('/datosPaciente', {params: {idPaciente: id}})
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+}

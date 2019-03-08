@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { Table } from 'react-bootstrap'
-
+import { Link } from 'react-router-dom'
 let elements = []
 export class TablaPaciente extends Component {
     constructor(props) {
@@ -34,20 +34,24 @@ export class TablaPaciente extends Component {
 
     render() {            
         return (
-            <Table striped bordered hover size="sm">
+            <Table striped bordered hover size="sm" >
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Rut</th>
+                        <th >Rut</th>
+                        <th style={{width: "10px"}}></th>
+                        
                     </tr>
                 </thead>
                 <tbody>
                     {this.props.elements.map((v, i) => {
+                        let href=`/${this.props.loggedUser}/editPaciente/${v.id_paciente}`
                         return (
-                            <tr key={i}>
+                            <tr key={v.id_paciente}>
 
                                 <td>{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
                                 <td>{v.rut + "-" + this.cambiarDigitoVerificador(v)}</td>
+                                <Link to={href}><td ><i className="fa fa-edit"></i></td></Link>
 
                             </tr>
                         )

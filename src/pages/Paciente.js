@@ -35,7 +35,7 @@ export class Paciente extends Component {
             .then(res => {
                 console.log(res.data)
                 let id = res.data.rows[0].id + 1
-                let enlace = this.props.match.params.id + "/index/" + id
+                let enlace = this.props.match.params.id + "/crearPaciente/" + id
 
                 this.setState({ rows: res.data.rows, idUsuario: enlace })
             })
@@ -44,7 +44,6 @@ export class Paciente extends Component {
                 console.log(err);
             });
         const self = this
-        console.log("test", this.props.match.params.search)
         if (this.props.match.params.search === undefined) {
             let promise = obtenerPacientes()
             promise
@@ -60,8 +59,7 @@ export class Paciente extends Component {
             promise
                 .then(res => {
                     self.setState({ pacientes: res.data.pacientes, refresh: !this.state.refresh })
-                    console.log("pacientes", this.state.pacientes)
-                    console.log("url",window.location.href)
+                   
                 }).catch(err => {
                     console.log(err)
                 });
@@ -123,7 +121,8 @@ export class Paciente extends Component {
                     <div>
                         <TablaPaciente
                             elements={this.state.pacientes}
-                            refresh = {this.state.refresh} />
+                            refresh = {this.state.refresh}
+                            loggedUser = {id} />
                     </div>
                 </div>
             </div>
