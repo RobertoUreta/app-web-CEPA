@@ -7,7 +7,7 @@ import { TablaPaciente } from '../components/TablaPacientes'
 import "../styles/styles.css"
 
 import request from '../backend/config'
-import { obtenerPacientes } from '../backend/paciente/paciente'
+import { obtenerPacientes, busquedaPacientes, obtenerIdPaciente } from '../backend/paciente/paciente'
 
 
 
@@ -21,24 +21,17 @@ export class Paciente extends Component {
             filtro: "",
             idUsuario: "",
             rows: [],
-            pacientes: []
-        }
-    }
+            pacientes: [],
+            refresh: false
 
-    componentWillMount() {
-        
-        const self = this
-        request.get('/listaPacientes')
-            .then(res => {
-                self.setState({ pacientes: res.data.pacientes })
-                console.log("pacientes", this.state.pacientes)
-            }).catch(err => {
-            });
+        }
     }
 
     componentDidMount() {
         console.log("componentDidMount")
         request.get('/obtener_id_paciente')
+        let idPaciente = obtenerIdPaciente()
+        idPaciente
             .then(res => {
                 console.log(res.data)
                 let id = res.data.rows[0].id + 1
@@ -50,6 +43,29 @@ export class Paciente extends Component {
             .catch(err => {
                 console.log(err);
             });
+        const self = this
+        console.log("test", this.props.match.params.search)
+        if (this.props.match.params.search === undefined) {
+            let promise = obtenerPacientes()
+            promise
+                .then(res => {
+                    self.setState({ pacientes: res.data.pacientes })
+                    console.log("pacientes", this.state.pacientes)
+                }).catch(err => {
+                    console.log(err)
+                });
+        }
+        else {
+            let promise = busquedaPacientes(this.props.match.params.search)
+            promise
+                .then(res => {
+                    self.setState({ pacientes: res.data.pacientes, refresh: !this.state.refresh })
+                    console.log("pacientes", this.state.pacientes)
+                    console.log("url",window.location.href)
+                }).catch(err => {
+                    console.log(err)
+                });
+        }
 
     }
 
@@ -65,8 +81,9 @@ export class Paciente extends Component {
                 <div>
 
                     <Layout
-                        mustBeSideNav={false} 
-                        loggedUser= {id}/>
+                        mustBeSideNav={false}
+                        loggedUser={id}
+                        history={this.props.history} />
 
                 </div>
                 <div id="body">
@@ -105,7 +122,8 @@ export class Paciente extends Component {
                     </div>
                     <div>
                         <TablaPaciente
-                            elements={this.state.pacientes} />
+                            elements={this.state.pacientes}
+                            refresh = {this.state.refresh} />
                     </div>
                 </div>
             </div>

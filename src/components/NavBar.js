@@ -4,7 +4,7 @@ import { Link , Redirect } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
 import "../styles/styles.css"
 import {cerrarSesion} from '../backend/login'
-
+import {Paciente } from '../pages/Paciente'
 import { obtenerDatosUsuario } from '../backend/usuario/usuario'
 
 export class NavBar extends Component {
@@ -34,8 +34,12 @@ export class NavBar extends Component {
 
     }
     _onSubmit = (evt) => {
-        console.log(evt)
+        console.log(this.state.search)
         evt.preventDefault()
+        console.log("navbar",this.props.history)
+        let enlace =  `/${this.props.loggedUser}/busquedaPaciente/${this.state.search}` 
+        this.props.history.push(enlace)
+        window.location.reload()
     }  
 
     _cerrarSesion = () => {

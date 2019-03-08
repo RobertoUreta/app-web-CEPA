@@ -128,7 +128,8 @@ export class Agenda extends Component {
 
                         <Layout
                             mustBeSideNav={false}
-                            loggedUser={id} />
+                            loggedUser={id} 
+                            history={this.props.history}/>
 
                     </div>
                 </div>
