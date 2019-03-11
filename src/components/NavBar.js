@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { InputGroup, Button, Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
-import { Link , Redirect } from 'react-router-dom'
+import {Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
+import { Link} from 'react-router-dom'
 import logo from '../images/cepaicono.png'
 import "../styles/styles.css"
 import {cerrarSesion} from '../backend/login'
-import {Paciente } from '../pages/Paciente'
 import { obtenerDatosUsuario } from '../backend/usuario/usuario'
 
 export class NavBar extends Component {
@@ -19,8 +18,9 @@ export class NavBar extends Component {
     componentWillMount() {
 
         let promesa = obtenerDatosUsuario(this.props.loggedUser);
-        promesa.
-            then((res) => {
+        
+        promesa
+            .then((res) => {
                 console.log("resdatapromesa", res.data)
                 this.setState({ usuario: res.data.usuarios[0] })
             })

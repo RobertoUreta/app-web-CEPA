@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-let elements = []
+let elements=[]
 export class TablaPaciente extends Component {
     constructor(props) {
         super(props)
@@ -51,7 +51,7 @@ export class TablaPaciente extends Component {
 
                                 <td>{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
                                 <td>{v.rut + "-" + this.cambiarDigitoVerificador(v)}</td>
-                                <Link to={href}><td ><i className="fa fa-edit"></i></td></Link>
+                                <Link to={href}><td><i className="fa fa-edit"></i></td></Link>
 
                             </tr>
                         )

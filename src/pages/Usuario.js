@@ -55,12 +55,9 @@ export class Usuario extends Component {
             .catch(err => {
             });
 
-
-        let id = this.props.match.params.id;
         let res = verificarSesion();
         res.then(resp => {
             if (!resp.data.ok) {
-                //console.log('entro aqui');
                 this.props.history.push('/')
             }
         })

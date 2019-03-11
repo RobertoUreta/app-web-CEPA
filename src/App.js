@@ -6,10 +6,14 @@ import { Paciente } from './pages/Paciente'
 import { Agenda } from './pages/Agenda'
 import { Home } from './pages/Home'
 import { Index } from './pages/Index'
+
 class App extends Component {
+
+ 
   render() {
     return (
       <div className="App">
+
         <Switch>
           <Route exact path='/' component={Login} />
           {['/:id/editPaciente/:userId', '/:id/crearPaciente/:userId'].map((path, index) =>

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Col, Form, Table, Button, Row } from 'react-bootstrap'
+import { Col, Form, Button, Row } from 'react-bootstrap'
 import { Layout } from '../components/Layout'
 import { Option } from '../components/Option'
 import { TextoAyuda } from '../components/TextoAyuda'
 import { TablaPaciente } from '../components/TablaPacientes'
 import "../styles/styles.css"
+import {verificarSesion} from '../backend/login'
 
 import request from '../backend/config'
 import { obtenerPacientes, busquedaPacientes, obtenerIdPaciente } from '../backend/paciente/paciente'
@@ -28,6 +29,12 @@ export class Paciente extends Component {
     }
 
     componentDidMount() {
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                this.props.history.push('/')
+            }
+        });
         console.log("componentDidMount")
         request.get('/obtener_id_paciente')
         let idPaciente = obtenerIdPaciente()
