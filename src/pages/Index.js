@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { NavBar } from '../components/NavBar'
 import { NavLateral } from '../components/SideBarNav'
-import PropTypes from 'prop-types'
 
 export class Index extends Component {
 

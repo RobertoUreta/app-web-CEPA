@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
-import {obtenerSupervisores,obtenerRoles,insertarUsuario,revisarRestricted} from '../backend/usuario/usuario'
+import {obtenerSupervisores,obtenerRoles,insertarUsuario} from '../backend/usuario/usuario'
 const generos = ["Masculino", "Femenino", "Otro"]
 export class CrearUsuario extends Component {
     constructor(props) {
@@ -108,7 +108,6 @@ export class CrearUsuario extends Component {
                                             value={this.state.apellidoMaterno}
                                             onChange={this.handleChange}
                                             placeholder="Apellido Materno"
-                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -118,12 +117,13 @@ export class CrearUsuario extends Component {
                                     <Row>
                                         <Form.Group as={Col} md="8" controlId="rut">
                                             <TextoAyuda nombre="rut"
-                                                tooltip="Rut sin puntos ni digito verificador"
+                                                tooltip="RUT sin puntos ni digito verificador"
                                                 componente={<Form.Control
                                                     value={this.state.rut}
                                                     onChange={this.cambiarDigitoVerificador}
                                                     placeholder="Rut"
-                                                    required
+                                                    pattern="[0-9]+"
+                                                    title="RUT sin puntos, sin guión y sin digito verificador"
                                                 />} />
                                         </Form.Group>
                                         <strong>_</strong>
@@ -185,10 +185,12 @@ export class CrearUsuario extends Component {
                                 <Col>
                                     <Form.Group controlId="telefonoMovil">
                                         <Form.Control
+                                            pattern="(\+?56)?(\s?)(0?9)(\s?)[98765]\d{7}"
                                             value={this.state.telefonoMovil}
                                             onChange={this.handleChange}
                                             placeholder="Teléfono Móvil"
                                             required
+                                            title="Ingrese un numero de teléfono móvil valido"
                                         />
                                     </Form.Group>
                                 </Col>
@@ -211,7 +213,6 @@ export class CrearUsuario extends Component {
                                     value={this.state.correo}
                                     onChange={this.handleChange}
                                     placeholder="Correo"
-                                    required
                                 />
                             </Form.Group>
                             <Form.Group controlId="horasSemanales">
@@ -219,7 +220,6 @@ export class CrearUsuario extends Component {
                                     value={this.state.horasSemanales}
                                     onChange={this.handleChange}
                                     placeholder="Horas Semanales"
-                                    required
                                 />
                             </Form.Group>
                             <Row>
@@ -230,7 +230,6 @@ export class CrearUsuario extends Component {
                                             value={this.state.nombreContactoEmergencia}
                                             onChange={this.handleChange}
                                             placeholder="Nombre contacto de emergencia"
-                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -240,7 +239,6 @@ export class CrearUsuario extends Component {
                                             value={this.state.telefonoContactoEmergencia}
                                             onChange={this.handleChange}
                                             placeholder="Teléfono contacto de emergencia"
-                                            required
                                         />
                                     </Form.Group>
                                 </Col>

@@ -81,7 +81,6 @@ export class General extends Component {
 
     render() {
         console.log("stateGeneral!!!",this.state)
-        const { nombre } = this.state.datosGenerales
         let { verificador } = false;
         if (this.state.datosGenerales.nombre !== undefined) {
             verificador = true

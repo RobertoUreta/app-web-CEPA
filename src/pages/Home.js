@@ -1,7 +1,7 @@
 import React,{ Component } from 'react'
 import { Layout } from '../components/Layout'
 import { obtenerDatosUsuario } from '../backend/usuario/usuario'
-
+import {verificarSesion} from '../backend/login'
 
 export class Home extends Component { 
     constructor(props){
@@ -13,10 +13,15 @@ export class Home extends Component {
     }
 
     componentWillMount() {
-
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                this.props.history.push('/')
+            }
+        });
         let promesa = obtenerDatosUsuario(this.props.match.params.id);
-        promesa.
-            then((res) => {
+        promesa
+            .then((res) => {
                 console.log("resdatapromesa", res.data)
                 this.setState({ usuario: res.data.usuarios[0] })
             })

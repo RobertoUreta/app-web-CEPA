@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 
 import { Layout } from '../components/Layout'
 
-import { Modal, Button, Row, Col } from 'react-bootstrap'
+import {Row, Col } from 'react-bootstrap'
 import { ModalSesion } from '../components/ModalSesion'
 import { ModalSesionInfo } from '../components/ModalSesionInfo'
 import events from '../components/events'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import BigCalendar from 'react-big-calendar';
 import "../styles/styles.css"
+
+import {verificarSesion} from '../backend/login'
 
 import moment from 'moment'
 
@@ -98,6 +100,14 @@ export class Agenda extends Component {
         console.log(this.state.eventos)
     }
 
+    componentDidMount(){
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                this.props.history.push('/')
+            }
+        });
+    }
 
 
     render() {

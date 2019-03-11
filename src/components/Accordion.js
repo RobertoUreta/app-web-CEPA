@@ -6,7 +6,7 @@ import AccordionSection from './AccordionSection';
 
 class Accordion extends Component {
   static propTypes = {
-    children: PropTypes.instanceOf(Object).isRequired,
+    children: PropTypes.instanceOf(Object),
   };
 
   constructor(props) {

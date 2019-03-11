@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
-import { Image, Form, Col, Button } from 'react-bootstrap'
+import {Form, Col, Button } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { ModalFamiliar } from '../../../components/ModalFamiliar'
 import { TablaFamiliar } from '../../../components/TablaFamiliar'
-import { ImagePicker } from 'react-file-picker'
 //--Para cambiar el calendario a español--
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
 registerLocale("es", es)
 setDefaultLocale("es")
 //---------------------------------------
-const tiposFamilias = ["Familia Nuclear", "Familia Extensa", "Familia monoparental",
+const tiposFamilias = ["Familia nuclear", "Familia extensa", "Familia monoparental",
     "Familia ensamblada", "Familia homoparental", "Familia de padres separados"]
 
 
@@ -29,8 +28,6 @@ export class EntrevistaIngreso extends Component {
             fechaEntrevista: null,
             grupoFamiliar: "",
             observaciones: "",
-            genograma: "",//imagen
-            ecomapa: "",//imagen
             solicitante: "",
             motivoConsultaPaciente: "",
             motivoConsultaInstitucion: "",
@@ -38,34 +35,15 @@ export class EntrevistaIngreso extends Component {
             solucionesIntensadas: "",
             principalSintomatologia: "",
             tratamientoPrevio: "",
-            recursosIndividualesFamiliares: "",
+            consumoSustancias:"",
             impresionesClinicas: "",
-            relacionesInterpersonales: "",
-            relacionTerapeuta: "",
             observacionesFinales: "",
             show: false,
             familia: [],
-            srcGenograma: '',
-            srcEcomapa: ''
         };
     }
 
-    _handleImageGenograma = (image) => {
-        console.log("_handleImage")
-        console.log(this.state.src)
-
-        this.setState({ srcGenograma: image })
-        console.log(this.state.src)
-    }
-
-    _handleImageEcomapa= (image) => {
-        console.log("_handleImage")
-        console.log(this.state.src)
-
-        this.setState({ srcGenograma: image })
-        console.log(this.state.src)
-    }
-
+    
     _handleClose = (modalEvt) => {
         this.setState({ show: modalEvt });
     }
@@ -140,8 +118,16 @@ export class EntrevistaIngreso extends Component {
                                         <Option options={tiposFamilias} />
                                     </Form.Control>}
                                 />
+                            </Form.Group>
 
-
+                            <Form.Group controlId="observaciones">
+                                <Form.Control
+                                    as="textarea"
+                                    rows="2"
+                                    value={this.state.observaciones}
+                                    onChange={this.handleChange}
+                                    placeholder="Observaciones"
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="modalGrupoFamiliar">
@@ -153,38 +139,7 @@ export class EntrevistaIngreso extends Component {
                                     fnCerrar={this._handleClose}
                                     onSubmit={this._handleModalSubmit} />
                             </Form.Group>
-                            <Form.Group controlId="Genograma">
-                                <Form.Label>Genograma</Form.Label>
-                                <div>
-                                    <img src={this.state.srcGenograma} />
-                                </div>
-                                <ImagePicker
-                                    extensions={['jpg', 'jpeg', 'png']}
-                                    dims={{ minWidth: 100, maxWidth: 500, minHeight: 100, maxHeight: 500 }}
-                                    onChange={this._handleImageGenograma}
-                                    onError={errMsg => { alert(errMsg) }}
-                                >
-                                    <Button className= "btn-custom">
-                                    <i className="fa fa-image"></i>
-                                    </Button>
-                                </ImagePicker>
-                            </Form.Group>
-                            <Form.Group controlId="ecomapa">
-                                <Form.Label>Ecomapa</Form.Label>
-                                <div>
-                                    <img src={this.state.srcEcomapa} />
-                                </div>
-                                <ImagePicker
-                                    extensions={['jpg', 'jpeg', 'png']}
-                                    dims={{ minWidth: 100, maxWidth: 500, minHeight: 100, maxHeight: 500 }}
-                                    onChange={this._handleImageEcomapa}
-                                    onError={errMsg => { alert(errMsg) }}
-                                >
-                                    <Button className= "btn-custom">
-                                    <i className="fa fa-image"></i>
-                                    </Button>
-                                </ImagePicker>
-                            </Form.Group>
+                           
                             <Form.Group controlId="solicitante">
                                 <Form.Label>¿Quién solicita la consulta? (iniciativa propia, médico, instituciones, otros)</Form.Label>
                                 <Form.Control
@@ -255,14 +210,14 @@ export class EntrevistaIngreso extends Component {
                                     placeholder="tratamiento previo"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="recursosIndividualesFamiliares">
-                                <Form.Label>Recursos individuales y familiares</Form.Label>
+                            <Form.Group controlId="consumoSustancias">
+                                <Form.Label>Consumo de sustancias(Alcohol, tabaco y otras drogas)</Form.Label>
                                 <Form.Control
                                     as="textarea"
                                     rows="5"
-                                    value={this.state.recursosIndividualesFamiliares}
+                                    value={this.state.consumoSustancias}
                                     onChange={this.handleChange}
-                                    placeholder="recursos individuales y familiares"
+                                    placeholder="Consumo de sustancias"
                                 />
                             </Form.Group>
                             <Form.Group controlId="impresionesClinicas">
@@ -275,34 +230,14 @@ export class EntrevistaIngreso extends Component {
                                     placeholder="impresiones clinicas"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="relacionesInterpersonales">
-                                <Form.Label>Relaciones interpersonales (descripción de la relación materno filial, paterno filial, fraterna, grupo de pares y/o pareja)</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows="5"
-                                    value={this.state.relacionesInterpersonales}
-                                    onChange={this.handleChange}
-                                    placeholder="relaciones interpersonales"
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="relacionTerapeuta">
-                                <Form.Label>Descripción de la relación con el terapeuta</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows="5"
-                                    value={this.state.relacionTerapeuta}
-                                    onChange={this.handleChange}
-                                    placeholder="relación con el terapeuta"
-                                />
-                            </Form.Group>
                             <Form.Group controlId="observacionesFinales">
-                                <Form.Label>Observaciones</Form.Label>
+                                <Form.Label>Observaciones (incluir percepción de apoyo social)</Form.Label>
                                 <Form.Control
                                     as="textarea"
                                     rows="5"
                                     value={this.state.observacionesFinales}
                                     onChange={this.handleChange}
-                                    placeholder="observaciones finales"
+                                    placeholder="Observaciones (incluir percepción de apoyo social)"
                                 />
                             </Form.Group>
                             <Form.Group>

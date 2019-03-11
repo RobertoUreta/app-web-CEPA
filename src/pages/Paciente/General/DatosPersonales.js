@@ -92,8 +92,6 @@ export class DatosPersonales extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        let fecha = new Date(this.state.fechaNacimiento)
-        let nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
 
         let info = JSON.stringify(this.state, null, '  ');
 
@@ -163,12 +161,14 @@ export class DatosPersonales extends Component {
                                     <Row>
                                         <Form.Group as={Col} md="8" controlId="rut">
                                             <TextoAyuda nombre="rut"
-                                                tooltip="Rut sin puntos ni digito verificador"
+                                                tooltip="RUT sin puntos ni digito verificador"
                                                 componente={<Form.Control
                                                     value={this.state.rut}
                                                     onChange={this.cambiarDigitoVerificador}
-                                                    placeholder="Rut"
+                                                    placeholder="RUT"
+                                                    pattern="[0-9]+"
                                                     required
+                                                    title="RUT sin puntos, sin guión y sin digito verificador"
                                                 />} />
                                         </Form.Group>
                                         <strong>_</strong>
@@ -191,7 +191,9 @@ export class DatosPersonales extends Component {
                                         value={this.state.telefonoMovil}
                                         onChange={this.handleChange}
                                         placeholder="Teléfono Móvil"
+                                        pattern="(\+?56)?(\s?)(0?9)(\s?)[98765]\d{7}"
                                         required
+                                        title="Ingrese un numero de teléfono móvil valido"
                                     />} />
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="telefonoFijo">
