@@ -47,22 +47,22 @@ export class DatosPersonales extends Component {
         if (paciente !== undefined) {
             console.log("no es undefined", paciente)
             this.setState({
-                nombre: paciente.nombre,
-                apellidoPaterno: paciente.apellido_paterno,
-                apellidoMaterno: paciente.apellido_materno,
-                rut: paciente.rut,
+                nombre: paciente.nombre === "default" ? "" : paciente.nombre ,
+                apellidoPaterno: paciente.apellido_paterno === "default" ? "" : paciente.apellido_paterno,
+                apellidoMaterno: paciente.apellido_materno === "default" ? "" : paciente.apellido_materno,
+                rut: paciente.rut === "12345678" ? "" : paciente.rut,
                 fechaNacimiento: paciente.fecha_nacimiento,
-                telefonoMovil: paciente.telefono_movil,
-                telefonoFijo: paciente.telefono_fijo,
-                correo: paciente.correo,
+                telefonoMovil: paciente.telefono_movil === "default" ? "" : paciente.telefono_movil,
+                telefonoFijo: paciente.telefono_fijo === "default" ? "" : paciente.telefono_fijo,
+                correo: paciente.correo === "default@default.com" ? "" : paciente.correo,
                
-                establecimientoEducacional: paciente.establecimiento_educacional,
-                tipoEstablecimiento: paciente.tipo_establecimiento,
-                prevision: paciente.prevision,
-                ocupacion: paciente.ocupacion,
-                relacionContractual: paciente.relacion_contractual,
-                tipoPaciente: paciente.tipo_paciente,
-                valorSesion: paciente.valor_sesion,
+                establecimientoEducacional: paciente.establecimiento_educacional === "default" ? "" : paciente.establecimiento_educacional,
+                tipoEstablecimiento: paciente.tipo_establecimiento === "default" ? "" : paciente.tipo_establecimiento,
+                prevision: paciente.prevision === "default" ? "" : paciente.prevision,
+                ocupacion: paciente.ocupacion === "default" ? "" : paciente.ocupacion,
+                relacionContractual: paciente.relacion_contractual === "default" ? "" : paciente.relacion_contractual,
+                tipoPaciente: paciente.tipo_paciente === "default" ? "" : paciente.tipo_paciente,
+                valorSesion: paciente.valor_sesion === "default" ? "" : paciente.valor_sesion,
             })
         }
     }

@@ -2,16 +2,13 @@
 import request from '../config'
 
 
-export let insertarIngreso = (data, id) => {
-    request.post('/insertarPaciente', {
-        data, id
-    }).then(function (response) {
-        console.log(data.apellido)
-        console.log(response);
-    }).catch(function (error) {
-        console.log(data.nombre)
-        console.log(error);
-    });
+export let insertarIngreso = async (data, id) => {
+    try{
+        let res = await request.post('/insertarPaciente',{ data,id})
+    }catch ( error){
+        console.log(error)
+    }
+    
 }
 
 export let obtenerIdIngreso = (data, id) => {
@@ -56,5 +53,15 @@ export let updateAdultoContacto = (data, id) => {
     }).catch(function (error) {
         console.log(error);
     });
+}
+
+export let updateDatosPersonales = (data,id ) => {
+    request.put ('/update_datosPersonales', {
+        data,id
+    }).then(function (response) {
+        console.log(response);
+    }).catch(function (error){
+        console.log(error)
+    })
 }
 

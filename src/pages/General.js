@@ -6,7 +6,7 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
-import { insertarIngreso, updateAdultoContacto, updateDatosSocioDemo, updateDatosAdicionales } from '../backend/ingreso/ingreso'
+import { insertarIngreso, updateAdultoContacto, updateDatosSocioDemo, updateDatosAdicionales, updateDatosPersonales } from '../backend/ingreso/ingreso'
 import { obtenerDatosPaciente } from '../backend/paciente/paciente';
 
 export class General extends Component {
@@ -23,39 +23,54 @@ export class General extends Component {
             datosAdicionales: {}
         }
     }
+
+
+
     componentDidMount() {
-        let direccion = window.location.pathname
-        console.log(direccion.includes("editPaciente"))
-        if (direccion.includes("editPaciente")) {
-            let promise = obtenerDatosPaciente(this.state.id)
-            promise
-                .then(res => {
-                    this.setState({ paciente: res.data.paciente[0] })
-                    console.log("stateGeneral", this.state.paciente)
-                }).catch(err => {
-                    console.log(err)
-                });
-        }
+
+        let fecha = new Date()
+        let ingreso = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        let data = { fechaIngreso: ingreso }
+        let insertar = insertarIngreso(data, this.state.id)
+
+        insertar
+            .then(res => {
+                let promise = obtenerDatosPaciente(this.state.id)
+                promise
+                    .then(res => {
+                        this.setState({ paciente: res.data.paciente[0] })
+                        console.log("stateGeneral", this.state.paciente)
+                    }).catch(err => {
+                        console.log(err)
+                    });
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+
+
+
 
     }
+
+
     _handleDatosGenerales = (infoPaciente) => {
         console.log("_handleModalSubmit")
         var info = JSON.parse(infoPaciente)
-       
+
         let fecha = new Date(info.fechaNacimiento)
         let ingreso = new Date(info.fechaIngreso)
-        
+
         info.fechaIngreso = ingreso.toJSON().slice(0, 19).replace('T', ' ')
         info.nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
-       
-        this.setState({ datosGenerales: info })
-        let enlace = `/${this.props.loggedUser}/editPaciente/${this.state.id}`
-        console.log("enlace",enlace)
-        insertarIngreso(info, this.state.id)
-        
-        console.log("history en general",this.props.history)
 
-        this.props.history.push(enlace)
+        this.setState({ datosGenerales: info })
+        updateDatosPersonales(info, this.state.id)
+        //insertarIngreso(info, this.state.id)
+
+        //this.props.history.push(enlace)
     }
 
     _handleDatosAdicionales = (data) => {
@@ -80,7 +95,7 @@ export class General extends Component {
     }
 
     render() {
-        console.log("stateGeneral!!!",this.state)
+        console.log("stateGeneral!!!", this.state)
         const { nombre } = this.state.datosGenerales
         let { verificador } = false;
         if (this.state.datosGenerales.nombre !== undefined) {

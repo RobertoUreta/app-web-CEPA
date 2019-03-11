@@ -8,6 +8,7 @@ import "../styles/styles.css"
 
 import request from '../backend/config'
 import { obtenerPacientes, busquedaPacientes, obtenerIdPaciente } from '../backend/paciente/paciente'
+import {insertarIngreso} from '../backend/ingreso/ingreso'
 
 
 
@@ -67,7 +68,7 @@ export class Paciente extends Component {
 
     }
 
-
+    
 
     render() {
         const id = this.props.match.params.id
@@ -95,7 +96,7 @@ export class Paciente extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button className="btn-custom" href={href}> Agregar Paciente</Button>
+                                <Button className="btn-custom" href={href} > Agregar Paciente</Button>
                             </Col>
 
                             <Col>
