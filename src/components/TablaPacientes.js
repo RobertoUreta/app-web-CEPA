@@ -47,11 +47,11 @@ export class TablaPaciente extends Component {
                     {this.props.elements.map((v, i) => {
                         let href=`/${this.props.loggedUser}/editPaciente/${v.id_paciente}`
                         return (
-                            <tr key={v.id_paciente}>
+                             <tr key={v.id_paciente}>
 
-                                <td>{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
-                                <td>{v.rut + "-" + this.cambiarDigitoVerificador(v)}</td>
-                                <Link to={href}><td><i className="fa fa-edit"></i></td></Link>
+                                <td><a href={href}>{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</a></td>
+                                <td><a href={href}> {v.rut + "-" + this.cambiarDigitoVerificador(v)} </a></td>
+                               <td ><a href={href}><i className="fa fa-edit"></i></a></td>
 
                             </tr>
                         )

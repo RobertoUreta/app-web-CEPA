@@ -7,6 +7,13 @@
 
   }
 
+  .table a {
+    display: block;
+    text-decoration: none;
+    color :rgba(0,0,0,.7)
+
+
+  }
   .fa-icon-inner-text{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     font-size: 1rem;
@@ -119,7 +126,20 @@
     /*border-bottom:1px solid #444;*/
     cursor: pointer;
   }
+  .btn-lg {
+    background-color: #438C83; 
 
+  }
+
+  .btn-lg:active {
+    background-color: #98cdc7;
+
+  }
+
+  .btn-lg:hover{
+    background-color: #98cdc7;
+
+  }
   .btn-submit {
     background-color: #438C83; 
   }
