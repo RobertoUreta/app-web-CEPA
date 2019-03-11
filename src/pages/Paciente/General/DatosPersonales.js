@@ -5,7 +5,8 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { addYears } from 'date-fns/esm';
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import { updateDatosPersonales } from '../../../backend/ingreso/ingreso'
+import { SweetAlert } from 'react-bootstrap-sweetalert'
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
 const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
@@ -37,7 +38,8 @@ export class DatosPersonales extends Component {
             tipoPaciente: "",
             valorSesion: 0,
             nacimiento: "",
-            fechaIngreso: new Date()
+            fechaIngreso: new Date(),
+            alert: null
         };
     }
 
@@ -47,7 +49,7 @@ export class DatosPersonales extends Component {
         if (paciente !== undefined) {
             console.log("no es undefined", paciente)
             this.setState({
-                nombre: paciente.nombre === "default" ? "" : paciente.nombre ,
+                nombre: paciente.nombre === "default" ? "" : paciente.nombre,
                 apellidoPaterno: paciente.apellido_paterno === "default" ? "" : paciente.apellido_paterno,
                 apellidoMaterno: paciente.apellido_materno === "default" ? "" : paciente.apellido_materno,
                 rut: paciente.rut === "12345678" ? "" : paciente.rut,
@@ -55,7 +57,7 @@ export class DatosPersonales extends Component {
                 telefonoMovil: paciente.telefono_movil === "default" ? "" : paciente.telefono_movil,
                 telefonoFijo: paciente.telefono_fijo === "default" ? "" : paciente.telefono_fijo,
                 correo: paciente.correo === "default@default.com" ? "" : paciente.correo,
-               
+
                 establecimientoEducacional: paciente.establecimiento_educacional === "default" ? "" : paciente.establecimiento_educacional,
                 tipoEstablecimiento: paciente.tipo_establecimiento === "default" ? "" : paciente.tipo_establecimiento,
                 prevision: paciente.prevision === "default" ? "" : paciente.prevision,
@@ -90,13 +92,16 @@ export class DatosPersonales extends Component {
         )
     }
 
-    handleSubmit = event => {
+    
+
+    
+    handleSubmit = (event) => {
         event.preventDefault();
         let fecha = new Date(this.state.fechaNacimiento)
         let nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
 
         let info = JSON.stringify(this.state, null, '  ');
-
+   
         this.props.handlePaciente(info)
 
 
@@ -295,6 +300,7 @@ export class DatosPersonales extends Component {
                             <Form.Group>
                                 <div className="btn-container">
                                     <Button
+                                       
                                         className="btn-submit"
                                         type="submit"
                                     >
@@ -307,7 +313,7 @@ export class DatosPersonales extends Component {
 
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );

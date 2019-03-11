@@ -126,7 +126,20 @@
     /*border-bottom:1px solid #444;*/
     cursor: pointer;
   }
+  .btn-lg {
+    background-color: #438C83; 
 
+  }
+
+  .btn-lg:active {
+    background-color: #98cdc7;
+
+  }
+
+  .btn-lg:hover{
+    background-color: #98cdc7;
+
+  }
   .btn-submit {
     background-color: #438C83; 
   }

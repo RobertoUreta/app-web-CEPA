@@ -6,6 +6,8 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
+import  SweetAlert  from 'react-bootstrap-sweetalert'
+
 import { insertarIngreso, updateAdultoContacto, updateDatosSocioDemo, updateDatosAdicionales, updateDatosPersonales } from '../backend/ingreso/ingreso'
 import { obtenerDatosPaciente } from '../backend/paciente/paciente';
 
@@ -20,13 +22,14 @@ export class General extends Component {
             datosGenerales: {},
             adultoContacto: {},
             datosSocioDemograficos: {},
-            datosAdicionales: {}
+            datosAdicionales: {},
+            alert: null
         }
     }
 
 
 
-    componentDidMount() {
+    async componentDidMount() {
 
         let fecha = new Date()
         let ingreso = fecha.toJSON().slice(0, 19).replace('T', ' ')
@@ -48,12 +51,14 @@ export class General extends Component {
             .catch(err => {
                 console.log(err)
             })
-
-
-
-
-
     }
+
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    
+
 
 
     _handleDatosGenerales = (infoPaciente) => {
@@ -67,7 +72,21 @@ export class General extends Component {
         info.nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
 
         this.setState({ datosGenerales: info })
-        updateDatosPersonales(info, this.state.id)
+        let value = updateDatosPersonales(info, this.state.id)
+        value
+            .then(res => {
+                console.log(" holaa ", res.data)
+                if (res.data.ok) {
+                    console.log("asdfasdfasdfasdfasd")
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos del paciente
+                        </SweetAlert>
+                    )
+                    this.setState({alert: getAlert()})
+                }
+
+            })
         //insertarIngreso(info, this.state.id)
 
         //this.props.history.push(enlace)
@@ -109,7 +128,9 @@ export class General extends Component {
                     <div label="Datos Personales">
                         <DatosPersonales
                             paciente={this.state.paciente}
+                            id={this.state.id}
                             handlePaciente={this._handleDatosGenerales} />
+                            {this.state.alert}
                     </div>
                     <div label="Adulto Contacto">
                         <AdultoContacto
@@ -133,8 +154,7 @@ export class General extends Component {
                     </div>
                 </Accordion>
 
-
-
+                
 
             </div>
         )

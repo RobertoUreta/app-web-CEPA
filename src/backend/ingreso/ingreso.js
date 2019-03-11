@@ -46,6 +46,7 @@ export let updateDatosSocioDemo = (data, id) => {
 }
 
 export let updateAdultoContacto = (data, id) => {
+   
     request.put('/update_adultocontacto', {
         data, id
     }).then(function (response) {
@@ -55,13 +56,14 @@ export let updateAdultoContacto = (data, id) => {
     });
 }
 
-export let updateDatosPersonales = (data,id ) => {
-    request.put ('/update_datosPersonales', {
-        data,id
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error){
-        console.log(error)
-    })
+export let updateDatosPersonales =  async (data,id ) => {
+    try{
+        let res = await request.put('/update_datosPersonales',{data,id})
+        console.log("res", res)
+        return res;
+    }catch(error){
+
+    }
+    
 }
 
