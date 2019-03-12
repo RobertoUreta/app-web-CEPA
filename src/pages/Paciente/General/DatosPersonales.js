@@ -5,8 +5,7 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { addYears } from 'date-fns/esm';
 import { TextoAyuda } from '../../../components/TextoAyuda'
-import { updateDatosPersonales } from '../../../backend/ingreso/ingreso'
-import { SweetAlert } from 'react-bootstrap-sweetalert'
+
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
 const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",

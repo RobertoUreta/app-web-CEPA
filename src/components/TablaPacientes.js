@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
 import { Table } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-let elements=[]
 export class TablaPaciente extends Component {
     constructor(props) {
         super(props)
@@ -20,16 +18,6 @@ export class TablaPaciente extends Component {
         return S ? S - 1 : 'k'
 
 
-    }
-
-
-
-    componentWillReceiveProps(props){
-        const {usuarios, refresh} = this.props;
-
-        if(props.refresh !== refresh){
-            elements = usuarios;
-        }
     }
 
     render() {            

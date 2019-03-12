@@ -9,7 +9,8 @@ export class ModalSesion extends Component {
         super(props)
 
         this.state = {
-
+            salas: null,
+            
         }
     }
 
@@ -18,6 +19,7 @@ export class ModalSesion extends Component {
         
     }
 
+    
     _handleFormSubmit = (evt) => {
        
         
@@ -32,7 +34,6 @@ export class ModalSesion extends Component {
 
     render() {
 
-
         return (
             <Modal show={this.props.show} onHide={this._handleClose}>
                 <Modal.Header closeButton>
@@ -41,7 +42,8 @@ export class ModalSesion extends Component {
                 <Modal.Body>
                     <RegistrarSesion 
                     defaultDate = { this.props.selectedDate}
-                    onSubmit = {this._handleFormSubmit}/>
+                    onSubmit = {this._handleFormSubmit}
+                    />
                 </Modal.Body>
             </Modal>
         )

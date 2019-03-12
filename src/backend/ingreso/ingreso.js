@@ -18,7 +18,7 @@ export let obtenerIdIngreso = (data, id) => {
         }
 
     }).then(res => {
-        let data = res.data;
+        //let data = res.data;
 
     }).catch(err => {
 

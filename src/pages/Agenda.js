@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Layout } from '../components/Layout'
 
-import {Row, Col } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import { ModalSesion } from '../components/ModalSesion'
 import { ModalSesionInfo } from '../components/ModalSesionInfo'
 import events from '../components/events'
@@ -10,9 +10,10 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import BigCalendar from 'react-big-calendar';
 import "../styles/styles.css"
 
-import {verificarSesion} from '../backend/login'
+import { verificarSesion } from '../backend/login'
 
 import moment from 'moment'
+import { insertarSesion, obtenerSesiones, obtenerLastIdSesion } from '../backend/agenda/agenda';
 
 
 
@@ -38,8 +39,11 @@ export class Agenda extends Component {
             fecha: new Date(),
             show: false,
             showInfo: false,
-            eventos: events,
+            eventos: [],
             clickedId: 0,
+            salas: new Map(),
+            loadingInfo: 'initial',
+            idSesion: "",
         }
     }
 
@@ -61,6 +65,43 @@ export class Agenda extends Component {
         };
     }
 
+
+  
+
+    componentDidMount() {
+        this.setState({loadingInfo : 'true'})
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                this.props.history.push('/')
+            }
+
+        })
+        let eventos = []
+        let promise = obtenerSesiones()
+        promise
+            .then(res => {
+                console.log("resddmountagenda", res)
+                res.data.response.forEach(element => {
+                    let nuevoEvento = {
+                        id: element.id_sesion,
+                        title: element.descripcion_sesion,
+                        start: new Date(element.hora_inicio_atencion),
+                        end: new Date(element.hora_termino_atencion)
+                    }
+                    eventos.push(nuevoEvento)
+                })
+                console.log("eventos", eventos)
+                this.setState({ eventos: eventos, loadingInfo: 'false ',idSesion: obtenerLastIdSesion()})
+                console.log("state.eventos", this.state.eventos, "state.idSesion", this.state.idSesion)
+            }).catch(err => {
+                console.log(err)
+            })
+
+
+
+
+    }
 
     _handleShowInfo(evt) {
         console.log("hhasdfas", evt.id)
@@ -84,29 +125,32 @@ export class Agenda extends Component {
         console.log("_handleModalSubmit")
         let aux = JSON.parse(evt)
         let fecha = new Date(aux.fechaSesion)
-        console.log(fecha)
+        console.log(aux)
         let inicio = this.getHora(aux.horaInicio).split(":")
         let termino = this.getHora(aux.horaTermino).split(":")
 
+        let fechaStart = new Date(fecha.getFullYear(), fecha.getMonth()
+            , fecha.getDate(), inicio[0], inicio[1])
+
+        let fechaEnd = new Date(fecha.getFullYear(), fecha.getMonth()
+            , fecha.getDate(), termino[0], termino[1])
+
         let eventoNuevo = {
-            id: events.length,
+            id: this.state.eventos.lastIndexOf + 1,
             title: aux.descripcion,
-            start: new Date(fecha.getFullYear(), fecha.getMonth()
-                , fecha.getDate(), inicio[0], inicio[1]),
-            end: new Date(fecha.getFullYear(), fecha.getMonth()
-                , fecha.getDate(), termino[0], termino[1]),
+            start: fechaStart,
+            end: fechaEnd,
+            fecha_sesion: aux.fechaSesion,
+            ref_sala: aux.idSala,
+            estado_sesion: aux.estadoSesion,
+            descripcion_sesion: aux.descripcion,
+            valor_sesion: aux.valorSesion,
+            ref_usuario: this.props.match.params.id,
+
         }
+        insertarSesion(eventoNuevo)
         this.state.eventos.push(eventoNuevo)
         console.log(this.state.eventos)
-    }
-
-    componentDidMount(){
-        let res = verificarSesion();
-        res.then(resp => {
-            if (!resp.data.ok) {
-                this.props.history.push('/')
-            }
-        });
     }
 
 
@@ -120,8 +164,8 @@ export class Agenda extends Component {
             week: "Semanal",
             day: "Día",
             date: "Fecha"
-        }        
-        
+        }
+
         const id = this.props.match.params.id
 
 
@@ -131,6 +175,26 @@ export class Agenda extends Component {
 
         moment.locale("es", { week: { dow: 1 } })
         let localizer = BigCalendar.momentLocalizer(moment)
+
+        if (this.state.loadingInfo === 'initial') {
+            console.log('This happens 2nd - after the class is constructed. You will not see this element because React is still computing changes to the DOM.');
+            console.log("amipixula21231", this.state.eventos)
+
+            return <h2>Intializing...</h2>;
+
+          }
+      
+      
+          if (this.state.loadingInfo === 'true') {
+            console.log('This happens 5th - when waiting for data.');
+            console.log("amipixula21231", this.state.eventos)
+
+            return <h2>loadingInfo...</h2>;
+
+          }
+      
+        console.log("amipixula21231", this.state.eventos,this.state.id)
+
         return (
             <div>
                 <div>
@@ -138,8 +202,8 @@ export class Agenda extends Component {
 
                         <Layout
                             mustBeSideNav={false}
-                            loggedUser={id} 
-                            history={this.props.history}/>
+                            loggedUser={id}
+                            history={this.props.history} />
 
                     </div>
                 </div>
@@ -152,7 +216,8 @@ export class Agenda extends Component {
                                     show={this.state.show}
                                     onClose={this._handleClose}
                                     onSubmit={this._handleModalSubmit}
-                                    selectedDate={this.state.fecha} />
+                                    selectedDate={this.state.fecha}
+                                />
                             </Col>
 
                         </Row>
@@ -176,13 +241,14 @@ export class Agenda extends Component {
                         />
                     </div>
                 </div>
-                <ModalSesionInfo
-                    show={this.state.showInfo}
-                    onHide={modalClose}
-                    eventos={this.state.eventos}
-                    clickeInfo={this.state.clickedId}
-                />
 
+                
+                    <ModalSesionInfo
+                        show={this.state.showInfo}
+                        onHide={modalClose}
+                        eventos={this.state.eventos}
+                        clickedInfo={this.state.clickedId}
+                    />
 
             </div>
         )

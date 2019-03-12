@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours } from 'date-fns/esm';
 import { setMinutes } from 'date-fns';
+import { obtenerSalas } from '../../../backend/agenda/agenda';
 
 export class RegistrarSesion extends Component {
 
@@ -22,9 +23,28 @@ export class RegistrarSesion extends Component {
             sala: "",
             tipoSesion: "",
             estadoSesion: "",
+            idSala: "",
+            salas: new Map()
         };
     }
 
+    componentDidMount(){
+        let aux = new Map()
+        let promise = obtenerSalas()
+            promise
+                .then(res => {
+                    let data = res.data;
+                    let arr = data.salas;
+                    arr.forEach(element => {
+                        aux.set(element.nombre, element.id_sala)
+                    });
+                    this.setState({ salas: aux })
+
+                }).catch(err => {
+                    aux.push("default");
+                    console.log(err);
+                });
+    }
 
     _handleChange = (date) => {
         this.setState({
@@ -157,10 +177,15 @@ export class RegistrarSesion extends Component {
                                         componente={<Form.Control
                                             as="select"
                                             value={this.state.sala}
-                                            onChange={this.handleChange}
+                                            onChange={event => {
+                                                this.setState({
+                                                    [event.target.id]: event.target.value,
+                                                    idSala: this.state.salas.get(event.target.value)
+                                                });
+                                            }}
                                         >
                                             <option hidden>Elegir Sala</option>
-                                            <Option options={[]} />
+                                            <Option options={Array.from(this.state.salas.keys())} />
                                         </Form.Control>} />
                                 </Form.Group>
                             </Row>
