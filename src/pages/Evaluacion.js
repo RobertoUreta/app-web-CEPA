@@ -21,7 +21,7 @@ export class Evaluacion extends Component {
             <div>
                 <Accordion>
                     <div label="Tamizaje">
-                        <Tamizaje />
+                        <Tamizaje userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Evaluación de Ingreso">
                         <EntrevistaIngreso />
