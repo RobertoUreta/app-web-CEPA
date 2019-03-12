@@ -4,6 +4,7 @@ import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
+import {insertarTamizaje} from '../../../backend/evaluacion/tamizaje'
 
 
 
@@ -41,9 +42,15 @@ export class Tamizaje extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha = new Date(aux.fechaSolicitud)
+        aux.fechaSolicitud = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux)
+        console.log(this.state);
+        insertarTamizaje({
+            idUsuario: this.props.userId,
+            idPaciente: this.props.pacienteId,
+            aux});
 
     }
 
@@ -53,12 +60,12 @@ export class Tamizaje extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                            <Form.Group controlId="nombre">
+                            <Form.Group controlId="nombreSolicitante">
                             <TextoAyuda 
                                     nombre="nombre"
                                     tooltip="Nombre Solicitante"
                                     componente={<Form.Control
-                                    value={this.state.nombre}
+                                    value={this.state.nombreSolicitante}
                                     onChange={this.handleChange}
                                     placeholder="Nombre Solicitante"
                                 />}
@@ -133,7 +140,7 @@ export class Tamizaje extends Component {
                                     <Option options={tiempoMalestar} />
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group controlId="preguntaOnservaciones">
+                            <Form.Group controlId="preguntaObservaciones">
                                 <Form.Label>Observaciones</Form.Label>
                                 <Form.Control
                                     as="textarea"

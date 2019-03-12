@@ -93,7 +93,7 @@ export class EntrevistaPsicologica extends Component {
                             <Form.Group controlId="Genograma">
                                 <Form.Label>Genograma</Form.Label>
                                 <div>
-                                    <img src={this.state.srcGenograma} />
+                                    <img src={this.state.srcGenograma} alt="Imagen de genograma"/>
                                 </div>
                                 <ImagePicker
                                     extensions={['jpg', 'jpeg', 'png']}
@@ -109,7 +109,7 @@ export class EntrevistaPsicologica extends Component {
                             <Form.Group controlId="ecomapa">
                                 <Form.Label>Ecomapa</Form.Label>
                                 <div>
-                                    <img src={this.state.srcEcomapa} />
+                                    <img src={this.state.srcEcomapa} alt="Imagen de Ecomapa"/>
                                 </div>
                                 <ImagePicker
                                     extensions={['jpg', 'jpeg', 'png']}

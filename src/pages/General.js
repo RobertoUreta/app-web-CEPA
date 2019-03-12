@@ -51,7 +51,7 @@ export class General extends Component {
         this.setState({ datosGenerales: info })
         let enlace = `/${this.props.loggedUser}/editPaciente/${this.state.id}`
         console.log("enlace",enlace)
-        insertarIngreso(info, this.state.id)
+        insertarIngreso(info, this.state.id,this.props.loggedUser)
         
         console.log("history en general",this.props.history)
 

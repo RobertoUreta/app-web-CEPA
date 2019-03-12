@@ -28,7 +28,7 @@ export class Login extends Component {
     let path = "/home"
 
     const aux = JSON.stringify(this.state, null, '  ');
-    console.log('AUXILIAR'+aux)
+    //console.log('AUXILIAR'+aux)
     //console.log(this.state);
     let auth = obtenerSesion(JSON.parse(aux));
     auth 

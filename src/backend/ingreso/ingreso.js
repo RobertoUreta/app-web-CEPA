@@ -2,9 +2,9 @@
 import request from '../config'
 
 
-export let insertarIngreso = (data, id) => {
+export let insertarIngreso = (data, id,userId) => {
     request.post('/insertarPaciente', {
-        data, id
+        data, id,userId
     }).then(function (response) {
         console.log(data.apellido)
         console.log(response);
