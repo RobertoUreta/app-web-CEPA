@@ -11,7 +11,9 @@ export class ModalSesionInfo extends Component {
     }
 
     render() {
-
+        console.log("propseventos",this.props.eventos)
+        console.log("propsclickedinfo", this.props.clickedInfo)
+        console.log("undfinde?", this.props.eventos[this.props.clickedInfo - 1])
 
         return (
             <Modal show={this.props.show} onHide={this.props.onHide}>
@@ -19,7 +21,7 @@ export class ModalSesionInfo extends Component {
                     <Modal.Title>Agendar Sesion</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.props.eventos[this.props.clickeInfo].title}
+                    {}
                     
                     
                 </Modal.Body>

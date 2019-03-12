@@ -70,7 +70,7 @@ export class General extends Component {
 
         info.fechaIngreso = ingreso.toJSON().slice(0, 19).replace('T', ' ')
         info.nacimiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
-
+        console.log(this.state.id)
         this.setState({ datosGenerales: info })
         let value = updateDatosPersonales(info, this.state.id)
         value

@@ -4,7 +4,7 @@ import request from '../config'
 
 export let insertarIngreso = async (data, id) => {
     try{
-        let res = await request.post('/insertarPaciente',{ data,id})
+       // let res = await request.post('/insertarPaciente',{ data,id})
     }catch ( error){
         console.log(error)
     }
@@ -18,7 +18,7 @@ export let obtenerIdIngreso = (data, id) => {
         }
 
     }).then(res => {
-        let data = res.data;
+        //let data = res.data;
 
     }).catch(err => {
 

@@ -9,7 +9,6 @@ import {verificarSesion} from '../backend/login'
 
 import request from '../backend/config'
 import { obtenerPacientes, busquedaPacientes, obtenerIdPaciente } from '../backend/paciente/paciente'
-import {insertarIngreso} from '../backend/ingreso/ingreso'
 
 
 
