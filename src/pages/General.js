@@ -34,7 +34,7 @@ export class General extends Component {
         let fecha = new Date()
         let ingreso = fecha.toJSON().slice(0, 19).replace('T', ' ')
         let data = { fechaIngreso: ingreso }
-        let insertar = insertarIngreso(data, this.state.id)
+        let insertar = insertarIngreso(data, this.state.id,this.props.loggedUser)
 
         insertar
             .then(res => {

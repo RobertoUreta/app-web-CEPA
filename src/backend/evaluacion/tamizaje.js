@@ -1,13 +1,20 @@
 import request from '../config'
 
+export let updateTamizaje =  async (data,idPaciente,idUsuario ) => {
+  try{
+      let res = await request.put('/update_tamizaje',{data,idPaciente,idUsuario})
+      console.log("resTAMIZAJE", res)
+      return res;
+  }catch(error){
 
-export let insertarTamizaje = (data)=>{
-  console.log('dataaaaaa:',data);
-  request.post('/insertar_tamizaje', data)
-      .then(function (response) {
-        //console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  } 
+}
+
+export let obtenerTamizaje = async (id) => {
+  try{
+      let res = await request.get('/obtener_tamizaje', {params: {idPaciente: id}})
+      return res;
+  } catch (error) {
+      console.log(error)
+  }
 }
