@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { Col, Form, Table, Button, Row } from 'react-bootstrap'
+import { Col, Button, Row } from 'react-bootstrap'
 import { Layout } from '../components/Layout'
 import { ModalUsuario } from '../components/ModalUsuario'
 import { TablaUsuario } from '../components/TablaUsuario'
 import "../styles/styles.css"
+import {verificarSesion} from '../backend/login'
+
+import request from '../backend/config'
 
 export class Usuario extends Component {
 
@@ -17,6 +20,7 @@ export class Usuario extends Component {
     }
 
 
+
     _handleShow() {
         this.setState({ show: true })
     }
@@ -27,19 +31,48 @@ export class Usuario extends Component {
 
     _handleModalSubmit = (evt) => {
         let aux = JSON.parse(evt)
-        this.state.usuarios.push(aux)
-        this.setState(this.state)
+        let element = {
+            
+            nombre: aux.nombre,
+            apellido_paterno: aux.apellidoPaterno,
+            apellido_materno: aux.apellidoMaterno,
+            nombre_rol: aux.rol
+            
+        }
+        this.state.usuarios.push(element)
 
     }
 
-    render() {
 
+    componentWillMount() {
+        const self = this;
+        request.get('/listaUsuario')
+            .then(res => {
+                self.setState({ usuarios: res.data.usuarios })
+                console.log("usuarios", this.state.usuarios)
+            })
+
+            .catch(err => {
+            });
+
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                this.props.history.push('/')
+            }
+        })
+    }
+
+    render() {
+        const id = this.props.match.params.id
         return (
             <div>
                 <div>
 
                     <Layout
-                        mustBeSideNav={false} />
+                        mustBeSideNav={false} 
+                        loggedUser= {id}
+                        history={this.props.history}/>
 
                 </div>
                 <div id="body">
@@ -47,7 +80,7 @@ export class Usuario extends Component {
                     <div style={{ display: 'flex', paddingBottom: '10px' }}>
                         <Row>
                             <Col>
-                                <Button className="btn-custom" onClick={this._handleShow} > <i class="fa fa-user-plus"></i></Button>
+                                <Button className="btn-custom" onClick={this._handleShow} > <i className="fa fa-user-plus"></i></Button>
                                 <ModalUsuario
                                     show={this.state.show}
                                     onClose={this._handleClose}
@@ -60,8 +93,9 @@ export class Usuario extends Component {
                         </Row>
                     </div>
                     <div>
-                        <TablaUsuario
-                            elements={this.state.usuarios} />
+                        {this.state && this.state.usuarios &&
+                            <TablaUsuario
+                                elements={this.state.usuarios} />}
                     </div>
                 </div>
             </div>

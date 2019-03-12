@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
+import {obtenerSupervisores,obtenerRoles,insertarUsuario} from '../backend/usuario/usuario'
 const generos = ["Masculino", "Femenino", "Otro"]
 export class CrearUsuario extends Component {
-
     constructor(props) {
         super(props);
 
@@ -24,11 +24,13 @@ export class CrearUsuario extends Component {
             nombreContactoEmergencia: "",
             telefonoContactoEmergencia: "",
             rol: "",
-            supervisor: ""
+            supervisor: "",
+            rolID:"",
+            supervisorID:"",
+            supervisores:new Map(),
+            roles:new Map()
         };
     }
-
-
 
     handleChange = event => {
         this.setState({
@@ -39,12 +41,17 @@ export class CrearUsuario extends Component {
     _handleSubmit = (event) => {
         event.preventDefault();
         console.log(event)
-        
+
+       
+        this.setState({
+            supervisor: this.state.supervisores.get(this.state.supervisor),
+            rol: this.state.roles.get(this.state.rol)
+        })
         const aux = JSON.stringify(this.state, null, '  ');
         console.log(aux)
-        //console.log(data)
+        console.log(this.state);
         this.props.onSubmit(aux)
-
+        insertarUsuario(JSON.parse(aux));
     }
 
     cambiarDigitoVerificador = event => {
@@ -59,11 +66,21 @@ export class CrearUsuario extends Component {
             }
         )
     }
+    
+    componentWillMount(){
+        this.setState({
+            supervisores: obtenerSupervisores(),
+            roles: obtenerRoles()
+        });
+
+        console.log(this.state.supervisores, this.state.roles)
+    }
+    
 
     render() {
         return (
             <div className="CrearUsuario">
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this._handleSubmit} autoComplete="off">
                     <Form.Row>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nombre">
@@ -71,6 +88,7 @@ export class CrearUsuario extends Component {
                                     value={this.state.nombre}
                                     onChange={this.handleChange}
                                     placeholder="Nombre"
+                                    required
                                 />
                             </Form.Group>
                             <Row>
@@ -80,6 +98,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.apellidoPaterno}
                                             onChange={this.handleChange}
                                             placeholder="Apellido Paterno"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -98,11 +117,13 @@ export class CrearUsuario extends Component {
                                     <Row>
                                         <Form.Group as={Col} md="8" controlId="rut">
                                             <TextoAyuda nombre="rut"
-                                                tooltip="Rut sin puntos ni digito verificador"
+                                                tooltip="RUT sin puntos ni digito verificador"
                                                 componente={<Form.Control
                                                     value={this.state.rut}
                                                     onChange={this.cambiarDigitoVerificador}
                                                     placeholder="Rut"
+                                                    pattern="[0-9]+"
+                                                    title="RUT sin puntos, sin guión y sin digito verificador"
                                                 />} />
                                         </Form.Group>
                                         <strong>_</strong>
@@ -122,7 +143,9 @@ export class CrearUsuario extends Component {
                                         <Form.Control
                                             as="select"
                                             value={this.state.genero}
-                                            onChange={this.handleChange}>
+                                            onChange={this.handleChange}
+                                            required
+                                            >
                                             <option hidden>Genero</option>
                                             <Option options={generos}></Option>
                                         </Form.Control>
@@ -138,6 +161,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.usuario}
                                             onChange={this.handleChange}
                                             placeholder="Nombre de usuario"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -149,6 +173,7 @@ export class CrearUsuario extends Component {
                                             type="password"
                                             inputRef={inputElement => this.inputPwd = inputElement}
                                             placeholder="Contraseña"
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -160,9 +185,12 @@ export class CrearUsuario extends Component {
                                 <Col>
                                     <Form.Group controlId="telefonoMovil">
                                         <Form.Control
+                                            pattern="(\+?56)?(\s?)(0?9)(\s?)[98765]\d{7}"
                                             value={this.state.telefonoMovil}
                                             onChange={this.handleChange}
                                             placeholder="Teléfono Móvil"
+                                            required
+                                            title="Ingrese un numero de teléfono móvil valido"
                                         />
                                     </Form.Group>
                                 </Col>
@@ -222,8 +250,15 @@ export class CrearUsuario extends Component {
                                         <Form.Control
                                             as="select"
                                             value={this.state.rol}
-                                            onChange={this.handleChange}>
+                                            onChange={event => {
+                                                this.setState({
+                                                    [event.target.id]: event.target.value,
+                                                    rolID: this.state.roles.get(event.target.value)
+                                                });
+                                            }}
+                                            required>
                                             <option hidden>Rol</option>
+                                            <Option options={Array.from(this.state.roles.keys())}/>
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
@@ -232,17 +267,21 @@ export class CrearUsuario extends Component {
                                         <Form.Control
                                             as="select"
                                             value={this.state.supervisor}
-                                            onChange={this.handleChange}>
+                                            onChange={event => {
+                                                this.setState({
+                                                    [event.target.id]: event.target.value,
+                                                    supervisorID: this.state.supervisores.get(event.target.value)
+                                                });
+                                            }}>
                                             <option hidden>Supervisor</option>
+                                            <Option options={Array.from(this.state.supervisores.keys())}/>
                                         </Form.Control>
-
                                     </Form.Group>
                                 </Col>
                             </Row>
                             <Form.Group>
                                 <div className="btn-container">
                                     <Button
-                                        onClick={this._handleSubmit}
                                         className="btn-submit"
                                         type="submit"
                                     >

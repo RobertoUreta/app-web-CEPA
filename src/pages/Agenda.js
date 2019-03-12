@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 
 import { Layout } from '../components/Layout'
 
-import { Modal, Button, Row, Col } from 'react-bootstrap'
+import {Row, Col } from 'react-bootstrap'
 import { ModalSesion } from '../components/ModalSesion'
 import { ModalSesionInfo } from '../components/ModalSesionInfo'
 import events from '../components/events'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import BigCalendar from 'react-big-calendar';
 import "../styles/styles.css"
+
+import {verificarSesion} from '../backend/login'
 
 import moment from 'moment'
 
@@ -61,16 +63,16 @@ export class Agenda extends Component {
 
 
     _handleShowInfo(evt) {
-        console.log("hhasdfas" , evt.id)
-        
-        this.setState({ showInfo: true , clickedId: evt.id});
+        console.log("hhasdfas", evt.id)
+
+        this.setState({ showInfo: true, clickedId: evt.id });
         console.log(this.state.clickedId)
-        
+
     }
 
     _handleShow(event) {
         console.log(event)
-        this.setState({ show: true , fecha: event.start})
+        this.setState({ show: true, fecha: event.start })
     }
 
     _handleClose = (modalEvt) => {
@@ -98,6 +100,14 @@ export class Agenda extends Component {
         console.log(this.state.eventos)
     }
 
+    componentDidMount(){
+        let res = verificarSesion();
+        res.then(resp => {
+            if (!resp.data.ok) {
+                this.props.history.push('/')
+            }
+        });
+    }
 
 
     render() {
@@ -110,7 +120,10 @@ export class Agenda extends Component {
             week: "Semanal",
             day: "Día",
             date: "Fecha"
-        }
+        }        
+        
+        const id = this.props.match.params.id
+
 
         let modalClose = () => this.setState({ showInfo: false });
 
@@ -124,7 +137,9 @@ export class Agenda extends Component {
                     <div>
 
                         <Layout
-                            mustBeSideNav={false} />
+                            mustBeSideNav={false}
+                            loggedUser={id} 
+                            history={this.props.history}/>
 
                     </div>
                 </div>
@@ -137,7 +152,7 @@ export class Agenda extends Component {
                                     show={this.state.show}
                                     onClose={this._handleClose}
                                     onSubmit={this._handleModalSubmit}
-                                    selectedDate= { this.state.fecha} />
+                                    selectedDate={this.state.fecha} />
                             </Col>
 
                         </Row>
@@ -164,9 +179,9 @@ export class Agenda extends Component {
                 <ModalSesionInfo
                     show={this.state.showInfo}
                     onHide={modalClose}
-                    eventos = { this.state.eventos}
-                    clickeInfo = { this.state.clickedId}
-                     />
+                    eventos={this.state.eventos}
+                    clickeInfo={this.state.clickedId}
+                />
 
 
             </div>

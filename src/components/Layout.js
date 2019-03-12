@@ -5,22 +5,33 @@ import PropTypes from 'prop-types'
 
 export class Layout extends Component {
 
+    constructor(props){
+        super(props)
+        this.state = {
+            mustBeSideNav: true,
+        }
+    }
     _renderSideNav() {
+        const id = this.props.match.params.userId
+
         return (
 
-            <NavLateral />
+            <NavLateral
+                userId = {id}
+                history = {this.props.history}
+                loggedUser= {this.props.match.params.id}
+                />
 
         )
     }
-
-
-    state = { mustBeSideNav: true }
 
     render() {
         return (
             <div>
                 <div>
-                    <NavBar />
+                    <NavBar
+                    loggedUser = { this.props.loggedUser} 
+                    history = {this.props.history}/>
                 </div>
                 <div>
                     {this.props.mustBeSideNav

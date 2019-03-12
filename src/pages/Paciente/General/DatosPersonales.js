@@ -5,7 +5,8 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { addYears } from 'date-fns/esm';
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import { updateDatosPersonales } from '../../../backend/ingreso/ingreso'
+import { SweetAlert } from 'react-bootstrap-sweetalert'
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
 const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
@@ -36,9 +37,37 @@ export class DatosPersonales extends Component {
             relacionContractual: "",
             tipoPaciente: "",
             valorSesion: 0,
+            nacimiento: "",
+            fechaIngreso: new Date(),
+            alert: null
         };
     }
 
+
+    componentWillMount() {
+        let paciente = this.props.paciente
+        if (paciente !== undefined) {
+            console.log("no es undefined", paciente)
+            this.setState({
+                nombre: paciente.nombre === "default" ? "" : paciente.nombre,
+                apellidoPaterno: paciente.apellido_paterno === "default" ? "" : paciente.apellido_paterno,
+                apellidoMaterno: paciente.apellido_materno === "default" ? "" : paciente.apellido_materno,
+                rut: paciente.rut === "12345678" ? "" : paciente.rut,
+                fechaNacimiento: paciente.fecha_nacimiento,
+                telefonoMovil: paciente.telefono_movil === "default" ? "" : paciente.telefono_movil,
+                telefonoFijo: paciente.telefono_fijo === "default" ? "" : paciente.telefono_fijo,
+                correo: paciente.correo === "default@default.com" ? "" : paciente.correo,
+
+                establecimientoEducacional: paciente.establecimiento_educacional === "default" ? "" : paciente.establecimiento_educacional,
+                tipoEstablecimiento: paciente.tipo_establecimiento === "default" ? "" : paciente.tipo_establecimiento,
+                prevision: paciente.prevision === "default" ? "" : paciente.prevision,
+                ocupacion: paciente.ocupacion === "default" ? "" : paciente.ocupacion,
+                relacionContractual: paciente.relacion_contractual === "default" ? "" : paciente.relacion_contractual,
+                tipoPaciente: paciente.tipo_paciente === "default" ? "" : paciente.tipo_paciente,
+                valorSesion: paciente.valor_sesion === "default" ? "" : paciente.valor_sesion,
+            })
+        }
+    }
     _handleChange = (date) => {
         this.setState({
             fechaNacimiento: date
@@ -63,17 +92,21 @@ export class DatosPersonales extends Component {
         )
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-        let info = JSON.stringify(this.state, null, '  ');
+    
 
+    
+    handleSubmit = (event) => {
+        event.preventDefault();
+
+        let info = JSON.stringify(this.state, null, '  ');
+   
         this.props.handlePaciente(info)
 
-        console.log(this.state)
 
     }
 
     render() {
+
         return (
             <div className="DatosPersonales">
                 <form onSubmit={this.handleSubmit} autoComplete="off">
@@ -133,12 +166,14 @@ export class DatosPersonales extends Component {
                                     <Row>
                                         <Form.Group as={Col} md="8" controlId="rut">
                                             <TextoAyuda nombre="rut"
-                                                tooltip="Rut sin puntos ni digito verificador"
+                                                tooltip="RUT sin puntos ni digito verificador"
                                                 componente={<Form.Control
                                                     value={this.state.rut}
                                                     onChange={this.cambiarDigitoVerificador}
-                                                    placeholder="Rut"
+                                                    placeholder="RUT"
+                                                    pattern="[0-9]+"
                                                     required
+                                                    title="RUT sin puntos, sin guión y sin digito verificador"
                                                 />} />
                                         </Form.Group>
                                         <strong>_</strong>
@@ -161,12 +196,14 @@ export class DatosPersonales extends Component {
                                         value={this.state.telefonoMovil}
                                         onChange={this.handleChange}
                                         placeholder="Teléfono Móvil"
+                                        pattern="(\+?56)?(\s?)(0?9)(\s?)[98765]\d{7}"
                                         required
+                                        title="Ingrese un numero de teléfono móvil valido"
                                     />} />
                                 </Form.Group>
-                                <Form.Group as={Col} controlId="telefonoTrabajo">
-                                    <TextoAyuda nombre="telefonoTrabajo" tooltip="Teléfono Fijo" componente={<Form.Control
-                                        value={this.state.telefonoTrabajo}
+                                <Form.Group as={Col} controlId="telefonoFijo">
+                                    <TextoAyuda nombre="telefonoFijo" tooltip="Teléfono Fijo" componente={<Form.Control
+                                        value={this.state.telefonoFijo}
                                         onChange={this.handleChange}
                                         placeholder="Teléfono Fijo"
                                     />} />
@@ -265,6 +302,7 @@ export class DatosPersonales extends Component {
                             <Form.Group>
                                 <div className="btn-container">
                                     <Button
+                                       
                                         className="btn-submit"
                                         type="submit"
                                     >
@@ -277,7 +315,7 @@ export class DatosPersonales extends Component {
 
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );

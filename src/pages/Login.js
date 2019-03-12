@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Image, Button, Form } from "react-bootstrap";
 import logo from '../images/cepalogo.png'
 import "../styles/login.css";
-
+import { obtenerSesion } from '../backend/login'
 export class Login extends Component {
   constructor(props) {
     super(props);
@@ -25,19 +25,34 @@ export class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const email = this.inputEmail.value
-    const pwd = this.inputPwd.value
-    console.log({ email, pwd });
+    let path = "/home"
+
+    const aux = JSON.stringify(this.state, null, '  ');
+    console.log('AUXILIAR'+aux)
+    //console.log(this.state);
+    let auth = obtenerSesion(JSON.parse(aux));
+    auth 
+      .then((res) => {
+        //console.log(res.data);
+        if (res.data.ok) {
+          path=path+'/'+res.data.usuario.id_usuario;
+          this.props.history.push(path);
+        }
+        else{
+          alert("Usuario o Contraseña incorrecta")
+        }
+      }
+    );
 
   }
 
   render() {
     return (
       <div className="Login">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this._handleSubmit} autoComplete="off">
           <Form.Group controlId="usuario">
             <Image src={logo} className="logo img-fluid center-block" alt="" responsive />
-           
+
             <Form.Control
               autoFocus
               type="usuario"
@@ -67,13 +82,14 @@ export class Login extends Component {
             </div>
 
             <div className="div-btn-submit">
-              <Button
-                className="btn-submit"
-                size="sm"
-                disabled={!this.validateForm()}
-                type="submit"
-              >
-                Acceder
+                <Button
+                  onClick={this.handleSubmit}
+                  className="btn-submit"
+                  size="sm"
+                  disabled={!this.validateForm()}
+                  type="submit"
+                >
+                  Acceder
               </Button>
             </div>
           </div>

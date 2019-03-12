@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
 
 import { Table } from 'react-bootstrap'
+import {} from '../backend/usuario/usuario'
 
 
 export class TablaUsuario extends Component {
+    constructor(props){
+        super(props)
+
+        this.state = ({
+            usuarios:[]
+        }) 
+    }
+
     render() {
         return (
             <Table striped bordered hover size="sm">
@@ -17,9 +26,10 @@ export class TablaUsuario extends Component {
                 {this.props.elements.map((v,i) => {
                     return (
                         <tr key={i}>
-                            <td>{(v.nombre + " " + v.apellidoPaterno + " " + v.apellidoMaterno)}</td>
-                            <td>{v.rol}</td>
-                           
+                            
+                            <td>{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
+                            <td>{v.nombre_rol}</td>
+        
                         </tr>
                     )
                 }) }

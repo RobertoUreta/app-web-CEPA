@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import {  Modal } from 'react-bootstrap'
-
-import { RegistrarSesion} from '../pages/Paciente/sesion/registrarSesion'
-
 export class ModalSesionInfo extends Component {
     constructor(props) {
 
