@@ -6,7 +6,8 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { setHours } from 'date-fns/esm';
 import { setMinutes } from 'date-fns';
-import { obtenerSalas } from '../../../backend/agenda/agenda';
+import { obtenerSalas, obtenerLastIdSesion } from '../../../backend/agenda/agenda';
+import { obtenerPacientes } from '../../../backend/paciente/paciente';
 
 export class RegistrarSesion extends Component {
 
@@ -19,31 +20,55 @@ export class RegistrarSesion extends Component {
             horaTermino: null,
             descripcion: "",
             valorSesion: "",//setear segun el valor de sesion agregado en la general
-            paciente: "",
+            paciente :"",
+            idPaciente: "",
+            pacientes: new Map(),
             sala: "",
             tipoSesion: "",
             estadoSesion: "",
             idSala: "",
-            salas: new Map()
+            salas: new Map(),
+            id: 0
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         let aux = new Map()
         let promise = obtenerSalas()
-            promise
-                .then(res => {
-                    let data = res.data;
-                    let arr = data.salas;
-                    arr.forEach(element => {
-                        aux.set(element.nombre, element.id_sala)
-                    });
-                    this.setState({ salas: aux })
-
-                }).catch(err => {
-                    aux.push("default");
-                    console.log(err);
+        promise
+            .then(res => {
+                let data = res.data;
+                let arr = data.salas;
+                arr.forEach(element => {
+                    aux.set(element.nombre, element.id_sala)
                 });
+                this.setState({ salas: aux })
+
+            }).catch(err => {
+                aux.push("default");
+                console.log(err);
+            });
+        let listado = new Map()
+        promise = obtenerPacientes()
+        promise
+            .then(res => {
+                let data = res.data;
+                let arr = data.pacientes;
+                arr.forEach(element => {
+                    let nombre = element.nombre + " " + element.apellido_paterno + " " + element.apellido_materno
+
+                    listado.set(nombre, element.id_paciente)
+                });
+                this.setState({ pacientes: listado })
+            })
+        promise = obtenerLastIdSesion()
+        promise
+        .then(res => {
+            let data = res.data.response[0].id +1
+            console.log("datita",data)
+
+            this.setState({id: data})
+        })
     }
 
     _handleChange = (date) => {
@@ -62,7 +87,7 @@ export class RegistrarSesion extends Component {
     _handleSubmit = (event) => {
         event.preventDefault();
         console.log(event)
-        
+
         const aux = JSON.stringify(this.state, null, '  ');
         console.log(aux)
         //console.log(data)
@@ -72,8 +97,8 @@ export class RegistrarSesion extends Component {
 
 
 
-
     render() {
+
         return (
             <div className="registrarSesion">
                 <form onSubmit={this.handleSubmit} autoComplete="off">
@@ -138,11 +163,16 @@ export class RegistrarSesion extends Component {
                                     componente={<Form.Control
                                         as="select"
                                         value={this.state.paciente}
-                                        onChange={this.handleChange}
+                                        onChange={event => {
+                                            this.setState({
+                                                [event.target.id]: event.target.value,
+                                                idPaciente: this.state.pacientes.get(event.target.value)
+                                            });
+                                        }}
                                     >
                                         <option hidden>Seleccionar Paciente</option>
-                                        <Option options={[]} />
-                                    </Form.Control>} 
+                                        <Option options={Array.from(this.state.pacientes.keys())} />
+                                    </Form.Control>}
                                 />
                             </Form.Group>
                             <Form.Group controlId="descripcion">
@@ -221,7 +251,7 @@ export class RegistrarSesion extends Component {
                             <Form.Group>
                                 <div className="btn-container">
                                     <Button
-                                        onClick= {this._handleSubmit}
+                                        onClick={this._handleSubmit}
                                         className="btn-submit"
                                         variant="primary"
                                     >
