@@ -24,7 +24,7 @@ export class Evaluacion extends Component {
                         <Tamizaje userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Evaluación de Ingreso">
-                        <EntrevistaIngreso />
+                        <EntrevistaIngreso  userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Evaluación Social">
 
