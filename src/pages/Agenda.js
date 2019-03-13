@@ -9,6 +9,7 @@ import events from '../components/events'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import BigCalendar from 'react-big-calendar';
 import "../styles/styles.css"
+import SweetAlert from 'react-bootstrap-sweetalert'
 
 import { verificarSesion } from '../backend/login'
 
@@ -43,7 +44,7 @@ export class Agenda extends Component {
             clickedId: 0,
             salas: new Map(),
             loadingInfo: 'initial',
-            idSesion: "",
+            idSesion: 0,
         }
     }
 
@@ -66,10 +67,10 @@ export class Agenda extends Component {
     }
 
 
-  
+
 
     componentDidMount() {
-        this.setState({loadingInfo : 'true'})
+        this.setState({ loadingInfo: 'true' })
         let res = verificarSesion();
         res.then(resp => {
             if (!resp.data.ok) {
@@ -77,34 +78,45 @@ export class Agenda extends Component {
             }
 
         })
+
         let eventos = []
         let promise = obtenerSesiones()
         promise
             .then(res => {
-                console.log("resddmountagenda", res)
                 res.data.response.forEach(element => {
+                    let aux = new Date(element.fecha_sesion)//.toISOString().split('T')
+                    //aux[1] = element.hora_inicio_atencion
+                    let fechaStart = aux.toISOString().split('T')
+                    fechaStart[1] = element.hora_inicio_atencion
+                    console.log(new Date(fechaStart[0] + " " + fechaStart[1]))
+                    let fechaEnd = aux.toISOString().split('T')
+                    fechaEnd[1] = element.hora_termino_atencion
                     let nuevoEvento = {
                         id: element.id_sesion,
                         title: element.descripcion_sesion,
-                        start: new Date(element.hora_inicio_atencion),
-                        end: new Date(element.hora_termino_atencion)
+                        start: new Date(fechaStart[0] + " " + fechaStart[1]),
+                        end: new Date(fechaEnd[0] + " " + fechaEnd[1]),
+                        fecha_sesion: element.fecha_sesion,
+                        ref_sala: element.ref_sala,
+                        ref_paciente: element.ref_ingreso,
+                        estado_sesion: element.estado_sesion,
+                        descripcion_sesion: element.descripcion_sesion,
+                        valor_sesion: element.valor_sesion,
+                        ref_usuario: element.ref_usuario,
                     }
                     eventos.push(nuevoEvento)
                 })
-                console.log("eventos", eventos)
-                this.setState({ eventos: eventos, loadingInfo: 'false ',idSesion: obtenerLastIdSesion()})
-                console.log("state.eventos", this.state.eventos, "state.idSesion", this.state.idSesion)
+
+                this.setState({ eventos: eventos, loadingInfo: 'false ' })
+
             }).catch(err => {
                 console.log(err)
             })
 
-
-
-
     }
 
     _handleShowInfo(evt) {
-        console.log("hhasdfas", evt.id)
+        console.log("handleShowInfo", evt.id)
 
         this.setState({ showInfo: true, clickedId: evt.id });
         console.log(this.state.clickedId)
@@ -120,12 +132,16 @@ export class Agenda extends Component {
         this.setState({ show: modalEvt });
     }
 
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
     _handleModalSubmit = (evt) => {
 
         console.log("_handleModalSubmit")
         let aux = JSON.parse(evt)
         let fecha = new Date(aux.fechaSesion)
-        console.log(aux)
+        console.log("aux", aux)
         let inicio = this.getHora(aux.horaInicio).split(":")
         let termino = this.getHora(aux.horaTermino).split(":")
 
@@ -136,21 +152,47 @@ export class Agenda extends Component {
             , fecha.getDate(), termino[0], termino[1])
 
         let eventoNuevo = {
-            id: this.state.eventos.lastIndexOf + 1,
+            id: aux.id,
             title: aux.descripcion,
             start: fechaStart,
             end: fechaEnd,
             fecha_sesion: aux.fechaSesion,
             ref_sala: aux.idSala,
+            ref_paciente: aux.idPaciente,
             estado_sesion: aux.estadoSesion,
             descripcion_sesion: aux.descripcion,
             valor_sesion: aux.valorSesion,
             ref_usuario: this.props.match.params.id,
+            startAux: fechaStart,
+            endAux: fechaEnd
 
         }
-        insertarSesion(eventoNuevo)
-        this.state.eventos.push(eventoNuevo)
-        console.log(this.state.eventos)
+
+        let validar = insertarSesion(eventoNuevo)
+        validar
+            .then(res => {
+                console.log("res", res)
+
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agendó correctamente la sesión
+                         </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                    this.state.eventos.push(eventoNuevo)
+
+                } else {
+                    const getAlert = () => (
+                        <SweetAlert warning title="Falla" onConfirm={this._hideAlert}>
+                            Esa sala ya está utilizada en ese horario
+                         </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+
+                }
+            })
+
     }
 
 
@@ -177,23 +219,17 @@ export class Agenda extends Component {
         let localizer = BigCalendar.momentLocalizer(moment)
 
         if (this.state.loadingInfo === 'initial') {
-            console.log('This happens 2nd - after the class is constructed. You will not see this element because React is still computing changes to the DOM.');
-            console.log("amipixula21231", this.state.eventos)
-
             return <h2>Intializing...</h2>;
 
-          }
-      
-      
-          if (this.state.loadingInfo === 'true') {
-            console.log('This happens 5th - when waiting for data.');
-            console.log("amipixula21231", this.state.eventos)
+        }
 
+
+        if (this.state.loadingInfo === 'true') {
             return <h2>loadingInfo...</h2>;
 
-          }
-      
-        console.log("amipixula21231", this.state.eventos,this.state.id)
+        }
+
+        console.log("amipixula21231", this.state.eventos, this.state.idSesion)
 
         return (
             <div>
@@ -242,14 +278,14 @@ export class Agenda extends Component {
                     </div>
                 </div>
 
-                
-                    <ModalSesionInfo
-                        show={this.state.showInfo}
-                        onHide={modalClose}
-                        eventos={this.state.eventos}
-                        clickedInfo={this.state.clickedId}
-                    />
 
+                <ModalSesionInfo
+                    show={this.state.showInfo}
+                    onHide={modalClose}
+                    eventos={this.state.eventos}
+                    clickedInfo={this.state.clickedId}
+                />
+                {this.state.alert}
             </div>
         )
     }

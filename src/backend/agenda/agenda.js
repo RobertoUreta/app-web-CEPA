@@ -3,7 +3,6 @@ import request from '../config'
 export let obtenerSalas = async () => {
     try {
         let promise = await request.get('/obtenerSalas')
-        console.log("res en obtenerSalas", promise)
         return promise;
 
     } catch (error) {
@@ -14,37 +13,36 @@ export let obtenerSalas = async () => {
 export let obtenerSesiones = async () => {
     try {
         let promise = await request.get('/obtenerSesiones')
-        console.log("obtenerSesiones", promise)
         return promise
     } catch (error) {
         console.log(error)
     }
 }
 
-export let obtenerLastIdSesion = async () =>{ 
-    await request.get('/max_IdSesion')
-    .then(res => {
-        let data = res.data
-        console.log("obtenerLastId", data, "response", data.response)
-        return data.response
-    })
+export let obtenerLastIdSesion = async () => {
+    try {
+        let promise = await request.get('/max_IdSesion')
+        return promise
+    } catch (err) {
+        console.log(err)
+    }
+
+
+
+
 }
 
-export let insertarSesion = (data) => {
+export let insertarSesion = async (data) => {
+    let data2 = data
     let fechaStart = new Date(data.start)
     let fechaEnd = new Date(data.end)
     let fechaSesion = new Date(data.fecha_sesion)
 
-    data.start = fechaStart.toJSON().slice(0, 19).replace('T', ' ')
-    data.end = fechaEnd.toJSON().slice(0, 19).replace('T', ' ')
-    data.fecha_sesion = fechaSesion.toJSON().slice(0, 19).replace('T', ' ')
+    data.startAux = fechaStart.getHours()+":"+(fechaStart.getMinutes()<10?'0':'') + fechaStart.getMinutes() +":"+ (fechaStart.getSeconds()<10?'0':'') +fechaStart.getSeconds()
+    data.endAux = fechaEnd.getHours()+":"+(fechaEnd.getMinutes()<10?'0':'') + fechaEnd.getMinutes()+":"+ (fechaEnd.getMinutes()<10?'0':'')+ fechaEnd.getSeconds()
+    data.fecha_sesion = fechaSesion.toISOString().split('T')[0]
 
-    request.post('/insertarSesion', data)
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+    let promise = await request.post('/insertarSesion', data)
+    return promise
 
 }

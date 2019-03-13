@@ -294,3 +294,21 @@
   #custom-search input::-webkit-input-placeholder {
     color: transparent;
   }
+
+  
+  .rbc-day-bg{
+    cursor: pointer;
+  }
+
+  .rbc-row-segment{
+    cursor:pointer;
+  }
+  .rbc-row{
+    cursor: pointer;
+  }
+  .rbc-date-cell{
+    cursor: pointer;
+  }
+  .rbc-events-containers{
+    cursor:pointer;
+  }

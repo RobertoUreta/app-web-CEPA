@@ -7,19 +7,7 @@ export let obtenerPacientes = async ()=>{
     } catch (error) {
         console.log(error);
     }   
-    /*let arr;
-    request.get('/listaPacientes')
-    .then(res=>{
-        let data = res.data;
-        arr = data.pacientes;
-        console.log("arr en ",arr);
-    })
-    .catch(err=>{
-        arr.push("default");
-        console.log(err);
-    });
-    console.log(arr);
-    return arr;*/
+    
 }
 
 export let busquedaPacientes = async (data) =>{
