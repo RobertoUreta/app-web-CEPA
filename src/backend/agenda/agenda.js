@@ -10,9 +10,9 @@ export let obtenerSalas = async () => {
     }
 }
 
-export let obtenerSesiones = async () => {
+export let obtenerSesiones = async (idUser) => {
     try {
-        let promise = await request.get('/obtenerSesiones')
+        let promise = await request.get('/obtenerSesiones', {params: {id: idUser}})
         return promise
     } catch (error) {
         console.log(error)
@@ -26,12 +26,17 @@ export let obtenerLastIdSesion = async () => {
     } catch (err) {
         console.log(err)
     }
-
-
-
-
 }
 
+export let colorUsuario = async (idUser) => {
+    try{
+        let promise = await request.get('/colorUsuario', {params: {id: idUser}})
+        return promise
+    }catch (err) {
+        console.log(err)
+    } 
+
+}
 export let insertarSesion = async (data) => {
     let data2 = data
     let fechaStart = new Date(data.start)

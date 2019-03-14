@@ -14,7 +14,7 @@ import SweetAlert from 'react-bootstrap-sweetalert'
 import { verificarSesion } from '../backend/login'
 
 import moment from 'moment'
-import { insertarSesion, obtenerSesiones, obtenerLastIdSesion } from '../backend/agenda/agenda';
+import { insertarSesion, obtenerSesiones, obtenerLastIdSesion, colorUsuario } from '../backend/agenda/agenda';
 
 
 
@@ -40,11 +40,12 @@ export class Agenda extends Component {
             fecha: new Date(),
             show: false,
             showInfo: false,
-            eventos: [],
+            eventos: events,
             clickedId: 0,
             salas: new Map(),
             loadingInfo: 'initial',
             idSesion: 0,
+            colorUsuario: "",
         }
     }
 
@@ -56,7 +57,7 @@ export class Agenda extends Component {
     }
 
     eventStyleGetter = (event) => {
-        var backgroundColor = '#' + event.hexColor;
+        var backgroundColor = event.hexColor;
         var style = {
             backgroundColor: backgroundColor,
 
@@ -77,14 +78,20 @@ export class Agenda extends Component {
                 this.props.history.push('/')
             }
 
-        })
+        })        
+        let idUser = this.props.match.params.id
 
+        let promiseColor = colorUsuario(idUser)
+        promiseColor
+        .then(res => {
+            this.setState({color:res.data.response[0].color })
+        })
         let eventos = []
-        let promise = obtenerSesiones()
+        let promise = obtenerSesiones(idUser)
         promise
             .then(res => {
                 res.data.response.forEach(element => {
-                    let aux = new Date(element.fecha_sesion)//.toISOString().split('T')
+                    let aux = new Date(element.fecha_sesion)
                     //aux[1] = element.hora_inicio_atencion
                     let fechaStart = aux.toISOString().split('T')
                     fechaStart[1] = element.hora_inicio_atencion
@@ -103,6 +110,7 @@ export class Agenda extends Component {
                         descripcion_sesion: element.descripcion_sesion,
                         valor_sesion: element.valor_sesion,
                         ref_usuario: element.ref_usuario,
+                        hexColor: element.color
                     }
                     eventos.push(nuevoEvento)
                 })
@@ -110,7 +118,7 @@ export class Agenda extends Component {
                 this.setState({ eventos: eventos, loadingInfo: 'false ' })
 
             }).catch(err => {
-                console.log(err)
+                this.setState({loadingInfo: 'false ' })
             })
 
     }
@@ -164,8 +172,8 @@ export class Agenda extends Component {
             valor_sesion: aux.valorSesion,
             ref_usuario: this.props.match.params.id,
             startAux: fechaStart,
-            endAux: fechaEnd
-
+            endAux: fechaEnd,
+            hexColor: this.state.color
         }
 
         let validar = insertarSesion(eventoNuevo)
@@ -225,6 +233,8 @@ export class Agenda extends Component {
 
 
         if (this.state.loadingInfo === 'true') {
+            console.log("amipixula21231", this.state.eventos, this.state.idSesion)
+
             return <h2>loadingInfo...</h2>;
 
         }
