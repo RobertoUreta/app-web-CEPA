@@ -4,7 +4,8 @@ import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import { updateEvaPsiquiatrica, obtenerEvaPsiquiatrica } from '../../../backend/evaluacion/evaluacionPsiquiatrica';
+import SweetAlert from 'react-bootstrap-sweetalert'
 const motivos = ["Derivación", "Consulta espontanea"]
 const anamnesisRemotaLista = ["hta",
     "dm",
@@ -46,39 +47,39 @@ export class EntrevistaPsiquiatrica extends Component {
             anamnesisProxima: "",
             hipotesisDiagnosticaDSMV: "",
             impresionesClinicas: "",
-            hta: false,
-            dm: false,
-            tbc: false,
-            epi: false,
-            tec: false,
-            pTiroideos: false,
-            alergias: false,
-            cirugias: false,
-            hospitalizacion: false,
-            accidentes: false,
-            antPsiquiatricos: false,
-            intentosSuicidas: false,
+            hta: 0,
+            dm: 0,
+            tbc: 0,
+            epi: 0,
+            tec: 0,
+            pTiroideos: 0,
+            alergias: 0,
+            cirugias: 0,
+            hospitalizacion: 0,
+            accidentes: 0,
+            antPsiquiatricos: 0,
+            intentosSuicidas: 0,
             observacionesAnamnesisRemota: "",
-            menarquia: false,
-            menopausia: false,
-            gpa: false,
-            ets: false,
-            fur: false,
-            tipo: false,
+            menarquia: 0,
+            menopausia: 0,
+            gpa: 0,
+            ets: 0,
+            fur: 0,
+            tipo: 0,
             observacionesAntGinecoObstetricos: "",
-            oh: false,
-            thc: false,
-            tabaco: false,
-            alucinogeno: false,
-            anorexigeno: false,
-            estimulante: false,
-            solvente: false,
+            oh: 0,
+            thc: 0,
+            tabaco: 0,
+            alucinogeno: 0,
+            anorexigeno: 0,
+            estimulante: 0,
+            solvente: 0,
             otro: "",
             observacionesHabitos: "",
             medicos: "",
             psiquiatricos: "",
             depresion: "",
-            ohDrigas: "",
+            ohDrogas: "",
             suicidios: "",
             homicidios: "",
             otrosAntecedesFamiliares: "",
@@ -92,7 +93,7 @@ export class EntrevistaPsiquiatrica extends Component {
             cuidadoFamiliar: "",
             proximoControl: "",
             observacionesIndicacionesPlanTratamiento: "",
-
+            alert: null
         };
     }
 
@@ -111,12 +112,94 @@ export class EntrevistaPsiquiatrica extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha = new Date(aux.fechaEntrevista)
+        aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux);
+        let resp = updateEvaPsiquiatrica(aux, this.props.pacienteId, this.props.userId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la Entrevista Psiquiatrica
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
+
+            })
 
     }
-
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+    componentDidMount() {
+        let prom = obtenerEvaPsiquiatrica(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data !== undefined) {
+                let entrevista = data.respuesta[0];
+                this.setState({
+                    fechaEntrevista: entrevista.fecha_entrevista === '0000-00-00' ? null : entrevista.fecha_entrevista,
+                    motivo: entrevista.motivo === 'default' ? "" : entrevista.motivo,
+                    observacion: entrevista.observacion === 'default' ? "" : entrevista.observacion,
+                    detalleMotivoPaciente: entrevista.detalle_motivo_paciente === 'default' ? "" : entrevista.detalle_motivo_paciente,
+                    anamnesisProxima: entrevista.anamnesis_proxima === 'default' ? "" : entrevista.anamnesis_proxima,
+                    hipotesisDiagnosticaDSMV: entrevista.hipotesis_diagnostica_dsm_v === 'default' ? "" : entrevista.hipotesis_diagnostica_dsm_v,
+                    impresionesClinicas: entrevista.impresiones_clinicas === 'default' ? "" : entrevista.impresiones_clinicas,
+                    hta: entrevista.hta ? 1 : 0,
+                    dm: entrevista.dm ? 1 : 0,
+                    tbc: entrevista.tbc ? 1 : 0,
+                    epi: entrevista.epi ? 1 : 0,
+                    tec: entrevista.tec ? 1 : 0,
+                    pTiroideos: entrevista.p_tiroideos ? 1 : 0,
+                    alergias: entrevista.alergias ? 1 : 0,
+                    cirugias: entrevista.cirugias ? 1 : 0,
+                    hospitalizacion: entrevista.hospitalizacion ? 1 : 0,
+                    accidentes: entrevista.accidentes ? 1 : 0,
+                    antPsiquiatricos: entrevista.ant_psiquiatrico ? 1 : 0,
+                    intentosSuicidas: entrevista.intento_suicida ? 1 : 0,
+                    observacionesAnamnesisRemota: entrevista.observacionesAnamnesisRemota === 'default' ? "" : entrevista.observacionesAnamnesisRemota,//ambiguo
+                    menarquia: entrevista.menarquia ? 1 : 0,
+                    menopausia: entrevista.menopausia ? 1 : 0,
+                    gpa: entrevista.gpa ? 1 : 0,
+                    ets: entrevista.ets ? 1 : 0,
+                    fur: entrevista.fur ? 1 : 0,
+                    tipo: entrevista.tipo ? 1 : 0,
+                    observacionesAntGinecoObstetricos: entrevista.observacionesAntGinObs === 'default' ? "" : entrevista.observacionesAntGinObs,//ambiguo
+                    oh: entrevista.oh ? 1 : 0,
+                    thc: entrevista.thc ? 1 : 0,
+                    tabaco: entrevista.tabaco ? 1 : 0,
+                    alucinogeno: entrevista.alucinogeno ? 1 : 0,
+                    anorexigeno: entrevista.anorexigeno ? 1 : 0,
+                    estimulante: entrevista.estimulante ? 1 : 0,
+                    solvente: entrevista.solvente ? 1 : 0,
+                    otro: entrevista.otro === 'default' ? "" : entrevista.otro,
+                    observacionesHabitos: entrevista.observacionesHabitos === 'default' ? "" : entrevista.observacionesHabitos,//ambiguo
+                    medicos: entrevista.medicos === 'default' ? "" : entrevista.medicos,
+                    psiquiatricos: entrevista.psiquiatricos === 'default' ? "" : entrevista.psiquiatricos,
+                    depresion: entrevista.depresion === 'default' ? "" : entrevista.depresion,
+                    ohDrogas: entrevista.oh_drogas === 'default' ? "" : entrevista.oh_drogras,
+                    suicidios: entrevista.suicidios === 'default' ? "" : entrevista.suicidios,
+                    homicidios: entrevista.homicidios === 'default' ? "" : entrevista.homicidios,
+                    otrosAntecedesFamiliares: entrevista.otros === 'default' ? "" : entrevista.otros,
+                    farmacos: entrevista.farmacos === 'default' ? "" : entrevista.farmacos,
+                    entrevistaSignificantesAfectivos: entrevista.entrevista_significantes_afectivos === 'default' ? "" : entrevista.entrevista_significantes_afectivos,
+                    examenesLaboratorio: entrevista.examenes_laboratorio === 'default' ? "" : entrevista.examenes_laboratorio,
+                    derivacion: entrevista.derivacion === 'default' ? "" : entrevista.derivacion,
+                    coordinacionPsicoterapeuta: entrevista.coordinacion_psicoterapeuta === 'default' ? "" : entrevista.coordinacion_psicoterapeuta,
+                    coordinacionCentroDerivacion: entrevista.coordinacion_centro_derivacion === 'default' ? "" : entrevista.coordinacion_centro_derivacion,
+                    instrumentosAplicar: entrevista.instrumentos_aplicar === 'default' ? "" : entrevista.instrumentos_aplicar,
+                    cuidadoFamiliar: entrevista.cuidado_familiar === 'default' ? "" : entrevista.cuidado_familiar,
+                    proximoControl: entrevista.proximo_control === 'default' ? "" : entrevista.proximo_control,
+                    observacionesIndicacionesPlanTratamiento: entrevista.observacionesPlanTratamiento === 'default' ? "" : entrevista.observacionesPlanTratamiento,//ambiguo
+                });
+            }
+        })
+    }
     render() {
         return (
             <div className="EntrevistaPsiquiatrica">
@@ -190,14 +273,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="anamnesisRemotaCheckBox">
                                             <Col>
-                                                {anamnesisRemotaLista.slice(0, 4).map((name, i) => (
+                                                {anamnesisRemotaLista.slice(0, 4).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        defaultChecked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`custom-inline-checkbox-${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -206,14 +292,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="anamnesisRemotaCheckBox1">
                                             <Col>
-                                                {anamnesisRemotaLista.slice(4, 8).map((name, i) => (
+                                                {anamnesisRemotaLista.slice(4, 8).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        defaultChecked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`custom-inline-checkbox1-${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -222,14 +311,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="anamnesisRemotaCheckBox2">
                                             <Col>
-                                                {anamnesisRemotaLista.slice(8, 12).map((name, i) => (
+                                                {anamnesisRemotaLista.slice(8, 12).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        defaultChecked={this.state[name]}
                                                         value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`custom-inline-checkbox2-${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -261,14 +353,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="antGinecoObstetricosCheckBox">
                                             <Col>
-                                                {antGinecoObstetricosLista.slice(0, 3).map((name, i) => (
+                                                {antGinecoObstetricosLista.slice(0, 3).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        defaultChecked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`antGinecoObstetricos${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -277,14 +372,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="antGinecoObstetricosCheckBox1">
                                             <Col>
-                                                {antGinecoObstetricosLista.slice(3, 6).map((name, i) => (
+                                                {antGinecoObstetricosLista.slice(3, 6).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        defaultChecked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`antGinecoObstetricos1${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -313,14 +411,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="habitosCheckBox">
                                             <Col>
-                                                {habitosLista.slice(0, 4).map((name, i) => (
+                                                {habitosLista.slice(0, 4).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        defaultChecked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`habitos${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -329,14 +430,17 @@ export class EntrevistaPsiquiatrica extends Component {
                                     <Col>
                                         <Form.Group controlId="habitosCheckBox1">
                                             <Col>
-                                                {habitosLista.slice(4, 7).map((name, i) => (
+                                                {habitosLista.slice(4, 7).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        defaultChecked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`habitos1${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -417,7 +521,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="ohDrogas"
                                         tooltip="OH/Drogas"
                                         componente={<Form.Control
-                                            value={this.state.ohDrigas}
+                                            value={this.state.ohDrogas}
                                             onChange={this.handleChange}
                                             placeholder="OH/Drogas"
                                         />}
@@ -646,6 +750,7 @@ export class EntrevistaPsiquiatrica extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );

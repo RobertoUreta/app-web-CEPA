@@ -4,9 +4,11 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { ImagePicker } from 'react-file-picker'
+import SweetAlert from 'react-bootstrap-sweetalert'
 //--Para cambiar el calendario a español--
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
+import { updateEvaPsicologica, obtenerEvaPsicologica } from '../../../backend/evaluacion/evaluacionPsicologica';
 registerLocale("es", es)
 setDefaultLocale("es")
 
@@ -29,22 +31,23 @@ export class EntrevistaPsicologica extends Component {
             motivoConsultaCoconstruido:"",
             observaciones:"",
             srcGenograma: '',
-            srcEcomapa: ''
+            srcEcomapa: '',
+            alert: null
         };
     }
 
     _handleImageGenograma = (image) => {
         console.log("_handleImage")
-        console.log(this.state.src)
+        //console.log(this.state.srcGenograma)
         this.setState({ srcGenograma: image })
-        console.log(this.state.src)
+        console.log(this.state.srcGenograma)
     }
 
     _handleImageEcomapa= (image) => {
         console.log("_handleImage")
-        console.log(this.state.src)
-        this.setState({ srcGenograma: image })
-        console.log(this.state.src)
+        //console.log(this.state.srcEcomapa)
+        this.setState({ srcEcomapa: image })
+        console.log(this.state.srcEcomapa)
     }
 
 
@@ -60,14 +63,53 @@ export class EntrevistaPsicologica extends Component {
         });
     }
 
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
         let fecha = new Date(aux.fechaEntrevista)
         aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
-    }
+        let resp = updateEvaPsicologica(aux, this.props.pacienteId, this.props.userId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la Entrevista Psicologica
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    componentDidMount(){
+        let prom = obtenerEvaPsicologica(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data !== undefined) {
+                let entrevista = data.respuesta[0];
+                this.setState({
+                    fechaEntrevista: entrevista.fecha_entrevista === '0000-00-00' ? null : entrevista.fecha_entrevista,
+                    recursosIndividualesFamiliares:entrevista.recursos_individuales_familiares==='default'?"":entrevista.recursos_individuales_familiares,
+                    impresionesClinicas: entrevista.impresiones_clinicas === 'default' ? "" : entrevista.impresiones_clinicas,
+                    relacionesInterpersonales:entrevista.relaciones_interpersonales==='default'?"":entrevista.relaciones_interpersonales,
+                    relacionTerapeuta:entrevista.relacion_terapeuta==='default'?"":entrevista.relacion_paciente,
+                    diagnosticoNosologico:entrevista.diagnostico_nosologico==='default'?"":entrevista.diagnostico_nosologico,
+                    diagnosticoDescriptivo:entrevista.diagnostico_descriptivo==='default'?"":entrevista.diagnostico_descriptivo,
+                    motivoConsultaCoconstruido:entrevista.motivo_consulta_coconstruido==='default'?"":entrevista.motivo_consulta_coconstruido,
+                    observaciones:entrevista.observaciones==='default'?"":entrevista.observaciones,
+                    srcGenograma: entrevista.genograma==='default'?'':entrevista.genograma,
+                    srcEcomapa: entrevista.ecomapa==='default'?'':entrevista.ecomapa
+                });
+            }
+        })
+    }
     render() {
         return (
             <div className="EntrevistaPsicologica">
@@ -214,7 +256,7 @@ export class EntrevistaPsicologica extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );
