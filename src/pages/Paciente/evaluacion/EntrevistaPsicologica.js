@@ -61,11 +61,11 @@ export class EntrevistaPsicologica extends Component {
     }
 
     handleSubmit = event => {
-        /*event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });*/
-
+        event.preventDefault();
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha = new Date(aux.fechaEntrevista)
+        aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux);
     }
 
     render() {
@@ -93,7 +93,7 @@ export class EntrevistaPsicologica extends Component {
                             <Form.Group controlId="Genograma">
                                 <Form.Label>Genograma</Form.Label>
                                 <div>
-                                    <img src={this.state.srcGenograma} />
+                                    <img src={this.state.srcGenograma} alt="Imagen de genograma"/>
                                 </div>
                                 <ImagePicker
                                     extensions={['jpg', 'jpeg', 'png']}
@@ -109,7 +109,7 @@ export class EntrevistaPsicologica extends Component {
                             <Form.Group controlId="ecomapa">
                                 <Form.Label>Ecomapa</Form.Label>
                                 <div>
-                                    <img src={this.state.srcEcomapa} />
+                                    <img src={this.state.srcEcomapa} alt="Imagen de Ecomapa"/>
                                 </div>
                                 <ImagePicker
                                     extensions={['jpg', 'jpeg', 'png']}
@@ -182,7 +182,7 @@ export class EntrevistaPsicologica extends Component {
                                     placeholder="Diagnóstico descriptivo"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="motivoConsultaInstitucion">
+                            <Form.Group controlId="motivoConsultaCoconstruido">
                                 <Form.Label>Motivo de consulta co-construido</Form.Label>
                                 <Form.Control
                                     as="textarea"

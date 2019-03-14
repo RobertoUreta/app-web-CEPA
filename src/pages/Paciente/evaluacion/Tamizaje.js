@@ -4,8 +4,8 @@ import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
-
+import {updateTamizaje,obtenerTamizaje} from '../../../backend/evaluacion/tamizaje'
+import  SweetAlert  from 'react-bootstrap-sweetalert'
 
 const tiempoMalestar = ["2 semanas", "3 semanas", "1 mes", "2 meses", "o más"]
 
@@ -22,7 +22,8 @@ export class Tamizaje extends Component {
             nivelUrgencia: 0,
             preguntaSintomatologia: "",
             preguntaMalestar: "",
-            preguntaObservaciones: ""
+            preguntaObservaciones: "",
+            alert:null
         };
     }
 
@@ -39,26 +40,67 @@ export class Tamizaje extends Component {
         });
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
-
+    _hideAlert = () => {
+        this.setState({ alert: null })
     }
 
+    handleSubmit = event => {
+        event.preventDefault();
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha = new Date(aux.fechaSolicitud)
+        aux.fechaSolicitud = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux)
+        console.log(this.state);
+        let resp = updateTamizaje(aux, this.props.pacienteId, this.props.userId);
+        resp
+        .then(res => {
+            console.log("agregado", res.data)
+            if (res.data.ok) {
+                console.log("TAMIZAJEEEEEE")
+                const getAlert = () => (
+                    <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                        Se agregaron correctamente los datos del tamizaje
+                    </SweetAlert>
+                )
+                this.setState({alert: getAlert()})
+            }
+
+        })
+
+    }
+    componentDidMount(){
+        let prom = obtenerTamizaje(this.props.pacienteId)
+        prom.then(res => {
+            let tami = res.data.respuesta[0];
+            console.log('tamizaje cambiandooooooo: ', tami)
+            if (tami !== undefined) {
+                console.log("no es undefined", tami)
+                this.setState({
+                    nombreSolicitante: tami.nombre_solicitante === 'default' ? "" : tami.nombre_solicitante,
+                    fechaSolicitud: tami.fecha_solicitud ===  '0000-00-00' ? "" : tami.fecha_solicitud,
+                    horarioDisponible: tami.horario_disponible === 'default' ? "" :tami.horario_disponible,
+                    nivelUrgencia: tami.nivel_urgencia === 'default' ? "" : tami.nivel_urgencia,
+                    preguntaSintomatologia:tami.pregunta_sintomatologia === 'default' ? "": tami.pregunta_sintomatologia,
+                    preguntaMalestar: tami.pregunta_malestar === 'default' ? "" : tami.pregunta_malestar,
+                    preguntaObservaciones: tami.pregunta_observaciones === 'default' ? "": tami.pregunta_observaciones
+                })
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     render() {
         return (
             <div className="Tamizaje">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                            <Form.Group controlId="nombre">
+                            <Form.Group controlId="nombreSolicitante">
                             <TextoAyuda 
                                     nombre="nombre"
                                     tooltip="Nombre Solicitante"
                                     componente={<Form.Control
-                                    value={this.state.nombre}
+                                    value={this.state.nombreSolicitante}
                                     onChange={this.handleChange}
                                     placeholder="Nombre Solicitante"
                                 />}
@@ -133,7 +175,7 @@ export class Tamizaje extends Component {
                                     <Option options={tiempoMalestar} />
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group controlId="preguntaOnservaciones">
+                            <Form.Group controlId="preguntaObservaciones">
                                 <Form.Label>Observaciones</Form.Label>
                                 <Form.Control
                                     as="textarea"
@@ -157,7 +199,7 @@ export class Tamizaje extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );

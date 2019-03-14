@@ -2,9 +2,9 @@
 import request from '../config'
 
 
-export let insertarIngreso = async (data, id) => {
+export let insertarIngreso = async (data, id,loggedUser) => {
     try{
-       // let res = await request.post('/insertarPaciente',{ data,id})
+        let res = await request.post('/insertarPaciente',{ data,id,loggedUser})
     }catch ( error){
         console.log(error)
     }

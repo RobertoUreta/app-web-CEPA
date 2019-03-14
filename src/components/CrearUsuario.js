@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
-import {obtenerSupervisores,obtenerRoles,insertarUsuario} from '../backend/usuario/usuario'
+import { obtenerSupervisores, obtenerRoles, insertarUsuario } from '../backend/usuario/usuario'
+import { ChromePicker } from 'react-color'
 const generos = ["Masculino", "Femenino", "Otro"]
 export class CrearUsuario extends Component {
     constructor(props) {
@@ -25,10 +26,11 @@ export class CrearUsuario extends Component {
             telefonoContactoEmergencia: "",
             rol: "",
             supervisor: "",
-            rolID:"",
-            supervisorID:"",
-            supervisores:new Map(),
-            roles:new Map()
+            rolID: "",
+            supervisorID: "",
+            supervisores: new Map(),
+            roles: new Map(),
+            color: "#438C83",
         };
     }
 
@@ -42,7 +44,7 @@ export class CrearUsuario extends Component {
         event.preventDefault();
         console.log(event)
 
-       
+
         this.setState({
             supervisor: this.state.supervisores.get(this.state.supervisor),
             rol: this.state.roles.get(this.state.rol)
@@ -66,8 +68,12 @@ export class CrearUsuario extends Component {
             }
         )
     }
-    
-    componentWillMount(){
+
+    handleChangeColor = (cl) => {
+        this.setState({ color: cl.hex });
+    };
+
+    componentWillMount() {
         this.setState({
             supervisores: obtenerSupervisores(),
             roles: obtenerRoles()
@@ -75,7 +81,7 @@ export class CrearUsuario extends Component {
 
         console.log(this.state.supervisores, this.state.roles)
     }
-    
+
 
     render() {
         return (
@@ -145,7 +151,7 @@ export class CrearUsuario extends Component {
                                             value={this.state.genero}
                                             onChange={this.handleChange}
                                             required
-                                            >
+                                        >
                                             <option hidden>Genero</option>
                                             <Option options={generos}></Option>
                                         </Form.Control>
@@ -178,9 +184,6 @@ export class CrearUsuario extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                        </Form.Group>
-
-                        <Form.Group as={Col}>
                             <Row>
                                 <Col>
                                     <Form.Group controlId="telefonoMovil">
@@ -222,6 +225,11 @@ export class CrearUsuario extends Component {
                                     placeholder="Horas Semanales"
                                 />
                             </Form.Group>
+                        </Form.Group>
+
+                        <Form.Group as={Col}>
+
+
                             <Row>
 
                                 <Col>
@@ -258,7 +266,7 @@ export class CrearUsuario extends Component {
                                             }}
                                             required>
                                             <option hidden>Rol</option>
-                                            <Option options={Array.from(this.state.roles.keys())}/>
+                                            <Option options={Array.from(this.state.roles.keys())} />
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
@@ -274,11 +282,26 @@ export class CrearUsuario extends Component {
                                                 });
                                             }}>
                                             <option hidden>Supervisor</option>
-                                            <Option options={Array.from(this.state.supervisores.keys())}/>
+                                            <Option options={Array.from(this.state.supervisores.keys())} />
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
                             </Row>
+                            <Row>
+                                <Col>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="color">
+                                        <ChromePicker
+                                            color={this.state.color}
+                                            onChangeComplete={this.handleChangeColor}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                </Col>
+                            </Row>
+
                             <Form.Group>
                                 <div className="btn-container">
                                     <Button
