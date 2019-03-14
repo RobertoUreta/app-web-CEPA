@@ -30,11 +30,11 @@ export class Evaluacion extends Component {
 
                     </div>
                     <div label="Evaluación Psicológica">
-                        <EntrevistaPsicologica/>
+                        <EntrevistaPsicologica userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
 
                     <div label="Evaluación Psiquiatrica">
-                        <EntrevistaPsiquiatrica />
+                        <EntrevistaPsiquiatrica userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
 
                     <div label="Entrevista Médica (ISL)">
