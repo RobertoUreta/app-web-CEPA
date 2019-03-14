@@ -1,29 +1,35 @@
 import React, { Component } from 'react'
-import {  Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
+import { InfoSesion} from './InfoSesion'
+
 export class ModalSesionInfo extends Component {
     constructor(props) {
 
         super(props)
 
         this.state = {
-
+            
+            id: this.props.clickedInfo
         }
     }
 
+   
+    
+
+
     render() {
-        //console.log("propseventos",this.props.eventos)
-        //console.log("propsclickedinfo", this.props.clickedInfo)
-        //console.log("undfinde?", this.props.eventos[this.props.clickedInfo - 1])
+        
 
         return (
             <Modal show={this.props.show} onHide={this.props.onHide}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Agendar Sesion</Modal.Title>
+                    <Modal.Title>Información Sesión</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {}
-                    
-                    
+                    <InfoSesion 
+                        clickedInfo = {this.state.id} />
+
+
                 </Modal.Body>
             </Modal>
         )
