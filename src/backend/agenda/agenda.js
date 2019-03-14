@@ -37,6 +37,16 @@ export let colorUsuario = async (idUser) => {
     } 
 
 }
+
+export let obtenerSesionPorId =  async( idUser ) => {
+    try{
+        let promise = await request.get('/sesionPorId', {params: {id: idUser}})
+        return promise
+    }catch (err) {
+        console.log(err)
+    } 
+}
+
 export let insertarSesion = async (data) => {
     let data2 = data
     let fechaStart = new Date(data.start)

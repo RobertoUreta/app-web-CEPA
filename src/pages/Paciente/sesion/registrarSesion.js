@@ -25,7 +25,7 @@ export class RegistrarSesion extends Component {
             pacientes: new Map(),
             sala: "",
             tipoSesion: "",
-            estadoSesion: "",
+            estadoSesion: "No empezado",
             idSala: "",
             salas: new Map(),
             id: 0

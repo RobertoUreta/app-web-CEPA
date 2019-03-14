@@ -46,6 +46,7 @@ export class Agenda extends Component {
             loadingInfo: 'initial',
             idSesion: 0,
             colorUsuario: "",
+            clickedEvent: false,
         }
     }
 
@@ -95,12 +96,17 @@ export class Agenda extends Component {
                     //aux[1] = element.hora_inicio_atencion
                     let fechaStart = aux.toISOString().split('T')
                     fechaStart[1] = element.hora_inicio_atencion
-                    console.log(new Date(fechaStart[0] + " " + fechaStart[1]))
+                    
                     let fechaEnd = aux.toISOString().split('T')
                     fechaEnd[1] = element.hora_termino_atencion
+
+                    let title = "PacienteAAAAAAAAAAAAAAAAAAAAAAAAAA '\n'" + element.nombre
+
+                    
+                   
                     let nuevoEvento = {
                         id: element.id_sesion,
-                        title: element.descripcion_sesion,
+                        title: title,
                         start: new Date(fechaStart[0] + " " + fechaStart[1]),
                         end: new Date(fechaEnd[0] + " " + fechaEnd[1]),
                         fecha_sesion: element.fecha_sesion,
@@ -115,7 +121,7 @@ export class Agenda extends Component {
                     eventos.push(nuevoEvento)
                 })
 
-                this.setState({ eventos: eventos, loadingInfo: 'false ' })
+                this.setState({ eventos: eventos, loadingInfo: 'false ' ,clickedId:1})
 
             }).catch(err => {
                 this.setState({loadingInfo: 'false ' })
@@ -124,10 +130,10 @@ export class Agenda extends Component {
     }
 
     _handleShowInfo(evt) {
-        console.log("handleShowInfo", evt.id)
+        console.log("handleShowInfo", evt.id, "event", evt)
 
-        this.setState({ showInfo: true, clickedId: evt.id });
-        console.log(this.state.clickedId)
+        this.setState({ showInfo: true, clickedId: evt.id ,clickedEvent:true});
+        console.log("stateClickedId",this.state.clickedId)
 
     }
 
@@ -137,7 +143,7 @@ export class Agenda extends Component {
     }
 
     _handleClose = (modalEvt) => {
-        this.setState({ show: modalEvt });
+        this.setState({ show: modalEvt , clickedEvent: false });
     }
 
     _hideAlert = () => {
@@ -159,9 +165,10 @@ export class Agenda extends Component {
         let fechaEnd = new Date(fecha.getFullYear(), fecha.getMonth()
             , fecha.getDate(), termino[0], termino[1])
 
+        let title = "Paciente \n" + aux.sala
         let eventoNuevo = {
             id: aux.id,
-            title: aux.descripcion,
+            title: title,
             start: fechaStart,
             end: fechaEnd,
             fecha_sesion: aux.fechaSesion,
@@ -219,7 +226,7 @@ export class Agenda extends Component {
         const id = this.props.match.params.id
 
 
-        let modalClose = () => this.setState({ showInfo: false });
+        let modalClose = () => this.setState({ showInfo: false ,clickedEvent: false});
 
         const views = ['month', 'work_week', 'day']
 
@@ -235,11 +242,11 @@ export class Agenda extends Component {
         if (this.state.loadingInfo === 'true') {
             console.log("amipixula21231", this.state.eventos, this.state.idSesion)
 
-            return <h2>loadingInfo...</h2>;
+            return <h2>Cargando...</h2>;
 
         }
 
-        console.log("amipixula21231", this.state.eventos, this.state.idSesion)
+       
 
         return (
             <div>
@@ -289,12 +296,12 @@ export class Agenda extends Component {
                 </div>
 
 
-                <ModalSesionInfo
+                {this.state.clickedEvent && <ModalSesionInfo
                     show={this.state.showInfo}
                     onHide={modalClose}
                     eventos={this.state.eventos}
                     clickedInfo={this.state.clickedId}
-                />
+                />}
                 {this.state.alert}
             </div>
         )
