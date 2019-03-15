@@ -28,9 +28,9 @@ export let obtenerLastIdSesion = async () => {
     }
 }
 
-export let colorUsuario = async (idUser) => {
+export let colorUsuario = async () => {
     try{
-        let promise = await request.get('/colorUsuario', {params: {id: idUser}})
+        let promise = await request.get('/colorUsuario')
         return promise
     }catch (err) {
         console.log(err)
@@ -53,8 +53,8 @@ export let insertarSesion = async (data) => {
     let fechaEnd = new Date(data.end)
     let fechaSesion = new Date(data.fecha_sesion)
 
-    data.startAux = fechaStart.getHours()+":"+(fechaStart.getMinutes()<10?'0':'') + fechaStart.getMinutes() +":"+ (fechaStart.getSeconds()<10?'0':'') +fechaStart.getSeconds()
-    data.endAux = fechaEnd.getHours()+":"+(fechaEnd.getMinutes()<10?'0':'') + fechaEnd.getMinutes()+":"+ (fechaEnd.getMinutes()<10?'0':'')+ fechaEnd.getSeconds()
+    data.startAux = (fechaStart.getHours()<10 ? '0':'')+fechaStart.getHours()+":"+(fechaStart.getMinutes()<10?'0':'') + fechaStart.getMinutes() +":"+ (fechaStart.getSeconds()<10?'0':'') +fechaStart.getSeconds()
+    data.endAux = (fechaEnd.getHours()<10 ? '0':'')+fechaEnd.getHours()+":"+(fechaEnd.getMinutes()<10?'0':'') + fechaEnd.getMinutes()+":"+ (fechaEnd.getMinutes()<10?'0':'')+ fechaEnd.getSeconds()
     data.fecha_sesion = fechaSesion.toISOString().split('T')[0]
 
     let promise = await request.post('/insertarSesion', data)

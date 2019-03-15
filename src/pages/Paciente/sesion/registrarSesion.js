@@ -8,6 +8,7 @@ import { setHours } from 'date-fns/esm';
 import { setMinutes } from 'date-fns';
 import { obtenerSalas, obtenerLastIdSesion } from '../../../backend/agenda/agenda';
 import { obtenerPacientes } from '../../../backend/paciente/paciente';
+import { obtenerUsuarios } from '../../../backend/usuario/usuario';
 
 export class RegistrarSesion extends Component {
 
@@ -15,12 +16,16 @@ export class RegistrarSesion extends Component {
         super(props);
 
         this.state = {
+            profesionales: new Map(),
+            idProfesional: "",
+            test: "",
+            profesional: "",
             fechaSesion: this.props.defaultDate,
             horaInicio: null,
             horaTermino: null,
             descripcion: "",
             valorSesion: "",//setear segun el valor de sesion agregado en la general
-            paciente :"",
+            paciente: "",
             idPaciente: "",
             pacientes: new Map(),
             sala: "",
@@ -45,7 +50,7 @@ export class RegistrarSesion extends Component {
                 this.setState({ salas: aux })
 
             }).catch(err => {
-                aux.push("default");
+
                 console.log(err);
             });
         let listado = new Map()
@@ -61,14 +66,28 @@ export class RegistrarSesion extends Component {
                 });
                 this.setState({ pacientes: listado })
             })
+        let listadoUsuarios = new Map()
+        promise = obtenerUsuarios()
+        promise
+            .then(res => {
+                let data = res.data;
+                let arr = data.usuarios;
+                console.log(data.usuarios)
+                arr.forEach(element => {
+                    let nombre = element.nombre + " " + element.apellido_paterno
+
+                    listadoUsuarios.set(nombre, element.id_usuario)
+                });
+                this.setState({ profesionales: listadoUsuarios })
+            })
         promise = obtenerLastIdSesion()
         promise
-        .then(res => {
-            let data = res.data.response[0].id +1
-            console.log("datita",data)
+            .then(res => {
+                let data = res.data.response[0].id + 1
+                console.log("datita", data)
 
-            this.setState({id: data})
-        })
+                this.setState({ id: data })
+            })
     }
 
     _handleChange = (date) => {
@@ -86,10 +105,8 @@ export class RegistrarSesion extends Component {
 
     _handleSubmit = (event) => {
         event.preventDefault();
-        console.log(event)
-
         const aux = JSON.stringify(this.state, null, '  ');
-        console.log(aux)
+        console.log(this.state)
         //console.log(data)
         this.props.onSubmit(aux)
 
@@ -98,7 +115,6 @@ export class RegistrarSesion extends Component {
 
 
     render() {
-
         return (
             <div className="registrarSesion">
                 <form onSubmit={this.handleSubmit} autoComplete="off">
@@ -164,6 +180,7 @@ export class RegistrarSesion extends Component {
                                         as="select"
                                         value={this.state.paciente}
                                         onChange={event => {
+                                            
                                             this.setState({
                                                 [event.target.id]: event.target.value,
                                                 idPaciente: this.state.pacientes.get(event.target.value)
@@ -172,6 +189,26 @@ export class RegistrarSesion extends Component {
                                     >
                                         <option hidden>Seleccionar Paciente</option>
                                         <Option options={Array.from(this.state.pacientes.keys())} />
+                                    </Form.Control>}
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="profesional">
+                                <TextoAyuda
+                                    nombre="profesional"
+                                    tooltip="Seleccionar profesional a cargo"
+                                    componente={<Form.Control
+                                        as="select"
+                                        value={this.state.profesional}
+                                        onChange={event => {
+                                           
+                                            this.setState({
+                                                [event.target.id]: event.target.value,
+                                                idProfesional: this.state.profesionales.get(event.target.value)
+                                            });
+                                        }}
+                                    >
+                                        <option hidden>Profesional a cargo</option>
+                                        <Option options={Array.from(this.state.profesionales.keys())} />
                                     </Form.Control>}
                                 />
                             </Form.Group>

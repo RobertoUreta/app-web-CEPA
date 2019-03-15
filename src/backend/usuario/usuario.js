@@ -16,6 +16,15 @@ export let obtenerListaUsuarios = ()=>{
     return arr;
 }
 
+export let obtenerUsuarios = async () => {
+    try {
+        let promise = await request.get('/listaUsuario')
+        return promise;
+    }catch(err){
+        console.log(err)
+    }
+}
+
 export let obtenerSupervisores= ()=>{
     let supervisores = new Map();
     request.get('/usuario')

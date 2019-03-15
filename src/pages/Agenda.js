@@ -45,7 +45,7 @@ export class Agenda extends Component {
             salas: new Map(),
             loadingInfo: 'initial',
             idSesion: 0,
-            colorUsuario: "",
+            colorUsuario: new Map(),
             clickedEvent: false,
         }
     }
@@ -82,11 +82,19 @@ export class Agenda extends Component {
         })        
         let idUser = this.props.match.params.id
 
-        let promiseColor = colorUsuario(idUser)
+        let promiseColor = colorUsuario()
         promiseColor
         .then(res => {
-            this.setState({color:res.data.response[0].color })
+            console.log(res)
+            let aux = new Map()
+            let data = res.data;
+            let arr = data.response;
+            arr.forEach(element => {
+                aux.set(element.id_usuario, element.color)
+            });
+            this.setState({color:aux })
         })
+
         let eventos = []
         let promise = obtenerSesiones(idUser)
         promise
@@ -102,8 +110,6 @@ export class Agenda extends Component {
 
                     let title = "PacienteAAAAAAAAAAAAAAAAAAAAAAAAAA '\n'" + element.nombre
 
-                    
-                   
                     let nuevoEvento = {
                         id: element.id_sesion,
                         title: title,
@@ -166,6 +172,8 @@ export class Agenda extends Component {
             , fecha.getDate(), termino[0], termino[1])
 
         let title = "Paciente \n" + aux.sala
+        let colorNuevo = this.state.color.get(aux.idProfesional)
+        console.log("color del usuario", colorNuevo)
         let eventoNuevo = {
             id: aux.id,
             title: title,
@@ -177,10 +185,10 @@ export class Agenda extends Component {
             estado_sesion: aux.estadoSesion,
             descripcion_sesion: aux.descripcion,
             valor_sesion: aux.valorSesion,
-            ref_usuario: this.props.match.params.id,
+            ref_usuario: aux.idProfesional,
             startAux: fechaStart,
             endAux: fechaEnd,
-            hexColor: this.state.color
+            hexColor: colorNuevo
         }
 
         let validar = insertarSesion(eventoNuevo)
@@ -240,13 +248,12 @@ export class Agenda extends Component {
 
 
         if (this.state.loadingInfo === 'true') {
-            console.log("amipixula21231", this.state.eventos, this.state.idSesion)
-
             return <h2>Cargando...</h2>;
 
         }
 
        
+        console.log("amipixula21231", this.state.eventos, this.state.idSesion,this.state.color)
 
         return (
             <div>
