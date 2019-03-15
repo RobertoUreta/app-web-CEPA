@@ -45,7 +45,6 @@ export class RegistrarSesion extends Component {
                 this.setState({ salas: aux })
 
             }).catch(err => {
-                aux.push("default");
                 console.log(err);
             });
         let listado = new Map()
@@ -243,7 +242,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Estado Sesión</option>
-                                            <Option options={["Asiste", "No asiste"]} />
+                                            <Option options={["Asiste", "No asiste","Justificado","Solicita cambio de hora",""]} />
                                         </Form.Control>} />
                                 </Form.Group>
                             </Row>
