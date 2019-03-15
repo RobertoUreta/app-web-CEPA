@@ -150,7 +150,7 @@ export class EntrevistaPsiquiatrica extends Component {
                     anamnesisProxima: entrevista.anamnesis_proxima === 'default' ? "" : entrevista.anamnesis_proxima,
                     hipotesisDiagnosticaDSMV: entrevista.hipotesis_diagnostica_dsm_v === 'default' ? "" : entrevista.hipotesis_diagnostica_dsm_v,
                     impresionesClinicas: entrevista.impresiones_clinicas === 'default' ? "" : entrevista.impresiones_clinicas,
-                    hta: entrevista.hta ? 1 : 0,
+                    hta: entrevista.hta ? 1: 0,
                     dm: entrevista.dm ? 1 : 0,
                     tbc: entrevista.tbc ? 1 : 0,
                     epi: entrevista.epi ? 1 : 0,
@@ -180,9 +180,9 @@ export class EntrevistaPsiquiatrica extends Component {
                     otro: entrevista.otro === 'default' ? "" : entrevista.otro,
                     observacionesHabitos: entrevista.observacionesHabitos === 'default' ? "" : entrevista.observacionesHabitos,//ambiguo
                     medicos: entrevista.medicos === 'default' ? "" : entrevista.medicos,
-                    psiquiatricos: entrevista.psiquiatricos === 'default' ? "" : entrevista.psiquiatricos,
+                    psiquiatricos: entrevista.psquiatricos === 'default' ? "" : entrevista.psquiatricos,
                     depresion: entrevista.depresion === 'default' ? "" : entrevista.depresion,
-                    ohDrogas: entrevista.oh_drogas === 'default' ? "" : entrevista.oh_drogras,
+                    ohDrogas: entrevista.oh_drogas === 'default' ? "" : entrevista.oh_drogas,
                     suicidios: entrevista.suicidios === 'default' ? "" : entrevista.suicidios,
                     homicidios: entrevista.homicidios === 'default' ? "" : entrevista.homicidios,
                     otrosAntecedesFamiliares: entrevista.otros === 'default' ? "" : entrevista.otros,
@@ -276,7 +276,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {anamnesisRemotaLista.slice(0, 4).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -295,7 +295,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {anamnesisRemotaLista.slice(4, 8).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -314,7 +314,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {anamnesisRemotaLista.slice(8, 12).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state.name}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -356,7 +356,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {antGinecoObstetricosLista.slice(0, 3).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -375,7 +375,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {antGinecoObstetricosLista.slice(3, 6).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -414,7 +414,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {habitosLista.slice(0, 4).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -433,7 +433,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {habitosLista.slice(4, 7).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        defaultChecked={this.state[name]}
+                                                        checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
                                                             [event.target.id]: event.target.checked ? 1 : 0
@@ -552,7 +552,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                     />
 
                                 </Form.Group>
-                                <Form.Group controlId="otrosAntecedentesFamiliares">
+                                <Form.Group controlId="otrosAntecedesFamiliares">
                                     <TextoAyuda
                                         nombre="otrosAntecedentesFamiliares"
                                         tooltip="Otros"

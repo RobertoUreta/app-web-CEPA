@@ -138,7 +138,6 @@ export class DatosPersonales extends Component {
                                     value={this.state.apellidoMaterno}
                                     onChange={this.handleChange}
                                     placeholder="Apellido Materno"
-                                    required
                                 />} />
                             </Form.Group>
                             <Row>
