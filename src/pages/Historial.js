@@ -12,7 +12,7 @@ export class Historial extends Component {
             usuario: this.props.userId,
             paciente: this.props.pacienteId,
             loadingInfo: 'initial',
-
+           
             sesiones: []
         }
     }
@@ -43,6 +43,7 @@ export class Historial extends Component {
             })
     }
 
+    
 
     render() {
         if (this.state.loadingInfo === 'initial') {

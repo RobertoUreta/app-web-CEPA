@@ -14,7 +14,7 @@ import SweetAlert from 'react-bootstrap-sweetalert'
 import { verificarSesion } from '../backend/login'
 
 import moment from 'moment'
-import { insertarSesion, obtenerSesiones, obtenerLastIdSesion, colorUsuario } from '../backend/agenda/agenda';
+import { insertarSesion, obtenerSesiones, obtenerLastIdSesion, colorUsuario, obtenerPacienteSesion } from '../backend/agenda/agenda';
 
 
 
@@ -47,9 +47,11 @@ export class Agenda extends Component {
             idSesion: 0,
             colorUsuario: new Map(),
             clickedEvent: false,
+
         }
     }
 
+    //no sirve por el momento
     getHora(hora) {
         let fecha = new Date(hora)
         var localeSpecificTime = fecha.toLocaleTimeString();
@@ -80,58 +82,72 @@ export class Agenda extends Component {
                 this.props.history.push('/')
             }
 
-        })        
+        })
         let idUser = this.props.match.params.id
 
         let promiseColor = colorUsuario()
         promiseColor
-        .then(res => {
-            console.log(res)
-            let aux = new Map()
-            let data = res.data;
-            let arr = data.response;
-            arr.forEach(element => {
-                aux.set(element.id_usuario, element.color)
-            });
-            this.setState({color:aux })
-        })
+            .then(res => {
+                console.log(res)
+                let aux = new Map()
+                let data = res.data;
+                let arr = data.response;
+                arr.forEach(element => {
+                    aux.set(element.id_usuario, element.color)
+                });
+                this.setState({ color: aux })
+            })
 
         let eventos = []
         let promise = obtenerSesiones(idUser)
         promise
-            .then(res => {
+            .then(res => {https://makeawebsitehub.com/host-website-computer/
                 res.data.response.forEach(element => {
                     let aux = new Date(element.fecha_sesion)
                     //aux[1] = element.hora_inicio_atencion
                     let fechaStart = aux.toISOString().split('T')
                     fechaStart[1] = element.hora_inicio_atencion
-                    
+
                     let fechaEnd = aux.toISOString().split('T')
                     fechaEnd[1] = element.hora_termino_atencion
+                    let promesaPaciente = obtenerPacienteSesion(element.id_sesion)
+                    let title;
+                    promesaPaciente
+                        .then(res => {
+                            console.log(res.data.respuesta)
+                            let data = res.data.respuesta
+                            title = data.nombre + " " + data.apellido_paterno + " " + data.apellido_materno
+                            console.log(title)
+                            let nuevoEvento = {
+                                id: element.id_sesion,
+                                title: title,
+                                start: new Date(fechaStart[0] + " " + fechaStart[1]),
+                                end: new Date(fechaEnd[0] + " " + fechaEnd[1]),
+                                fecha_sesion: element.fecha_sesion,
+                                ref_sala: element.ref_sala,
+                                ref_paciente: element.ref_ingreso,
+                                estado_sesion: element.estado_sesion,
+                                descripcion_sesion: element.descripcion_sesion,
+                                valor_sesion: element.valor_sesion,
+                                ref_usuario: element.ref_usuario,
+                                hexColor: element.color
+                            }
+                            eventos.push(nuevoEvento)
+                            this.setState({ eventos: eventos})
+                        }).catch(err => {
+                            console.log(err)
+                        })
 
-                    let title = "PacienteAAAAAAAAAAAAAAAAAAAAAAAAAA '\n'" + element.nombre
+                    console.log("aquiTitle" + title)
 
-                    let nuevoEvento = {
-                        id: element.id_sesion,
-                        title: title,
-                        start: new Date(fechaStart[0] + " " + fechaStart[1]),
-                        end: new Date(fechaEnd[0] + " " + fechaEnd[1]),
-                        fecha_sesion: element.fecha_sesion,
-                        ref_sala: element.ref_sala,
-                        ref_paciente: element.ref_ingreso,
-                        estado_sesion: element.estado_sesion,
-                        descripcion_sesion: element.descripcion_sesion,
-                        valor_sesion: element.valor_sesion,
-                        ref_usuario: element.ref_usuario,
-                        hexColor: element.color
-                    }
-                    eventos.push(nuevoEvento)
+
+                   
                 })
 
-                this.setState({ eventos: eventos, loadingInfo: 'false ' ,clickedId:1})
+                this.setState({loadingInfo: 'false ', clickedId: 1 })
 
             }).catch(err => {
-                this.setState({loadingInfo: 'false ' })
+                this.setState({ loadingInfo: 'false ' })
             })
 
     }
@@ -139,8 +155,8 @@ export class Agenda extends Component {
     _handleShowInfo(evt) {
         console.log("handleShowInfo", evt.id, "event", evt)
 
-        this.setState({ showInfo: true, clickedId: evt.id ,clickedEvent:true});
-        console.log("stateClickedId",this.state.clickedId)
+        this.setState({ showInfo: true, clickedId: evt.id, clickedEvent: true });
+        console.log("stateClickedId", this.state.clickedId)
 
     }
 
@@ -150,7 +166,7 @@ export class Agenda extends Component {
     }
 
     _handleClose = (modalEvt) => {
-        this.setState({ show: modalEvt , clickedEvent: false });
+        this.setState({ show: modalEvt, clickedEvent: false });
     }
 
     _hideAlert = () => {
@@ -164,13 +180,13 @@ export class Agenda extends Component {
         let fecha = new Date(aux.fechaSesion)
 
         let fechaStart = new Date(fecha.getFullYear(), fecha.getMonth()
-            , fecha.getDate(), new Date(aux.horaInicio).getHours(),new Date(aux.horaInicio).getMinutes()) //en linux tiraba error
+            , fecha.getDate(), new Date(aux.horaInicio).getHours(), new Date(aux.horaInicio).getMinutes()) //en linux tiraba error
 
         console.log(fechaStart)
         let fechaEnd = new Date(fecha.getFullYear(), fecha.getMonth()
-            , fecha.getDate(), new Date(aux.horaTermino).getHours(),new Date(aux.horaTermino).getMinutes()) //en linux tiraba error  
+            , fecha.getDate(), new Date(aux.horaTermino).getHours(), new Date(aux.horaTermino).getMinutes()) //en linux tiraba error  
 
-        let title = "Paciente \n" + aux.sala
+        let title = aux.paciente + " " + aux.sala
         let colorNuevo = this.state.color.get(aux.idProfesional)
         console.log("color del usuario", colorNuevo)
         let eventoNuevo = {
@@ -233,7 +249,7 @@ export class Agenda extends Component {
         const id = this.props.match.params.id
 
 
-        let modalClose = () => this.setState({ showInfo: false ,clickedEvent: false});
+        let modalClose = () => this.setState({ showInfo: false, clickedEvent: false });
 
         const views = ['month', 'work_week', 'day']
 
@@ -251,7 +267,7 @@ export class Agenda extends Component {
 
         }
 
-       
+
 
         return (
             <div>

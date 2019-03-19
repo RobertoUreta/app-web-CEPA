@@ -3,12 +3,16 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import DatePicker from 'react-datepicker'
+import { Typeahead } from 'react-bootstrap-typeahead';
 import "react-datepicker/dist/react-datepicker.css";
+import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { setHours } from 'date-fns/esm';
 import { setMinutes } from 'date-fns';
 import { obtenerSalas, obtenerLastIdSesion } from '../../../backend/agenda/agenda';
 import { obtenerPacientes } from '../../../backend/paciente/paciente';
 import { obtenerUsuarios } from '../../../backend/usuario/usuario';
+
+
 
 export class RegistrarSesion extends Component {
 
@@ -175,11 +179,22 @@ export class RegistrarSesion extends Component {
                                 <TextoAyuda
                                     nombre="paciente"
                                     tooltip="Seleccionar paciente"
-                                    componente={<Form.Control
+                                    componente={
+                                        <Typeahead
+                                            options={Array.from(this.state.pacientes.keys())}
+                                            placeholder="Seleccionar paciente"
+                                            value={this.state.paciente}
+                                            onChange={event => {
+                                                console.log(event)
+                                                this.setState({
+                                                    paciente: event[0],
+                                                    idPaciente: this.state.pacientes.get(event[0])
+                                                });
+                                            }} />/*<Form.Control
                                         as="select"
                                         value={this.state.paciente}
                                         onChange={event => {
-                                            
+
                                             this.setState({
                                                 [event.target.id]: event.target.value,
                                                 idPaciente: this.state.pacientes.get(event.target.value)
@@ -188,27 +203,25 @@ export class RegistrarSesion extends Component {
                                     >
                                         <option hidden>Seleccionar Paciente</option>
                                         <Option options={Array.from(this.state.pacientes.keys())} />
-                                    </Form.Control>}
+                                    </Form.Control>*/}
                                 />
                             </Form.Group>
                             <Form.Group controlId="profesional">
                                 <TextoAyuda
                                     nombre="profesional"
                                     tooltip="Seleccionar profesional a cargo"
-                                    componente={<Form.Control
-                                        as="select"
-                                        value={this.state.profesional}
-                                        onChange={event => {
-                                           
-                                            this.setState({
-                                                [event.target.id]: event.target.value,
-                                                idProfesional: this.state.profesionales.get(event.target.value)
-                                            });
-                                        }}
-                                    >
-                                        <option hidden>Profesional a cargo</option>
-                                        <Option options={Array.from(this.state.profesionales.keys())} />
-                                    </Form.Control>}
+                                    componente={
+                                        <Typeahead
+                                            options={Array.from(this.state.profesionales.keys())}
+                                            placeholder="Profesional a cargo"
+                                            value={this.state.profesional}
+                                            onChange={event => {
+                                                console.log(event)
+                                                this.setState({
+                                                    profesional: event[0],
+                                                    idProfesional: this.state.profesionales.get(event[0])
+                                                });
+                                            }} />}
                                 />
                             </Form.Group>
                             <Form.Group controlId="descripcion">
