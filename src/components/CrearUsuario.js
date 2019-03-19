@@ -9,7 +9,7 @@ const generos = ["Masculino", "Femenino", "Otro"]
 export class CrearUsuario extends Component {
     constructor(props) {
         super(props);
-        
+
         this._handleShow = this._handleShow.bind(this);
         this.state = {
             nombre: "",
@@ -33,7 +33,7 @@ export class CrearUsuario extends Component {
             supervisores: new Map(),
             roles: new Map(),
             color: "#438C83",//color CEPA
-            show:false,
+            show: false,
         };
     }
 
@@ -42,7 +42,7 @@ export class CrearUsuario extends Component {
             [event.target.id]: event.target.value
         });
     }
-    handleSubmitPass= (event)=>{
+    handleSubmitPass = (event) => {
         this._handleClose()
     }
     _handleSubmit = (event) => {
@@ -61,7 +61,17 @@ export class CrearUsuario extends Component {
             insertarUsuario(JSON.parse(aux));
         }
     }
-
+    _cambiarDigitoVerificador = (rut) => {
+        var M = 0, S = 1;
+        var T = rut
+        for (; T; T = Math.floor(T / 10))
+            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+        this.setState(
+            {
+                digitoVerificador: S ? S - 1 : 'k'
+            }
+        )
+    }
     cambiarDigitoVerificador = event => {
         var M = 0, S = 1;
         var T = event.target.value
@@ -117,6 +127,7 @@ export class CrearUsuario extends Component {
                         supervisor: nombreSupervisor,
                         color: usuario.color,
                     });
+                    this._cambiarDigitoVerificador(this.state.rut);
                 }
             })
         }
@@ -216,13 +227,13 @@ export class CrearUsuario extends Component {
                                 {this.props.usuarioID !== undefined ?
                                     <Col>
                                         <Button
-                                        className="btn-custom"
+                                            className="btn-custom"
                                             onClick={this._handleShow}
                                         >
                                             Cambiar contraseña
                                         </Button>
                                         <ModalPassword
-                                            
+
                                             usuarioID={this.props.usuarioID}
                                             onClose={this._handleClose}
                                             show={this.state.show}
@@ -280,21 +291,19 @@ export class CrearUsuario extends Component {
                                     placeholder="Correo"
                                 />
                             </Form.Group>
-                            <Form.Group controlId="horasSemanales">
-                                <Form.Control
-                                    value={this.state.horasSemanales}
-                                    onChange={this.handleChange}
-                                    placeholder="Horas Semanales"
-                                />
-                            </Form.Group>
                         </Form.Group>
-
                         <Form.Group as={Col}>
-
 
                             <Row>
 
-                                <Col>
+                                <Form.Group as={Col}>
+                                    <Form.Group controlId="horasSemanales">
+                                        <Form.Control
+                                            value={this.state.horasSemanales}
+                                            onChange={this.handleChange}
+                                            placeholder="Horas Semanales"
+                                        />
+                                    </Form.Group>
                                     <Form.Group controlId="nombreContactoEmergencia">
                                         <Form.Control
                                             value={this.state.nombreContactoEmergencia}
@@ -302,8 +311,7 @@ export class CrearUsuario extends Component {
                                             placeholder="Nombre contacto de emergencia"
                                         />
                                     </Form.Group>
-                                </Col>
-                                <Col>
+
                                     <Form.Group controlId="telefonoContactoEmergencia">
                                         <Form.Control
                                             value={this.state.telefonoContactoEmergencia}
@@ -311,11 +319,6 @@ export class CrearUsuario extends Component {
                                             placeholder="Teléfono contacto de emergencia"
                                         />
                                     </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col>
                                     <Form.Group controlId="rol">
                                         <Form.Control
                                             as="select"
@@ -331,8 +334,7 @@ export class CrearUsuario extends Component {
                                             <Option options={Array.from(this.state.roles.keys())} />
                                         </Form.Control>
                                     </Form.Group>
-                                </Col>
-                                <Col>
+
                                     <Form.Group controlId="supervisor">
                                         <Form.Control
                                             as="select"
@@ -347,21 +349,19 @@ export class CrearUsuario extends Component {
                                             <Option options={Array.from(this.state.supervisores.keys())} />
                                         </Form.Control>
                                     </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                </Col>
-                                <Col>
-                                    <Form.Group controlId="color">
-                                        <ChromePicker
-                                            color={this.state.color}
-                                            onChangeComplete={this.handleChangeColor}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                </Col>
+                                </Form.Group>
+                                <Form.Group as={Col}>
+                                    <Row>
+                                        <Col>
+                                            <Form.Group controlId="color">
+                                                <ChromePicker
+                                                    color={this.state.color}
+                                                    onChangeComplete={this.handleChangeColor}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Form.Group>
                             </Row>
 
                             <Form.Group>
