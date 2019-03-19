@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { Form, Col, Button} from 'react-bootstrap'
+import { Form, Col, Button } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updateDiagnosticoPsiquiatrico, obtenerDiagnosticoPsiquiatrico } from '../../../backend/diagnostico/diagnosticoPsiquiatrico';
 
 export class DiagnosticoPsiquiatrico extends Component {
 
@@ -15,14 +17,15 @@ export class DiagnosticoPsiquiatrico extends Component {
             diagnosticoDSMeje5: "",
             etapaTratamiento: "",
             observacion: "",
-            fechaCierrePsiquiatra: null
+            fechaCierrePsiquiatra: null,
+            alert: null
         };
     }
 
 
     _handleChange = (date) => {
         this.setState({
-            fecha: date
+            fechaCierrePsiquiatra: date
         });
     }
 
@@ -34,10 +37,45 @@ export class DiagnosticoPsiquiatrico extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha = new Date(aux.fechaCierrePsiquiatra)
+        aux.fechaCierrePsiquiatra = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux);
+        let resp = updateDiagnosticoPsiquiatrico(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos deL diagnostico psiquiatrico.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerDiagnosticoPsiquiatrico(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data !== undefined) {
+                let diag = data.respuesta[0];
+                this.setState({
+                    tratamientoPsiquiatrico: diag.tratamiento_psiquiatrico === 'default' ? "" : diag.tratamiento_psiquiatrico,
+                    diagnosticoDSMeje5: diag.diagnostico_dsm_eje5 === 'default' ? "" : diag.diagnostico_dsm_eje5,
+                    etapaTratamiento: diag.etapa_tratamiento === 'default' ? "" : diag.etapa_tratamiento,
+                    observacion: diag.observacion === 'default' ? "" : diag.observacion,
+                    fechaCierrePsiquiatra: diag.fecha_cierre_psiquiatra === '0000-00-00' ? null : diag.fecha_cierre_psiquiatra,
+                });
+            }
+        })
     }
 
     render() {
@@ -93,7 +131,7 @@ export class DiagnosticoPsiquiatrico extends Component {
                                     componente={<DatePicker
                                         customInput={<Form.Control />}
                                         dateFormat="dd/MM/yyyy"
-                                        selected={this.state.fecha}
+                                        selected={this.state.fechaCierrePsiquiatra}
                                         onChange={this._handleChange}
                                         placeholderText="Fecha Cierre Psiquiatra"
                                     />}
@@ -112,7 +150,7 @@ export class DiagnosticoPsiquiatrico extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );

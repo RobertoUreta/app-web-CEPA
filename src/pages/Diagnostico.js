@@ -11,11 +11,11 @@ export class Diagnostico extends Component {
             <div>
                 <Accordion>
                     <div label="Diagnostico Psicológico">
-                        <DiagnosticoPsicologico />
+                        <DiagnosticoPsicologico userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
 
                     <div label="Diagnostico Psiquiatrico">
-                        <DiagnosticoPsiquiatrico />
+                        <DiagnosticoPsiquiatrico userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                 </Accordion>
             </div>

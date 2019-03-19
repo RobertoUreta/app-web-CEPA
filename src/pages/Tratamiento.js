@@ -15,10 +15,10 @@ export class Tratamiento extends Component {
 
         <Accordion>
           <div label="Psicológico">
-            <TratamientoPsicologico />
+            <TratamientoPsicologico  userId={this.props.userId} pacienteId={this.props.pacienteId} />
           </div>
           <div label="Psiquiatría">
-            <TratamientoPsiquiatrico />
+            <TratamientoPsiquiatrico userId={this.props.userId} pacienteId={this.props.pacienteId}/>
           </div>
           <div label="Social">
           </div>

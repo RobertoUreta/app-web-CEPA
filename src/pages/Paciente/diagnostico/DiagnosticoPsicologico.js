@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
+import SweetAlert from 'react-bootstrap-sweetalert'
 import { TextoAyuda } from '../../../components/TextoAyuda'
+import { updateDiagnosticoPsicologico, obtenerDiagnosticoPsicologico } from '../../../backend/diagnostico/diagnosticoPsicologico';
 
 export class DiagnosticoPsicologico extends Component {
 
@@ -18,9 +20,10 @@ export class DiagnosticoPsicologico extends Component {
             modalidadTratamiento: "",
             modeloTerapeutico: "",
             otroModeloTerapeutico: "",
-            traspasoModalidadTratamiento: false,
+            traspasoModalidadTratamiento: 0,
             fechaTraspasoModTratamiento: null,
-            fechaCierrePsicologico: null
+            fechaCierrePsicologico: null,
+            alert: null
         };
     }
 
@@ -39,10 +42,52 @@ export class DiagnosticoPsicologico extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha = new Date(aux.fechaTraspasoModTratamiento)
+        aux.fechaTraspasoModTratamiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
+        let fecha1 = new Date(aux.fechaCierrePsicologico)
+        aux.fechaCierrePsicologico = fecha1.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux);
+        let resp = updateDiagnosticoPsicologico(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos deL diagnostico psicologico.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerDiagnosticoPsicologico(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data !== undefined) {
+                let diag = data.respuesta[0];
+                this.setState({
+                    diagnostico: diag.diagnostico==='default'?"":diag.diagnostico,
+                    subtrastorno: diag.subtrastorno==='default'?"":diag.subtrastorno,
+                    tipoEpisodio: diag.tipo_episodio==='default'?"":diag.tipo_episodio,
+                    otroTipoEspecificacion: diag.otro_tipo_especificacion==='default'?"":diag.otro_tipo_especificacion,
+                    modalidadTratamiento: diag.modalidad_tratamiento==='default'?"":diag.modalidad_tratamiento,
+                    modeloTerapeutico: diag.modelo_terapeutico==='default'?"":diag.modelo_terapeutico,
+                    otroModeloTerapeutico: diag.otro_modelo_terapeutico==='default'?"":diag.otro_modelo_terapeutico,
+                    traspasoModalidadTratamiento: diag.traspaso_modalidad_tratamiento?1:0,
+                    fechaTraspasoModTratamiento: diag.fecha_traspaso_mod_tratamiento==='0000-00-00'?null:diag.fecha_traspaso_mod_tratamiento,
+                    fechaCierrePsicologico: diag.fecha_cierre_psicologico==='0000-00-00'?null:diag.fecha_cierre_psicologico
+                });
+            }
+        })
     }
 
     render() {
@@ -125,11 +170,14 @@ export class DiagnosticoPsicologico extends Component {
                                 <Col>
                                     <Form.Check
                                         custom
+                                        checked={this.state.traspasoModalidadTratamiento}
                                         value={this.state.traspasoModalidadTratamiento}
-                                        onChange={this.handleChange}
+                                        onChange={event => this.setState({
+                                            [event.target.id]: event.target.checked ? 1 : 0
+                                        })}
                                         label="Traspaso de modalidad de tratamiento(grupal a individual)"
                                         type="checkbox"
-                                        id="checkbox-modalidadTratamiento"
+                                        id="traspasoModalidadTratamiento"
                                     />
                                 </Col>
                                 <Col>
@@ -141,8 +189,12 @@ export class DiagnosticoPsicologico extends Component {
                                                 componente={<DatePicker
                                                     customInput={<Form.Control />}
                                                     dateFormat="dd/MM/yyyy"
-                                                    selected={this.state.fecha}
-                                                    onChange={this._handleChange}
+                                                    selected={this.state.fechaTraspasoModTratamiento}
+                                                    onChange={(date) => {
+                                                        this.setState({
+                                                            fechaTraspasoModTratamiento: date
+                                                        });
+                                                    }}
                                                     placeholderText="Fecha Traspaso Modalidad de tratamiento"
                                                 />}
                                             />
@@ -159,8 +211,12 @@ export class DiagnosticoPsicologico extends Component {
                                                 componente={<DatePicker
                                                     customInput={<Form.Control />}
                                                     dateFormat="dd/MM/yyyy"
-                                                    selected={this.state.fecha}
-                                                    onChange={this._handleChange}
+                                                    selected={this.state.fechaCierrePsicologico}
+                                                    onChange={(date) => {
+                                                        this.setState({
+                                                            fechaCierrePsicologico: date
+                                                        });
+                                                    }}
                                                     placeholderText="Fecha cierre psicologico"
                                                 />}
                                             />
@@ -183,7 +239,7 @@ export class DiagnosticoPsicologico extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );
