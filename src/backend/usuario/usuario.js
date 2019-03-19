@@ -41,6 +41,7 @@ export let obtenerSupervisores= ()=>{
         console.log(err);
     });
     return supervisores;
+    
 }
 export let obtenerRoles= ()=>{
     let roles = new Map();
@@ -90,3 +91,34 @@ export let obtenerDatosUsuario = async (id) => {
         console.log(error);
     }   
 }
+
+
+export let obtenerUsuario = async (id) => {
+    try {
+        let res = await request.get('/obtenerUsuario', {params:{
+            idUser: id
+        }});
+        return res;
+    } catch (error) {
+        console.log(error);
+    }   
+}
+export let updateUsuario=  async (data,idUsuario ) => {
+    try{
+        let res = await request.put('/update_usuario',{data,idUsuario})
+        console.log("resupdateUusuario", res);
+        return res;
+    }catch(error){
+      console.log(error);
+    } 
+  }
+
+  export let updatePasswordUsuario=  async (data,idUsuario ) => {
+    try{
+        let res = await request.put('/update_password',{data,idUsuario})
+        console.log("passwoooord", res);
+        return res;
+    }catch(error){
+      console.log(error);
+    } 
+  }

@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Option } from './Option'
 import { TextoAyuda } from './TextoAyuda'
-import { obtenerSupervisores, obtenerRoles, insertarUsuario } from '../backend/usuario/usuario'
+import { obtenerSupervisores, obtenerRoles, insertarUsuario, obtenerUsuario, updateUsuario } from '../backend/usuario/usuario'
 import { ChromePicker } from 'react-color'
+import { ModalPassword } from './ModalPassword';
 const generos = ["Masculino", "Femenino", "Otro"]
 export class CrearUsuario extends Component {
     constructor(props) {
         super(props);
-
+        
+        this._handleShow = this._handleShow.bind(this);
         this.state = {
             nombre: "",
             apellidoPaterno: "",
@@ -30,7 +32,8 @@ export class CrearUsuario extends Component {
             supervisorID: "",
             supervisores: new Map(),
             roles: new Map(),
-            color: "#438C83",
+            color: "#438C83",//color CEPA
+            show:false,
         };
     }
 
@@ -39,21 +42,24 @@ export class CrearUsuario extends Component {
             [event.target.id]: event.target.value
         });
     }
-
+    handleSubmitPass= (event)=>{
+        this._handleClose()
+    }
     _handleSubmit = (event) => {
         event.preventDefault();
-        console.log(event)
 
-
-        this.setState({
-            supervisor: this.state.supervisores.get(this.state.supervisor),
-            rol: this.state.roles.get(this.state.rol)
-        })
+        this.state.rolID = this.state.roles.get(this.state.rol)
+        if (this.state.supervisor !== "") this.state.supervisorID = this.state.supervisores.get(this.state.supervisor)
         const aux = JSON.stringify(this.state, null, '  ');
-        console.log(aux)
-        console.log(this.state);
+        //console.log(aux)
+        //console.log(this.state);
         this.props.onSubmit(aux)
-        insertarUsuario(JSON.parse(aux));
+        if (this.props.usuarioID !== undefined) {
+            updateUsuario(JSON.parse(aux), this.props.usuarioID);
+        } else {
+            //this.props.onSubmit(aux)
+            insertarUsuario(JSON.parse(aux));
+        }
     }
 
     cambiarDigitoVerificador = event => {
@@ -68,16 +74,52 @@ export class CrearUsuario extends Component {
             }
         )
     }
+    _handleClose = (modalEvt) => {
+        this.setState({ show: modalEvt });
+    }
+    _handleShow() {
+        this.setState({ show: true })
+    }
 
     handleChangeColor = (cl) => {
         this.setState({ color: cl.hex });
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.setState({
             supervisores: obtenerSupervisores(),
             roles: obtenerRoles()
         });
+        if (this.props.usuarioID !== undefined) {
+            let prom = obtenerUsuario(this.props.usuarioID);
+            prom.then(res => {
+                let data = res.data;
+                console.log(res.data);
+                if (data !== undefined) {
+                    let usuario = data.respuesta[0];
+                    let nombreRol = data.nombreRol;
+                    let nombreSupervisor = data.supervisor !== undefined ? data.supervisor.nombre + ' ' + data.supervisor.apellido_paterno : "";
+                    this.setState({
+                        nombre: usuario.nombre,
+                        apellidoPaterno: usuario.apellido_paterno,
+                        apellidoMaterno: usuario.apellido_materno,
+                        rut: usuario.rut,
+                        genero: usuario.genero,
+                        usuario: usuario.username,
+                        password: usuario.password,
+                        telefonoMovil: usuario.telefono_movil,
+                        telefonoTrabajo: usuario.telefono_trabajo,
+                        correo: usuario.correo,
+                        horasSemanales: usuario.horas_semanales,
+                        nombreContactoEmergencia: usuario.nombre_contacto_emergencia,
+                        telefonoContactoEmergencia: usuario.telefono_contacto_emergencia,
+                        rol: nombreRol,
+                        supervisor: nombreSupervisor,
+                        color: usuario.color,
+                    });
+                }
+            })
+        }
 
         console.log(this.state.supervisores, this.state.roles)
     }
@@ -171,18 +213,38 @@ export class CrearUsuario extends Component {
                                         />
                                     </Form.Group>
                                 </Col>
-                                <Col>
-                                    <Form.Group controlId="password">
-                                        <Form.Control
-                                            value={this.state.password}
-                                            onChange={this.handleChange}
-                                            type="password"
-                                            inputRef={inputElement => this.inputPwd = inputElement}
-                                            placeholder="Contraseña"
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
+                                {this.props.usuarioID !== undefined ?
+                                    <Col>
+                                        <Button
+                                        className="btn-custom"
+                                            onClick={this._handleShow}
+                                        >
+                                            Cambiar contraseña
+                                        </Button>
+                                        <ModalPassword
+                                            
+                                            usuarioID={this.props.usuarioID}
+                                            onClose={this._handleClose}
+                                            show={this.state.show}
+                                            usuarioID={this.props.usuarioID}
+                                            onSubmit={this.handleSubmitPass}
+                                        ></ModalPassword>
+                                    </Col>
+                                    :
+                                    <Col>
+                                        <Form.Group controlId="password">
+                                            <Form.Control
+                                                value={this.state.password}
+                                                onChange={this.handleChange}
+                                                type="password"
+                                                inputRef={inputElement => this.inputPwd = inputElement}
+                                                placeholder="Contraseña"
+                                                required
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                }
+
                             </Row>
                             <Row>
                                 <Col>
@@ -265,7 +327,7 @@ export class CrearUsuario extends Component {
                                                 });
                                             }}
                                             required>
-                                            <option hidden>Rol</option>
+                                            <option hidden>{this.state.rol === '' ? "Rol" : this.state.rol}</option>
                                             <Option options={Array.from(this.state.roles.keys())} />
                                         </Form.Control>
                                     </Form.Group>
@@ -281,7 +343,7 @@ export class CrearUsuario extends Component {
                                                     supervisorID: this.state.supervisores.get(event.target.value)
                                                 });
                                             }}>
-                                            <option hidden>Supervisor</option>
+                                            <option hidden>{this.state.supervisor === '' ? "Supervisor" : this.state.supervisor}</option>
                                             <Option options={Array.from(this.state.supervisores.keys())} />
                                         </Form.Control>
                                     </Form.Group>

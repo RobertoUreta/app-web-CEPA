@@ -139,7 +139,7 @@ export class EntrevistaPsicologica extends Component {
                                 </div>
                                 <ImagePicker
                                     extensions={['jpg', 'jpeg', 'png']}
-                                    dims={{ minWidth: 100, maxWidth: 500, minHeight: 100, maxHeight: 500 }}
+                                    dims={{ minWidth: 50, maxWidth: 1000, minHeight: 50, maxHeight: 1000 }}
                                     onChange={this._handleImageGenograma}
                                     onError={errMsg => { alert(errMsg) }}
                                 >
@@ -155,7 +155,7 @@ export class EntrevistaPsicologica extends Component {
                                 </div>
                                 <ImagePicker
                                     extensions={['jpg', 'jpeg', 'png']}
-                                    dims={{ minWidth: 100, maxWidth: 500, minHeight: 100, maxHeight: 500 }}
+                                    dims={{ minWidth: 50, maxWidth: 1000, minHeight: 50, maxHeight: 1000 }}
                                     onChange={this._handleImageEcomapa}
                                     onError={errMsg => { alert(errMsg) }}
                                 >
