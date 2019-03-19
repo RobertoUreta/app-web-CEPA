@@ -16,12 +16,16 @@ export class InfoSesion extends Component {
             apellidoMaternoProfesional: "",
             sala: "",
             id: this.props.clickedInfo,
-            fechaSesion: ""
+            fechaSesion: "",
+            nombrePaciente: "",
+            apellidoPaternoPaciente: "",
+            apellidoMaternoPaciente: "",
+
 
         }
     }
 
-   
+
     componentDidMount() {
         this.setState({
             loadingInfo: 'true'
@@ -33,17 +37,20 @@ export class InfoSesion extends Component {
                 let data = res.data.response[0]
                 let fecha = new Date(data.fecha_sesion)
                 let fecha_sesion = fecha.toISOString().split('T')[0]
-                console.log("fechasesion",fecha_sesion)
+                console.log("fechasesion", fecha_sesion)
                 this.setState({
-                    
+
                     loadingInfo: 'false',
                     horaInicio: data.hora_inicio_atencion,
                     horaTermino: data.hora_termino_atencion,
                     nombreProfesional: data.nombre_usuario,
-                    apellidoPaternoProfesional: data.apellido_paterno,
-                    apellidoMaternoProfesional: data.apellido_materno,
+                    apellidoPaternoProfesional: data.apellidoP_usuario,
+                    apellidoMaternoProfesional: data.apellidoM_usuario,
                     sala: data.nombre_sala,
-                    fechaSesion: fecha_sesion
+                    fechaSesion: fecha_sesion,
+                    apellidoPaternoPaciente: data.apellidoP_paciente,
+                    apellidoMaternoPaciente: data.apellidoM_paciente,
+                    nombrePaciente: data.nombre_paciente,
                 })
             })
 
@@ -67,10 +74,12 @@ export class InfoSesion extends Component {
         //console.log("propseventos",this.props.eventos)
         //console.log("propsclickedinfo", this.props.clickedInfo)
         //console.log("undfinde?", this.props.eventos[this.props.clickedInfo - 1])
-        let nombreProfesional= this.state.nombreProfesional + " " + this.state.apellidoPaternoProfesional + " " + this.state.apellidoMaternoProfesional
+        let nombreProfesional = this.state.nombreProfesional + " " + this.state.apellidoPaternoProfesional + " " + this.state.apellidoMaternoProfesional
+        let nombrePaciente = this.state.nombrePaciente + " " + this.state.apellidoPaternoPaciente + " " + this.state.apellidoMaternoPaciente
         return (
             <div>
                 <ul>
+                    <li><strong>Paciente: </strong>{nombrePaciente}</li>
                     <li><strong>Profesional a cargo: </strong>{nombreProfesional}</li>
                     <li><strong>Sala: </strong>{this.state.sala}</li>
                     <li><strong>Fecha:</strong>{this.state.fechaSesion}</li>

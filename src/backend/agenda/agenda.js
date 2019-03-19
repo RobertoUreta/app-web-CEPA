@@ -38,6 +38,16 @@ export let colorUsuario = async () => {
 
 }
 
+export let obtenerPacienteSesion = async (id) => {
+    try{
+        let promise = await request.get('/obtenerPacienteSesion', {params:{ idSesion: id}})
+        return promise
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
 export let obtenerSesionPorId =  async( idUser ) => {
     try{
         let promise = await request.get('/sesionPorId', {params: {id: idUser}})
