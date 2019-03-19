@@ -53,6 +53,7 @@ export class Agenda extends Component {
     getHora(hora) {
         let fecha = new Date(hora)
         var localeSpecificTime = fecha.toLocaleTimeString();
+        console.log("localeSpecific", localeSpecificTime)
         return localeSpecificTime.replace(/:\d+ /, ' ');
 
     }
@@ -161,15 +162,13 @@ export class Agenda extends Component {
         console.log("_handleModalSubmit")
         let aux = JSON.parse(evt)
         let fecha = new Date(aux.fechaSesion)
-        console.log("aux", aux)
-        let inicio = this.getHora(aux.horaInicio).split(":")
-        let termino = this.getHora(aux.horaTermino).split(":")
 
         let fechaStart = new Date(fecha.getFullYear(), fecha.getMonth()
-            , fecha.getDate(), inicio[0], inicio[1])
+            , fecha.getDate(), new Date(aux.horaInicio).getHours(),new Date(aux.horaInicio).getMinutes()) //en linux tiraba error
 
+        console.log(fechaStart)
         let fechaEnd = new Date(fecha.getFullYear(), fecha.getMonth()
-            , fecha.getDate(), termino[0], termino[1])
+            , fecha.getDate(), new Date(aux.horaTermino).getHours(),new Date(aux.horaTermino).getMinutes()) //en linux tiraba error  
 
         let title = "Paciente \n" + aux.sala
         let colorNuevo = this.state.color.get(aux.idProfesional)
@@ -253,7 +252,6 @@ export class Agenda extends Component {
         }
 
        
-        console.log("amipixula21231", this.state.eventos, this.state.idSesion,this.state.color)
 
         return (
             <div>
