@@ -24,7 +24,8 @@ export class SesionPsicologica extends Component {
             conductaObservada: "",
             descripcionRetiro: "",
             indicaciones: "",
-            notasSesion: ""
+            notasSesion: "",
+            editable: false,
         };
     }
 
@@ -42,6 +43,10 @@ export class SesionPsicologica extends Component {
 
     }
 
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
     render() {
         return (
             <div className="sesionPsicologica">
@@ -51,19 +56,20 @@ export class SesionPsicologica extends Component {
                             <Row>
                                 <Col>
                                     <Form.Group controlId="numSesion">
-                                    <TextoAyuda
-                                        nombre="numSesion"
-                                        tooltip="N° de sesión"
-                                        componente={<Form.Control
-                                            value={this.state.numSesion}
-                                            onChange={this.handleChange}
-                                            placeholder="N° de Sesión"
-                                        />}
-                                    />
-                                        
-                                    </Form.Group> 
-                                    </Col>
-                                    <Col>
+                                        <TextoAyuda
+                                            nombre="numSesion"
+                                            tooltip="N° de sesión"
+                                            componente={<Form.Control
+                                                plaintext readOnly
+                                                value={this.state.numSesion}
+                                                onChange={this.handleChange}
+                                                placeholder="N° de Sesión"
+                                            />}
+                                        />
+
+                                    </Form.Group>
+                                </Col>
+                                <Col>
                                     <Form.Check
                                         custom
                                         value={this.state.diagnostico}
@@ -101,33 +107,33 @@ export class SesionPsicologica extends Component {
                                             nombre="tipoTratamiento"
                                             tooltip="Tipo Tratamiento"
                                             componente={<Form.Control
-                                            as="select"
-                                            value={this.state.tipoTratamiento}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Tipo Tratamiento</option>
-                                            <Option options={tiposTratamiento} />
-                                        </Form.Control>}
+                                                as="select"
+                                                value={this.state.tipoTratamiento}
+                                                onChange={this.handleChange}
+                                            >
+                                                <option hidden>Tipo Tratamiento</option>
+                                                <Option options={tiposTratamiento} />
+                                            </Form.Control>}
                                         />
-                                        
+
                                     </Form.Group>
                                 </Col>
 
                                 <Col>
                                     <Form.Group controlId="quienAsiste">
-                                    <TextoAyuda
+                                        <TextoAyuda
                                             nombre="quienAsiste"
                                             tooltip="Asiste"
                                             componente={<Form.Control
-                                            as="select"
-                                            value={this.state.quienAsiste}
-                                            onChange={this.handleChange}
-                                        >
-                                            <option hidden>Asiste</option>
-                                            <Option options={asistentes} />
-                                        </Form.Control>}
+                                                as="select"
+                                                value={this.state.quienAsiste}
+                                                onChange={this.handleChange}
+                                            >
+                                                <option hidden>Asiste</option>
+                                                <Option options={asistentes} />
+                                            </Form.Control>}
                                         />
-                                        
+
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -135,6 +141,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="descripcionLlegada">
                                 <Form.Label>Descripción del usuario a su llegada</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="3"
                                     value={this.state.descripcionLlegada}
@@ -145,6 +152,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="objetivoSesion">
                                 <Form.Label>Objetivo de la sesión</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="3"
                                     value={this.state.objetivoSesion}
@@ -155,6 +163,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="intervencionResultado">
                                 <Form.Label>Intervenciones realizadas y resultado obtenido</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="3"
                                     value={this.state.intervencionResultado}
@@ -165,6 +174,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="conductaObservada">
                                 <Form.Label>Conducta observada durante la sesión</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="3"
                                     value={this.state.conductaObservada}
@@ -175,6 +185,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="descripcionRetiro">
                                 <Form.Label>Descripción del usuario a su retiro</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="3"
                                     value={this.state.descripcionRetiro}
@@ -185,6 +196,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="indicaciones">
                                 <Form.Label>Indicaciones (en el caso de proceder)</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="3"
                                     value={this.state.indicaciones}
@@ -195,6 +207,7 @@ export class SesionPsicologica extends Component {
                             <Form.Group controlId="notasSesion">
                                 <Form.Label>Notas de la sesión</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
                                     as="textarea"
                                     rows="8"
                                     value={this.state.notasSesion}
@@ -205,6 +218,14 @@ export class SesionPsicologica extends Component {
 
                             <Form.Group>
                                 <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        type="submit"
+                                        onClick={this._handleClick}
+                                    >
+                                        Editar
+                                        </Button>
+                                    <div className="divider"></div>
                                     <Button
                                         className="btn-submit"
                                         type="submit"
