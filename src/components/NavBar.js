@@ -1,24 +1,28 @@
 import React, { Component } from 'react'
-import {Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
-import { Link} from 'react-router-dom'
+import { Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
 import logo from '../images/cepaicono.png'
 import "../styles/styles.css"
-import {cerrarSesion} from '../backend/login'
+import { cerrarSesion } from '../backend/login'
 import { obtenerDatosUsuario } from '../backend/usuario/usuario'
+import { ModalUsuario } from '../components/ModalUsuario'
 
 export class NavBar extends Component {
     constructor(props) {
         super(props);
 
+        this._handleShow = this._handleShow.bind(this);
         this.state = {
             usuario: {},
             search: "",
+            show: false
         }
     }
+
     componentWillMount() {
 
         let promesa = obtenerDatosUsuario(this.props.loggedUser);
-        
+
         promesa
             .then((res) => {
                 console.log("resdatapromesa", res.data)
@@ -26,7 +30,7 @@ export class NavBar extends Component {
             })
 
     }
-    
+
     handleChange = evt => {
         this.setState({
             search: evt.target.value
@@ -36,30 +40,40 @@ export class NavBar extends Component {
     _onSubmit = (evt) => {
         console.log(this.state.search)
         evt.preventDefault()
-        console.log("navbar",this.props.history)
-        let enlace =  `/${this.props.loggedUser}/busquedaPaciente/${this.state.search}` 
+        console.log("navbar", this.props.history)
+        let enlace = `/${this.props.loggedUser}/busquedaPaciente/${this.state.search}`
         this.props.history.push(enlace)
         window.location.reload()
-    }  
+    }
 
     _cerrarSesion = () => {
         console.log('logouooottt');
         let res = cerrarSesion();
-        res.then(resp=>{
+        res.then(resp => {
             if (resp.data.ok) {
                 return true;
             }
             return false;
         })
-        .catch(err =>{
-            console.log(err);
-        }
-        )
-    
+            .catch(err => {
+                console.log(err);
+            }
+            )
+
     }
+
+    _handleShow() {
+        this.setState({ show: true })
+    }
+
+    _handleClose = (modalEvt) => {
+        this.setState({ show: modalEvt });
+    }
+
+    
     render() {
         const { nombre, apellido_paterno, apellido_materno } = this.state.usuario
-        const hrefListaUsuarios= `/${this.props.loggedUser}/listaUsuarios`
+        const hrefListaUsuarios = `/${this.props.loggedUser}/listaUsuarios`
         const hrefListaPacientes = `/${this.props.loggedUser}/listaPacientes/`
         const hrefAgenda = `/${this.props.loggedUser}/agenda`
         const hrefHome = `/home/${this.props.loggedUser}`
@@ -94,31 +108,34 @@ export class NavBar extends Component {
                             </Nav.Item>
 
                         </Nav>
-                        
-                            <Form onSubmit={this._onSubmit} placeholder="Buscar">
-                                <Form.Control
-                                    id="custom-search"
-                                    type="search"
-                                    value={this.state.search}
 
-                                    onChange={this.handleChange} />
+                        <Form onSubmit={this._onSubmit} placeholder="Buscar">
+                            <Form.Control
+                                id="custom-search"
+                                type="search"
+                                value={this.state.search}
 
-                            </Form>
-                        
-                        
-                        
+                                onChange={this.handleChange} />
+
+                        </Form>
+
+
+
 
                         <NavDropdown
                             className="dropdown-menu-nav"
                             title={<i className="fa fa-user">
-                                <span className = "fa-icon-inner-text">
-                                {nombre + " "+ apellido_paterno + " "+apellido_materno}
+                                <span className="fa-icon-inner-text">
+                                    {nombre + " " + apellido_paterno + " " + apellido_materno}
                                 </span></i>}
                             id="basic-nav-dropdown">
 
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                            <NavDropdown.Item onClick={this._handleShow}>Editar Usuario</NavDropdown.Item>
+                            <ModalUsuario
+                                name="Editar Usuario"
+                                usuarioID={this.props.loggedUser}
+                                show={this.state.show}
+                                onClose={this._handleClose}/>
                             <NavDropdown.Divider />
                             <NavDropdown.Item onClick={this._cerrarSesion} href="/">Cerrar Sesión</NavDropdown.Item>
                         </NavDropdown>
