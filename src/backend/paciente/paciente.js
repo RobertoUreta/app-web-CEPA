@@ -36,3 +36,16 @@ export let obtenerDatosPaciente = async (id) => {
         console.log(error)
     }
 }
+
+export let obtenerHistorial = async (data) => {
+    try{
+        console.log(data)
+        let res = await request.get('/obtenerHistorial', {params: {
+            id_paciente: data.paciente,
+            id_usuario: data.usuario,
+        }})
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+}

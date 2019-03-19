@@ -32,7 +32,7 @@ export class NavLateral extends Component {
     }
 
     if (this.state.selectedPath === "historial") {
-      return <Historial userId={this.props.userId} />
+      return <Historial userId={this.props.loggedUser} pacienteId = {this.props.userId} />
     }
 
     if (this.state.selectedPath === "epicrisis") {
