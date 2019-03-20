@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
 import "../../../styles/styles.css"
-import { obtenerHistorial } from '../../../backend/paciente/paciente';
 import { ModalRegistroSesion } from '../../../components/ModalRegistroSesion';
 
 let active = 1;
 
 
-export class HistorialPaciente extends Component {
+export class HistorialPacientePsicologico extends Component {
 
     constructor(props) {
         super(props)
@@ -16,15 +15,16 @@ export class HistorialPaciente extends Component {
         this.state = {
             sesiones: this.props.sesiones,
             show: false,
-            elementsPerPage: 5,
+            elementsPerPage: 10,
             currentPage: 1,
-            resta: 0
+            resta: 0,
+            idSesion: 0,
         }
     }
 
     _handleShow(event) {
         console.log("aaa",event.target.id)
-        this.setState({ show: true })
+        this.setState({ show: true ,idSesion: event.target.id})
     }
 
     _handleClose = (modalEvt) => {
@@ -124,9 +124,12 @@ export class HistorialPaciente extends Component {
                 </div>
 
                 <ModalRegistroSesion
+                    title= {"Sesión Psicológica"}
                     show={this.state.show}
                     onClose={this._handleClose}
                     onSubmit={this._handleModalSubmit}
+                    renderPsi={true}
+                    idSesion = {this.state.idSesion}
                 />
             </div>
         )

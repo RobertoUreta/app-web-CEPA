@@ -130,7 +130,8 @@ export class Agenda extends Component {
                                 descripcion_sesion: element.descripcion_sesion,
                                 valor_sesion: element.valor_sesion,
                                 ref_usuario: element.ref_usuario,
-                                hexColor: element.color
+                                hexColor: element.color,
+                                tipo_sesion: element.tipo_sesion
                             }
                             eventos.push(nuevoEvento)
                             this.setState({ eventos: eventos})
@@ -201,6 +202,7 @@ export class Agenda extends Component {
             descripcion_sesion: aux.descripcion,
             valor_sesion: aux.valorSesion,
             ref_usuario: aux.idProfesional,
+            tipo_sesion: aux.tipoSesion,
             startAux: fechaStart,
             endAux: fechaEnd,
             hexColor: colorNuevo
@@ -223,10 +225,10 @@ export class Agenda extends Component {
                 } else {
                     const getAlert = () => (
                         <SweetAlert warning title="Falla" onConfirm={this._hideAlert}>
-                            Esa sala ya está utilizada en ese horario
+                            {res.data.message}
                          </SweetAlert>
                     )
-                    this.setState({ alert: getAlert() })
+                    this.setState({ alert: getAlert(), show: true })
 
                 }
             })

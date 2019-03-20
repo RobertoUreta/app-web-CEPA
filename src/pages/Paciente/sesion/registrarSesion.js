@@ -238,7 +238,7 @@ export class RegistrarSesion extends Component {
                                 />
                             </Form.Group>
                             <Row>
-                                <Form.Group as={Col} controlId="valorSesion">
+                                {/*<Form.Group as={Col} controlId="valorSesion">
                                     <TextoAyuda
                                         nombre="valorSesion"
                                         tooltip="Valor Sesión"
@@ -248,7 +248,7 @@ export class RegistrarSesion extends Component {
                                             placeholder="Valor Sesión"
                                         />}
                                     />
-                                </Form.Group>
+                                        </Form.Group>*/}
                                 <Form.Group as={Col} controlId="sala">
                                     <TextoAyuda
                                         nombre="sala"
@@ -279,7 +279,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Tipo sesión</option>
-                                            <Option options={[]} />
+                                            <Option options={["Psicológica","Psiquiátrica","Social","Coordinación"]} />
                                         </Form.Control>} />
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="estadoSesion">

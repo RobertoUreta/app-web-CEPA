@@ -75,3 +75,14 @@ export let insertarSesion = async (data) => {
     return promise
 
 }
+
+export let obtenerRegistroPsicologico = async (data) => {
+
+    try{
+        let promise = await request.get('/obtenerRegistroPsicologico',{params:{id: data}})
+        return promise
+    }
+    catch(err){
+        console.log(err)
+    }
+}

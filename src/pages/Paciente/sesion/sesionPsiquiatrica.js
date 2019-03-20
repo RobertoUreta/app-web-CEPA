@@ -12,7 +12,8 @@ export class SesionPsiquiatrica extends Component {
         this.state = {
             numSesion: "",
             tipoTratamiento: "",
-            notasSesion: ""
+            notasSesion: "",
+            editable: false,
         };
     }
 
@@ -23,12 +24,14 @@ export class SesionPsiquiatrica extends Component {
     }
 
     handleSubmit = event => {
-        event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+       
 
     }
+
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
 
     render() {
         return (
@@ -39,20 +42,20 @@ export class SesionPsiquiatrica extends Component {
                             <Row>
                                 <Col>
                                     <Form.Group controlId="numSesion">
-                                    <TextoAyuda
+                                        <TextoAyuda
                                             nombre="numSesion"
                                             tooltip="N° de sesión"
                                             componente={<Form.Control
-                                            value={this.state.numSesion}
-                                            onChange={this.handleChange}
-                                            placeholder="N° de Sesión"
-                                        />}
+                                                value={this.state.numSesion}
+                                                onChange={this.handleChange}
+                                                placeholder="N° de Sesión"
+                                            />}
                                         />
-                                        
-                                    </Form.Group> 
-                                    </Col>
-                                    <Col>
-                                        <Form.Group controlId="tipoTratamiento">
+
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group controlId="tipoTratamiento">
                                         <TextoAyuda
                                             nombre="tipoTratamiento"
                                             tooltip="Tipo Tratamiento"
@@ -65,13 +68,15 @@ export class SesionPsiquiatrica extends Component {
                                                 <Option options={tiposTratamiento} />
                                             </Form.Control>}
                                         />
-                                            
-                                        </Form.Group>
-                                    </Col>
+
+                                    </Form.Group>
+                                </Col>
                             </Row>
                             <Form.Group controlId="notasSesion">
                                 <Form.Label>Notas de la sesión</Form.Label>
                                 <Form.Control
+                                    readOnly={!this.state.editable}
+
                                     as="textarea"
                                     rows="10"
                                     value={this.state.notasSesion}
@@ -81,6 +86,13 @@ export class SesionPsiquiatrica extends Component {
                             </Form.Group>
                             <Form.Group>
                                 <div className="btn-container">
+                                    <Button
+                                        className="btn-submit"
+                                        onClick={this._handleClick}
+                                    >
+                                        Editar
+                                        </Button>
+                                    <div className="divider"></div>
                                     <Button
                                         className="btn-submit"
                                         type="submit"
