@@ -109,7 +109,7 @@ export class EntrevistaIngreso extends Component {
         prom.then(res => {
             let data = res.data;
             console.log(res.data);
-            if (data !== undefined) {
+            if (data.ok) {
                 let entrevista = data.respuesta[0];
                 this.setState({
                     fechaEntrevista: entrevista.fecha_entrevista === '0000-00-00' ? null : entrevista.fecha_entrevista,
@@ -140,26 +140,6 @@ export class EntrevistaIngreso extends Component {
 
             }
         })
-        /*
-        
-        prom.then(res => {
-            let ent = res.data.respuesta[0];
-            console.log('tamizaje cambiandooooooo: ', ent)
-            if (tami !== undefined) {
-                console.log("no es undefined", ent)
-                this.setState({
-                    nombreSolicitante: tami.nombre_solicitante === 'default' ? "" : tami.nombre_solicitante,
-                    fechaSolicitud: tami.fecha_solicitud ===  '0000-00-00' ? "" : tami.fecha_solicitud,
-                    horarioDisponible: tami.horario_disponible === 'default' ? "" :tami.horario_disponible,
-                    nivelUrgencia: tami.nivel_urgencia === 'default' ? "" : tami.nivel_urgencia,
-                    preguntaSintomatologia:tami.pregunta_sintomatologia === 'default' ? "": tami.pregunta_sintomatologia,
-                    preguntaMalestar: tami.pregunta_malestar === 'default' ? "" : tami.pregunta_malestar,
-                    preguntaObservaciones: tami.pregunta_observaciones === 'default' ? "": tami.pregunta_observaciones
-                })
-            }
-        }).catch(err => {
-            console.log(err)
-        })*/
     }
 
     render() {

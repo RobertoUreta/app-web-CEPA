@@ -25,7 +25,7 @@ export class NavLateral extends Component {
         loggedUser={this.props.loggedUser}/>
     }
     if (this.state.selectedPath === "tratamiento") {
-      return <Tratamiento userId={this.props.userId} />
+      return <Tratamiento userId={this.props.loggedUser} pacienteId={this.props.userId} />
     }
     if (this.state.selectedPath === "evaluacion") {
       return <Evaluacion userId={this.props.loggedUser} pacienteId={this.props.userId} />
@@ -44,7 +44,7 @@ export class NavLateral extends Component {
     }
 
     if (this.state.selectedPath === "diagnostico") {
-      return <Diagnostico userId={this.props.userId} />
+      return <Diagnostico userId={this.props.loggedUser} pacienteId={this.props.userId} />
     }
   }
 

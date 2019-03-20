@@ -42,7 +42,17 @@ export class DatosPersonales extends Component {
         };
     }
 
-
+    _cambiarDigitoVerificador = (rut) => {
+        var M = 0, S = 1;
+        var T = rut
+        for (; T; T = Math.floor(T / 10))
+            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+        this.setState(
+            {
+                digitoVerificador: S ? S - 1 : 'k'
+            }
+        )
+    }
     componentWillMount() {
         let paciente = this.props.paciente
         if (paciente !== undefined) {
@@ -65,6 +75,7 @@ export class DatosPersonales extends Component {
                 tipoPaciente: paciente.tipo_paciente === "default" ? "" : paciente.tipo_paciente,
                 valorSesion: paciente.valor_sesion === "default" ? "" : paciente.valor_sesion,
             })
+            this._cambiarDigitoVerificador(this.state.rut);
         }
     }
     _handleChange = (date) => {
@@ -138,7 +149,6 @@ export class DatosPersonales extends Component {
                                     value={this.state.apellidoMaterno}
                                     onChange={this.handleChange}
                                     placeholder="Apellido Materno"
-                                    required
                                 />} />
                             </Form.Group>
                             <Row>

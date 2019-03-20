@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updateTratamientoPsicologico, obtenerTratamientoPsicologico } from '../../../backend/tratamiento/tratamientoPsicologico';
 const tiposTratamiento = ["Terapia individual", "Taller", "Intervención grupal", "Derivación asistida"]
 export class TratamientoPsicologico extends Component {
 
@@ -13,7 +14,8 @@ export class TratamientoPsicologico extends Component {
             motivoTratamiento: "",
             motivoCoconstruido: "",
             tipoTratamiento: "",
-            esInterconsulta: false
+            esInterconsulta: 0,
+            alert: null
         };
     }
 
@@ -25,10 +27,42 @@ export class TratamientoPsicologico extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updateTratamientoPsicologico(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                    <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la Entrevista Psiquiatrica
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerTratamientoPsicologico(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data !== undefined) {
+                let tratamiento = data.respuesta[0];
+                this.setState({
+                    motivoTratamiento: tratamiento.motivo_tratamiento_psicologico==='default'?"":tratamiento.motivo_tratamiento_psicologico,
+                    motivoCoconstruido: tratamiento.motivo_consulta_coconstruido==='default'?"":tratamiento.motivo_consulta_coconstruido,
+                    tipoTratamiento: tratamiento.tipo_tratamiento==='default'?"":tratamiento.tipo_tratamiento,
+                    esInterconsulta: tratamiento.es_interconsulta ? 1:0
+                });
+            }
+        })
     }
 
     render() {
@@ -58,11 +92,14 @@ export class TratamientoPsicologico extends Component {
                                 <Col>
                                     <Form.Check
                                         custom
+                                        checked={this.state.esInterconsulta}
                                         value={this.state.esInterconsulta}
-                                        onChange={this.handleChange}
+                                        onChange={event=>this.setState({
+                                            [event.target.id]: event.target.checked ? 1 : 0
+                                        })}
                                         label="Interconsulta"
                                         type="checkbox"
-                                        id="checkbox-interconsulta"
+                                        id="esInterconsulta"
                                     />
                                 </Col>
                             </Row>
@@ -99,7 +136,7 @@ export class TratamientoPsicologico extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );

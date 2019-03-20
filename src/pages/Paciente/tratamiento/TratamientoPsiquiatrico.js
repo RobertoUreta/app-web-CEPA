@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Form, Col, Button } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updateTratamientoPsiquiatrico, obtenerTratamientoPsiquiatrico } from '../../../backend/tratamiento/tratamientoPsiquiatrico';
 const tiposTratamiento = ["Terapia individual", "Taller", "Intervención grupal", "Derivación asistida"]
 export class TratamientoPsiquiatrico extends Component {
 
@@ -12,7 +13,8 @@ export class TratamientoPsiquiatrico extends Component {
         this.state = {
             motivoTratamiento: "",
             motivoCoconstruido: "",
-            tipoTratamiento: ""
+            tipoTratamiento: "",
+            alert: null
         };
     }
 
@@ -24,10 +26,41 @@ export class TratamientoPsiquiatrico extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updateTratamientoPsiquiatrico(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                    <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos del tratamiento psiquiatrico.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerTratamientoPsiquiatrico(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data !== undefined) {
+                let tratamiento = data.respuesta[0];
+                this.setState({
+                    motivoTratamiento: tratamiento.motivo_consulta_psiquiatrica==='default'?"":tratamiento.motivo_consulta_psiquiatrica,
+                    motivoCoconstruido: tratamiento.motivo_consulta_coconstruido==='default'?"":tratamiento.motivo_consulta_coconstruido,
+                    tipoTratamiento: tratamiento.tipo_tratamiento==='default'?"":tratamiento.tipo_tratamiento,
+                });
+            }
+        })
     }
 
     render() {
@@ -86,7 +119,7 @@ export class TratamientoPsiquiatrico extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    {this.state.alert}
                 </form>
             </div>
         );

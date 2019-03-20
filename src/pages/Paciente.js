@@ -42,7 +42,7 @@ export class Paciente extends Component {
             .then(res => {
                 console.log(res.data)
                 let id = res.data.rows[0].id + 1
-                let enlace = this.props.match.params.id + "/crearPaciente/" + id
+                let enlace = this.props.match.params.id + "/editPaciente/" + id
 
                 this.setState({ rows: res.data.rows, idUsuario: enlace })
             })
