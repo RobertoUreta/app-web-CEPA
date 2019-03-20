@@ -36,7 +36,7 @@ export class NavLateral extends Component {
     }
 
     if (this.state.selectedPath === "epicrisis") {
-      return <Epicrisis userId={this.props.userId} />
+      return <Epicrisis userId={this.props.loggedUser} pacienteId={this.props.userId} />
     }
 
     if (this.state.selectedPath === "registrosesion") {

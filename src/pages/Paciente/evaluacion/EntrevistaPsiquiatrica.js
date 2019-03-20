@@ -140,7 +140,7 @@ export class EntrevistaPsiquiatrica extends Component {
         prom.then(res => {
             let data = res.data;
             console.log(res.data);
-            if (data !== undefined) {
+            if (data.ok) {
                 let entrevista = data.respuesta[0];
                 this.setState({
                     fechaEntrevista: entrevista.fecha_entrevista === '0000-00-00' ? null : entrevista.fecha_entrevista,

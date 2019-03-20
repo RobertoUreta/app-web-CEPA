@@ -65,7 +65,7 @@ export class DiagnosticoPsiquiatrico extends Component {
         prom.then(res => {
             let data = res.data;
             console.log(res.data);
-            if (data !== undefined) {
+            if (data.ok) {
                 let diag = data.respuesta[0];
                 this.setState({
                     tratamientoPsiquiatrico: diag.tratamiento_psiquiatrico === 'default' ? "" : diag.tratamiento_psiquiatrico,

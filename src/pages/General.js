@@ -134,21 +134,21 @@ export class General extends Component {
                     <div label="Adulto Contacto">
                         <AdultoContacto
                             paciente={this.state.paciente}
-
+                            pacienteId={this.state.id}
                             handleAdultoContacto={this._handleAdulto} />
                     </div>
 
                     <div label="Datos Socio-demográficos">
                         <DatosSocioDemograficos
                             paciente={this.state.paciente}
-
+                            pacienteId={this.state.id}
                             handleDatosSocio={this._handleDatosSocio} />
                     </div>
 
                     <div label="Datos Adicionales">
                         <DatosAdicionales
                             paciente={this.state.paciente}
-
+                            pacienteId={this.state.id}
                             handleDatosAdicionales={this._handleDatosAdicionales} />
                     </div>
                 </Accordion>

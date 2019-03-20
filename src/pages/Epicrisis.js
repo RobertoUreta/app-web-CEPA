@@ -9,10 +9,10 @@ export class Epicrisis extends Component {
             <div>
                 <Accordion>
                     <div label="Epicrisis Psicológica">
-                        <EpicrisisPsicologica />
+                        <EpicrisisPsicologica userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Epicrisis Psiquiátrica">
-                        <EpicrisisPsiquiatrica />
+                        <EpicrisisPsiquiatrica userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                 </Accordion>
             </div>
