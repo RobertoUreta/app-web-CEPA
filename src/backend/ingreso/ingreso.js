@@ -67,3 +67,31 @@ export let updateDatosPersonales =  async (data,id ) => {
     
 }
 
+export let obtenerAdultoContacto= async (id) => {
+    try{
+        let res = await request.get('/obtener_adultoContacto', {params: {idPaciente: id}})
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  
+export let obtenerDatosSocio= async (id) => {
+    try{
+        let res = await request.get('/obtener_datosSocio', {params: {idPaciente: id}})
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  
+export let obtenerDatosAdicionales= async (id) => {
+    try{
+        let res = await request.get('/obtener_datosAdicionales', {params: {idPaciente: id}})
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+  }

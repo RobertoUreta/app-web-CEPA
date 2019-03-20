@@ -73,7 +73,7 @@ export class Tamizaje extends Component {
         prom.then(res => {
             let tami = res.data.respuesta[0];
             console.log('tamizaje cambiandooooooo: ', tami)
-            if (tami !== undefined) {
+            if (tami.ok) {
                 console.log("no es undefined", tami)
                 this.setState({
                     nombreSolicitante: tami.nombre_solicitante === 'default' ? "" : tami.nombre_solicitante,

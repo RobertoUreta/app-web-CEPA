@@ -4,7 +4,8 @@ import { Option } from '../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
-
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updateEpicrisisPsicologica, obtenerEpicrisisPsicologica } from '../../../backend/epicrisis/epicrisisPsicologica';
 const tiposEpicrisis = ["Alta terapéutica", "Alta administrativa", "Renuncia voluntaria", "Alta por abandono", "Derivación", "Otra"]
 const nivelesRemision = ["Menos del 50%", "Más del 50%", "Más del 75%"]
 const tiposBateriaEstandar = ["Proceso Diagnóstico", "Durante proceso interventivo", "Finalización proceso terapéutico"]
@@ -23,11 +24,21 @@ export class EpicrisisPsicologica extends Component {
             observacionesFinales: "",
             logroAlcanzado: "",
             puntuacionObservacionesCgi: "",
-            oq452: "",
-            sclr90: "",
-            des: "",
-            lec: "",
-            pcl: "",
+            oq452_1: 0,
+            sclr90_1: 0,
+            des_1: 0,
+            lec_1: 0,
+            pcl_1: 0,
+            oq452_2: 0,
+            sclr90_2: 0,
+            des_2: 0,
+            lec_2: 0,
+            pcl_2: 0,
+            oq452_3: 0,
+            sclr90_3: 0,
+            des_3: 0,
+            lec_3: 0,
+            pcl_3: 0,
         };
     }
 
@@ -46,10 +57,42 @@ export class EpicrisisPsicologica extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updateEpicrisisPsicologica(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                    <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la epicrisis psicologica.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerEpicrisisPsicologica(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            /*if (data.ok) {
+                let tratamiento = data.respuesta[0];
+                this.setState({
+                    motivoTratamiento: tratamiento.motivo_tratamiento_psicologico==='default'?"":tratamiento.motivo_tratamiento_psicologico,
+                    motivoCoconstruido: tratamiento.motivo_consulta_coconstruido==='default'?"":tratamiento.motivo_consulta_coconstruido,
+                    tipoTratamiento: tratamiento.tipo_tratamiento==='default'?"":tratamiento.tipo_tratamiento,
+                    esInterconsulta: tratamiento.es_interconsulta ? 1:0
+                });
+            }*/
+        })
     }
 
     render() {
@@ -109,52 +152,126 @@ export class EpicrisisPsicologica extends Component {
                             <Form.Group controlId="resultadosTestBateriaEstandar">
                                 <Form.Label>Resultados aplicación de test Batería Estándar</Form.Label>
                                 <Row>
-                                    {tiposBateriaEstandar.map((name) => (
-                                        <Form.Group>
-                                            <Form.Label>{name}</Form.Label>
+                                    <Form.Group>
+                                        <Form.Label>{tiposBateriaEstandar[0]}</Form.Label>
+                                        <Col>
+                                            <Form.Group controlId="oq452_1">
+                                                <Form.Control
+                                                    value={this.state.oq452_1}
+                                                    onChange={this.handleChange}
+                                                    placeholder="OQ-45.2"
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="sclr90_1">
+                                                <Form.Control
+                                                    value={this.state.sclr90_1}
+                                                    onChange={this.handleChange}
+                                                    placeholder="SCLR-90"
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="des_1">
+                                                <Form.Control
+                                                    value={this.state.des_1}
+                                                    onChange={this.handleChange}
+                                                    placeholder="DES"
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="lec_1">
+                                                <Form.Control
+                                                    value={this.state.lec_1}
+                                                    onChange={this.handleChange}
+                                                    placeholder="LEC"
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="pcl_1">
+                                                <Form.Control
+                                                    value={this.state.pcl_1}
+                                                    onChange={this.handleChange}
+                                                    placeholder="PCL"
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Form.Group>
+                                    <Form.Group>
+                                            <Form.Label>{tiposBateriaEstandar[1]}</Form.Label>
                                             <Col>
-                                                <Form.Group>
+                                                <Form.Group controlId="oq452_2">
                                                     <Form.Control
-                                                        value={this.state.oq452}
+                                                        value={this.state.oq452_2}
                                                         onChange={this.handleChange}
                                                         placeholder="OQ-45.2"
                                                     />
                                                 </Form.Group>
-                                                <Form.Group>
+                                                <Form.Group controlId="sclr90_2">
                                                     <Form.Control
-                                                        value={this.state.sclr90}
+                                                        value={this.state.sclr90_2}
                                                         onChange={this.handleChange}
                                                         placeholder="SCLR-90"
                                                     />
                                                 </Form.Group>
-                                                <Form.Group>
+                                                <Form.Group controlId="des_2">
                                                     <Form.Control
-                                                        value={this.state.des}
+                                                        value={this.state.des_2}
                                                         onChange={this.handleChange}
                                                         placeholder="DES"
                                                     />
                                                 </Form.Group>
-                                                <Form.Group>
+                                                <Form.Group controlId="lec_2">
                                                     <Form.Control
-                                                        value={this.state.lec}
+                                                        value={this.state.lec_2}
                                                         onChange={this.handleChange}
                                                         placeholder="LEC"
                                                     />
                                                 </Form.Group>
-                                                <Form.Group>
+                                                <Form.Group controlId="pcl_2">
                                                     <Form.Control
-                                                        value={this.state.pcl}
+                                                        value={this.state.pcl_2}
                                                         onChange={this.handleChange}
                                                         placeholder="PCL"
                                                     />
                                                 </Form.Group>
-
-
-
-
                                             </Col>
                                         </Form.Group>
-                                    ))}
+                                        <Form.Group>
+                                            <Form.Label>{tiposBateriaEstandar[2]}</Form.Label>
+                                            <Col>
+                                                <Form.Group controlId="oq452_3">
+                                                    <Form.Control
+                                                        value={this.state.oq452_3}
+                                                        onChange={this.handleChange}
+                                                        placeholder="OQ-45.2"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group controlId="sclr90_3">
+                                                    <Form.Control
+                                                        value={this.state.sclr90_3}
+                                                        onChange={this.handleChange}
+                                                        placeholder="SCLR-90"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group controlId="des_3">
+                                                    <Form.Control
+                                                        value={this.state.des_3}
+                                                        onChange={this.handleChange}
+                                                        placeholder="DES"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group controlId="lec_3">
+                                                    <Form.Control
+                                                        value={this.state.lec_3}
+                                                        onChange={this.handleChange}
+                                                        placeholder="LEC"
+                                                    />
+                                                </Form.Group>
+                                                <Form.Group controlId="pcl_3">
+                                                    <Form.Control
+                                                        value={this.state.pcl_3}
+                                                        onChange={this.handleChange}
+                                                        placeholder="PCL"
+                                                    />
+                                                </Form.Group>
+                                            </Col>
+                                        </Form.Group>
                                 </Row>
                             </Form.Group>
 
@@ -237,6 +354,7 @@ export class EpicrisisPsicologica extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );

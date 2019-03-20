@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Col, Row, Button } from 'react-bootstrap'
 import { TextoAyuda } from '../../../components/TextoAyuda'
+import { obtenerAdultoContacto } from '../../../backend/ingreso/ingreso';
 export class AdultoContacto extends Component {
 
     constructor(props) {
@@ -26,11 +27,27 @@ export class AdultoContacto extends Component {
     handleSubmit = event => {
         event.preventDefault();
         let info = JSON.stringify(this.state, null, '  ');
-
         this.props.handleAdultoContacto(info)
-
         console.log(this.state)
+    }
 
+    componentDidMount() {
+        console.log(this.props.pacienteId);
+        let prom = obtenerAdultoContacto(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data.ok) {
+                let datos = data.respuesta[0];
+                this.setState({
+                    nombre:datos.nombre==='default'?"":datos.nombre,
+                    apellidoPaterno: datos.apellido_paterno==='default'?"":datos.apellido_paterno,
+                    apellidoMaterno: datos.apellido_materno==='default'?"":datos.apellido_materno,
+                    parentezco: datos.parentezco==='default'?"":datos.parentezco,
+                    telefonoMovil: datos.telefono_movil==='default'?"":datos.telefono_movil,
+                });
+            }
+        })
     }
 
     render() {

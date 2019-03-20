@@ -52,7 +52,7 @@ export class TratamientoPsiquiatrico extends Component {
         prom.then(res => {
             let data = res.data;
             console.log(res.data);
-            if (data !== undefined) {
+            if (data.ok) {
                 let tratamiento = data.respuesta[0];
                 this.setState({
                     motivoTratamiento: tratamiento.motivo_consulta_psiquiatrica==='default'?"":tratamiento.motivo_consulta_psiquiatrica,
