@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { HistorialPaciente } from '../pages/Paciente/historial/HistorialPaciente'
+import { HistorialPacientePsicologico } from './Paciente/historial/HistorialPacientePsicologico'
+import { HistorialPacientePsiquiatrico } from './Paciente/historial/HistorialPacientePsiquiatrico'
+
 import Accordion from '../components/Accordion'
-import { obtenerHistorial } from '../backend/paciente/paciente';
+import { obtenerHistorialPsicologico, obtenerHistorialPsiquiatrico } from '../backend/paciente/paciente';
 
 
 export class Historial extends Component {
@@ -13,7 +15,8 @@ export class Historial extends Component {
             paciente: this.props.pacienteId,
             loadingInfo: 'initial',
            
-            sesiones: []
+            sesionesPsicologicas: [],
+            sesionesPsiquiatricas:[],
         }
     }
 
@@ -21,7 +24,7 @@ export class Historial extends Component {
         const self = this
         this.setState({ loadingInfo: 'true' })
 
-        let promise = obtenerHistorial(this.state)
+        let promise = obtenerHistorialPsicologico(this.state)
 
         promise
             .then(res => {
@@ -32,15 +35,36 @@ export class Historial extends Component {
                     aux.push(element)
                     
                 })
-                console.log("sesiones", self.state.sesiones)
+                console.log("sesiones", self.state.sesionesPsicologicas)
                 aux.sort(function(date1,date2){
                     return date2 - date1
                 })
-                self.setState({ sesiones: aux, loadingInfo: 'false' })
+                self.setState({ sesionesPsicologicas: aux })
                 console.log("asdfasdfasdfamipixulasdfa")
             }).catch(err => {
                 this.setState({ loadingInfo: 'false ' })
             })
+
+        promise = obtenerHistorialPsiquiatrico(this.state)
+
+        promise
+        .then(res => {
+            let aux = []
+            console.log("historial", res.data.response)
+            res.data.response.forEach(element => {
+                element.fecha_sesion = new Date(element.fecha_sesion)
+                aux.push(element)
+                
+            })
+            console.log("sesiones", self.state.sesionesPsiquiatricas)
+            aux.sort(function(date1,date2){
+                return date2 - date1
+            })
+            self.setState({ sesionesPsiquiatricas: aux, loadingInfo: 'false' })
+            console.log("asdfasdfasdfamipixulasdfa")
+        }).catch(err => {
+            this.setState({ loadingInfo: 'false ' })
+        })
     }
 
     
@@ -63,11 +87,12 @@ export class Historial extends Component {
             <div>
                 <Accordion>
                     <div label="Psicológico">
-                        <HistorialPaciente
-                        sesiones = {this.state.sesiones} />
+                        <HistorialPacientePsicologico
+                        sesiones = {this.state.sesionesPsicologicas} />
                     </div>
                     <div label="Psiquiátrico">
-                        <HistorialPaciente />
+                        <HistorialPacientePsiquiatrico
+                        sesiones = {this.state.sesionesPsiquiatricas} />
                     </div>
                 </Accordion>
 

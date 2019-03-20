@@ -37,10 +37,23 @@ export let obtenerDatosPaciente = async (id) => {
     }
 }
 
-export let obtenerHistorial = async (data) => {
+export let obtenerHistorialPsicologico = async (data) => {
     try{
         console.log(data)
-        let res = await request.get('/obtenerHistorial', {params: {
+        let res = await request.get('/obtenerHistorialPsicologico', {params: {
+            id_paciente: data.paciente,
+            id_usuario: data.usuario,
+        }})
+        return res;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export let obtenerHistorialPsiquiatrico = async (data) => {
+    try{
+        console.log(data)
+        let res = await request.get('/obtenerHistorialPsiquiatrico', {params: {
             id_paciente: data.paciente,
             id_usuario: data.usuario,
         }})

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
+import { obtenerRegistroPsicologico } from '../../../backend/agenda/agenda';
 
 
 const asistentes = ["PI", "Adulto responsable", "Familia", "Otro significativo"];
@@ -13,9 +14,9 @@ export class SesionPsicologica extends Component {
 
         this.state = {
             numSesion: "",
-            diagnostico: false,
-            tratamiento: false,
-            seguimiento: false,
+            diagnostico: 0,
+            tratamiento: 0,
+            seguimiento: 0,
             tipoTratamiento: "",
             quienAsiste: "",
             descripcionLlegada: "",
@@ -26,8 +27,41 @@ export class SesionPsicologica extends Component {
             indicaciones: "",
             notasSesion: "",
             editable: false,
+            loadingInfo: 'initial',
+
         };
     }
+
+    componentDidMount() {
+        const self = this
+        this.setState({ loadingInfo: 'true' })
+        console.log("idsesionasdfa", this.props.idSesion)
+        let promise = obtenerRegistroPsicologico(this.props.idSesion)
+        promise
+            .then(res => {
+                let data = res.data;
+                console.log("data", data)
+                if (data !== undefined) {
+                    let reg = data.response[0]
+                    self.setState({
+                        diagnostico: 0,
+                        tratamiento: 0,
+                        seguimiento: 0,
+                        tipoTratamiento: reg.tipo_tratamiento === "default" ? "" : reg.tipo_tratamiento,
+                        quienAsiste: reg.quien_asiste === "default" ? "": reg.quien_asiste,
+                        descripcionLlegada: reg.descripcion_llegada === "default" ? "": reg.descripcion_llegada,
+                        objetivoSesion: reg.objetivo_sesion==="default" ? "": reg.objetivo_sesion,
+                        intervencionResultado: reg.intervencion_resultado === "default" ? "" : reg.intervencion_resultado,
+                        conductaObservada: reg.conducta_observada ==="default"?"":reg.conducta_observada,
+                        descripcionRetiro: reg.descripcion_retiro==="default"? "":reg.descripcion_retiro,
+                        indicaciones: reg.indicaciones ==="default" ? "": reg.indicaciones,
+                        notasSesion: reg.notas_sesion === "default" ? "" : reg.notas_sesion,
+                        loadingInfo: 'false'
+                    })
+                }
+            })
+    }
+
 
     handleChange = event => {
         this.setState({
@@ -35,19 +69,25 @@ export class SesionPsicologica extends Component {
         });
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
-
-    }
+    
 
     _handleClick = () => {
         this.setState({ editable: !this.state.editable })
     }
 
     render() {
+        if (this.state.loadingInfo === 'initial') {
+            return <h2>Intializing...</h2>;
+
+        }
+
+
+        if (this.state.loadingInfo === 'true') {
+            console.log("sesiones", this.state.sesiones)
+
+            return <h2>Cargando...</h2>;
+
+        }
         return (
             <div className="sesionPsicologica">
                 <form onSubmit={this.handleSubmit}>
@@ -220,7 +260,6 @@ export class SesionPsicologica extends Component {
                                 <div className="btn-container">
                                     <Button
                                         className="btn-submit"
-                                        type="submit"
                                         onClick={this._handleClick}
                                     >
                                         Editar

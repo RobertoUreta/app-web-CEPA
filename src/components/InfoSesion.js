@@ -20,6 +20,7 @@ export class InfoSesion extends Component {
             nombrePaciente: "",
             apellidoPaternoPaciente: "",
             apellidoMaternoPaciente: "",
+            tipoSesion: "",
 
 
         }
@@ -51,6 +52,7 @@ export class InfoSesion extends Component {
                     apellidoPaternoPaciente: data.apellidoP_paciente,
                     apellidoMaternoPaciente: data.apellidoM_paciente,
                     nombrePaciente: data.nombre_paciente,
+                    tipoSesion: data.tipo_sesion
                 })
             })
 
@@ -81,10 +83,12 @@ export class InfoSesion extends Component {
                 <ul>
                     <li><strong>Paciente: </strong>{nombrePaciente}</li>
                     <li><strong>Profesional a cargo: </strong>{nombreProfesional}</li>
+                    <li><strong>Tipo Sesion: </strong> {this.state.tipoSesion}</li>
                     <li><strong>Sala: </strong>{this.state.sala}</li>
                     <li><strong>Fecha:</strong>{this.state.fechaSesion}</li>
                     <li><strong>Hora inicio:</strong>{this.state.horaInicio}</li>
                     <li><strong>Hora termino: </strong>{this.state.horaTermino}</li>
+                    
                 </ul>
             </div>
         )
