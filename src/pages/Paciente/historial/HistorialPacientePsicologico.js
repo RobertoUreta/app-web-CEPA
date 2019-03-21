@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
 import "../../../styles/styles.css"
 import { ModalRegistroSesion } from '../../../components/ModalRegistroSesion';
+import { updateRegistroPsicologico } from '../../../backend/paciente/registros';
+import  SweetAlert  from 'react-bootstrap-sweetalert'
 
-let active = 1;
 
 
 export class HistorialPacientePsicologico extends Component {
@@ -19,12 +20,17 @@ export class HistorialPacientePsicologico extends Component {
             currentPage: 1,
             resta: 0,
             idSesion: 0,
+            alert: null
         }
     }
 
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
     _handleShow(event) {
-        console.log("aaa",event.target.id)
-        this.setState({ show: true ,idSesion: event.target.id})
+        console.log("aaa", event.target.id)
+        this.setState({ show: true, idSesion: event.target.id })
     }
 
     _handleClose = (modalEvt) => {
@@ -32,7 +38,21 @@ export class HistorialPacientePsicologico extends Component {
     }
 
     _handleModalSubmit = (evt) => {
+        let info = JSON.parse(evt)
+        console.log(info)
+        let value = updateRegistroPsicologico(info, info.id)
+        value
+            .then(res => {
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Sesión exitosa" onConfirm={this._hideAlert}>
+                            Se registró correctamente la sesión.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
     }
 
     _handleClick = (event) => {
@@ -124,13 +144,14 @@ export class HistorialPacientePsicologico extends Component {
                 </div>
 
                 <ModalRegistroSesion
-                    title= {"Sesión Psicológica"}
+                    title={"Sesión Psicológica"}
                     show={this.state.show}
                     onClose={this._handleClose}
                     onSubmit={this._handleModalSubmit}
                     renderPsi={true}
-                    idSesion = {this.state.idSesion}
+                    idSesion={this.state.idSesion}
                 />
+                {this.state.alert}
             </div>
         )
     }
