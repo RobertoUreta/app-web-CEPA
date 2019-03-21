@@ -4,7 +4,6 @@ import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { obtenerRegistroPsicologico } from '../../../backend/paciente/registros';
 import * as jsPDF from 'jspdf';
-import banner from '../../../images/imagenes/banner.png'
 import html2canvas from 'html2canvas'
 const asistentes = ["PI", "Adulto responsable", "Familia", "Otro significativo"];
 const tiposTratamiento = ["Terapia individual", "Taller", "Intervención grupal", "Derivación asistida"];
