@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../../components/Option'
 import { TextoAyuda } from '../../../../components/TextoAyuda'
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updatepsicologoISL, obtenerpsicologoISL } from '../../../../backend/isl/psicologoISL';
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 export class EntrevistaPsicologo extends Component {
 
@@ -58,10 +60,43 @@ export class EntrevistaPsicologo extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updatepsicologoISL(aux, this.props.pacienteId);
+        resp
+            .then(res => { 
+                console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la entrevista Psicologica del ISL.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerpsicologoISL(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            /*if (data.ok) {
+                let epi = data.respuesta[0];
+                this.setState({
+                    fecha: epi.fecha_epicrisis === '0000-00-00' ? null :epi.fecha_epicrisis,
+                    tipoEpicrisis:epi.tipo_epicrisis === 'default' ? "" : epi.tipo_epicrisis,
+                    motivos: epi.motivos=== 'default' ? "" :epi.motivos,
+                    diagnosticoEgreso: epi.diagnostico_egreso=== 'default' ? "" :epi.diagnostico_egreso,
+                    indicaciones: epi.indicaciones=== 'default' ? "" :epi.indicaciones
+                });
+            }*/
+        })
     }
 
     render() {
@@ -120,14 +155,14 @@ export class EntrevistaPsicologo extends Component {
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                    <Form.Group controlId="nombreEmpresa">
+                                    <Form.Group controlId="rolCumpleEmpresa">
                                         <TextoAyuda
-                                            nombre="nombreEmpresa"
-                                            tooltip="Nombre de la empresa"
+                                            nombre="rolCumpleEmpresa"
+                                            tooltip="Rol que cumple en la empresa"
                                             componente={<Form.Control
-                                                value={this.state.nombreEmpresa}
+                                                value={this.state.rolCumpleEmpresa}
                                                 onChange={this.handleChange}
-                                                placeholder="Nombre de la empresa"
+                                                placeholder="Rol que cumple en la empresa"
                                             />}
                                         />
                                     </Form.Group>
@@ -573,6 +608,7 @@ export class EntrevistaPsicologo extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );
