@@ -4,6 +4,8 @@ import { Option } from '../../../../components/Option'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../../components/TextoAyuda'
+import { updateMedicoISL, obtenerMedicoISL } from '../../../../backend/isl/medicoISL';
+import SweetAlert from 'react-bootstrap-sweetalert'
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 const nivelesEducacion = ["Enseñanza Basica", "Enseñanza Media", "Educación Superior"]
 export class EntrevistaMedica extends Component {
@@ -26,9 +28,9 @@ export class EntrevistaMedica extends Component {
             actitudInicial: "",
             conductaNoVerbal: "",
             esAcompanado: "",//cambiar a text en la base de datos ya que es un bit
-            oposicionamiento: false,
-            sospechaSimulacion: false,
-            sugerenciaTest: false,
+            oposicionamiento: 0,
+            sospechaSimulacion: 0,
+            sugerenciaTest: 0,
             sugerenciaTestEspecificar: "",
             observaciones: "",
             observacionesGenerales: ""
@@ -50,10 +52,57 @@ export class EntrevistaMedica extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updateMedicoISL(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la entrevista Medica del ISL.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerMedicoISL(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data.ok) {
+                let isl = data.respuesta[0];
+                this.setState({
+                    estadoCivil: isl.estado_civil === 'default' ? "" : isl.estado_civil,
+                    escolaridad: isl.escolaridad === 'default' ? "" : isl.escolaridad,
+                    fechaEvaluacionMedica: isl.fecha_evaluacion_medica === null ? "" : isl.fecha_evaluacion_medica,
+                    anamnesis: isl.anamnesis === 'default' ? "" : isl.anamnesis,
+                    territorialidadDesplazaFueraLugar: isl.territorialidad_desplaza_fuera_hogar === 'default' ? "" : isl.territorialidad_desplaza_fuera_hogar,
+                    patologiasMedicasPsiquiatricasPrevias: isl.patologias_medicas_psiquiatricas_previas === 'default' ? "" : isl.patologias_medicas_psiquiatricas_previas,
+                    consumoSustancias: isl.consumo_sustancias === 'default' ? "" : isl.consumo_sustancias,
+                    laboresRealizadas: isl.labores_realizadas === 'default' ? "" : isl.labores_realizadas,
+                    dificultadesReferidas: isl.difcultades_referidas === 'default' ? "" : isl.difcultades_referidas,
+                    apariencia: isl.apariencia === 'default' ? "" : isl.apariencia,
+                    actitudInicial: isl.actitud_inicial === 'default' ? "" : isl.actitud_inicial,
+                    conductaNoVerbal: isl.conducta_no_verbal === 'default' ? "" : isl.conducta_no_verbal,
+                    esAcompanado: isl.es_acompanado === 'default' ? "" : isl.es_acompanado,//cambiar a text en la base de datos ya que es un bit
+                    oposicionamiento: isl.oposicionalismo ? 1 : 0,
+                    sospechaSimulacion: isl.sospecha_simulacion ? 1 : 0,
+                    sugerenciaTest: isl.sugerencia_test ? 1 : 0,
+                    sugerenciaTestEspecificar: isl.sugerencia_test_especificar === 'default' ? "" : isl.sugerencia_test_especificar,
+                    observaciones: isl.observaciones === 'default' ? "" : isl.observaciones,
+                    observacionesGenerales: isl.observaciones_generales === 'default' ? "" : isl.observaciones_generales
+                });
+            }
+        })
     }
 
     render() {
@@ -265,31 +314,40 @@ export class EntrevistaMedica extends Component {
                                 <Form.Group controlId="oposicionamiento">
                                     <Form.Check
                                         custom
+                                        checked={this.state.oposicionamiento}
                                         value={this.state.oposicionamiento}
-                                        onChange={this.handleChange}
+                                        onChange={event => this.setState({
+                                            [event.target.id]: event.target.checked ? 1 : 0
+                                        })}
                                         label="Oposicionismo"
                                         type="checkbox"
-                                        id="custom-inline-checkbox-oposicionismo"
+                                        id="oposicionamiento"
                                     />
                                 </Form.Group>
                                 <Form.Group controlId="sospechaSimulacion">
                                     <Form.Check
                                         custom
+                                        checked={this.state.sospechaSimulacion}
                                         value={this.state.sospechaSimulacion}
-                                        onChange={this.handleChange}
+                                        onChange={event => this.setState({
+                                            [event.target.id]: event.target.checked ? 1 : 0
+                                        })}
                                         label="Sospecha de simulación"
                                         type="checkbox"
-                                        id="custom-inline-checkbox-sospechaSimulacion"
+                                        id="sospechaSimulacion"
                                     />
                                 </Form.Group>
                                 <Form.Group controlId="sugerenciaTest">
                                     <Form.Check
                                         custom
+                                        checked={this.state.sugerenciaTest}
                                         value={this.state.sugerenciaTest}
-                                        onChange={this.handleChange}
+                                        onChange={event => this.setState({
+                                            [event.target.id]: event.target.checked ? 1 : 0
+                                        })}
                                         label="¿Sugiere aplicar algún test?"
                                         type="checkbox"
-                                        id="custom-inline-checkbox-sugerenciaTest"
+                                        id="sugerenciaTest"
                                     />
                                 </Form.Group>
                                 <Form.Group controlId="sugerenciaTestEspecificar">
@@ -344,6 +402,7 @@ export class EntrevistaMedica extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );
