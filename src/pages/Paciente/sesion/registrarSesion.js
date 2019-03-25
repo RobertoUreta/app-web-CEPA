@@ -82,6 +82,8 @@ export class RegistrarSesion extends Component {
                     listadoUsuarios.set(nombre, element.id_usuario)
                 });
                 this.setState({ profesionales: listadoUsuarios })
+            }).catch(err => {
+                console.log(err)
             })
         promise = obtenerLastIdSesion()
         promise
@@ -90,6 +92,8 @@ export class RegistrarSesion extends Component {
                 console.log("datita", data)
 
                 this.setState({ id: data })
+            }).catch(err => {
+                console.log(err)
             })
     }
 
@@ -279,7 +283,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Tipo sesión</option>
-                                            <Option options={["Psicológica","Psiquiátrica","Social","Coordinación"]} />
+                                            <Option options={["Psicológica", "Psiquiátrica", "Social", "Coordinación"]} />
                                         </Form.Control>} />
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="estadoSesion">
@@ -292,7 +296,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Estado Sesión</option>
-                                            <Option options={["Asiste", "No asiste","Justificado","Solicita cambio de hora",""]} />
+                                            <Option options={["Asiste", "No asiste", "Justificado", "Solicita cambio de hora", ""]} />
                                         </Form.Control>} />
                                 </Form.Group>
                             </Row>

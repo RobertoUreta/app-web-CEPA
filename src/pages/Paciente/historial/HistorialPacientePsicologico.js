@@ -20,7 +20,8 @@ export class HistorialPacientePsicologico extends Component {
             currentPage: 1,
             resta: 0,
             idSesion: 0,
-            alert: null
+            alert: null,
+            numSesion:0
         }
     }
 
@@ -28,9 +29,9 @@ export class HistorialPacientePsicologico extends Component {
         this.setState({ alert: null })
     }
 
-    _handleShow(event) {
-        console.log("aaa", event.target.id)
-        this.setState({ show: true, idSesion: event.target.id })
+    _handleShow(id,largo) {
+        console.log("aaa", id,largo)
+        this.setState({ show: true, idSesion: id ,numSesion: largo})
     }
 
     _handleClose = (modalEvt) => {
@@ -71,12 +72,11 @@ export class HistorialPacientePsicologico extends Component {
         let largo = sesiones.length
         const renderSesiones = currentSesiones.map((v, i) => {
             let fecha = v.fecha_sesion.getDate() + "-" + (v.fecha_sesion.getMonth() + 1) + "-" + v.fecha_sesion.getFullYear()
-
             return (
-                <tr key={v.id_sesion} id={v.id_sesion}>
-                    <td id={v.id_sesion} onClick={this._handleShow} >Sesión n°{largo - ((elementsPerPage * (currentPage - 1)) + i)}</td>
-                    <td id={v.id_sesion} onClick={this._handleShow} >{fecha}</td>
-                    <td id={v.id_sesion} onClick={this._handleShow} >{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
+                <tr key={v.id_sesion} id={v.id_sesion} >
+                    <td id={v.id_sesion}  onClick={()=> this._handleShow(v.id_sesion,largo - ((elementsPerPage * (currentPage - 1)) + i))}  >Sesión N°{largo - ((elementsPerPage * (currentPage - 1)) + i)}</td>
+                    <td id={v.id_sesion}  onClick={()=> this._handleShow(v.id_sesion,largo - ((elementsPerPage * (currentPage - 1)) + i))}  >{fecha}</td>
+                    <td id={v.id_sesion}  onClick={()=> this._handleShow(v.id_sesion,largo - ((elementsPerPage * (currentPage - 1)) + i))}  >{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
                 </tr>
             )
         })
@@ -150,6 +150,7 @@ export class HistorialPacientePsicologico extends Component {
                     onSubmit={this._handleModalSubmit}
                     renderPsi={true}
                     idSesion={this.state.idSesion}
+                    numSesion={this.state.numSesion}
                 />
                 {this.state.alert}
             </div>

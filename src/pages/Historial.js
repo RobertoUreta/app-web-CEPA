@@ -36,9 +36,11 @@ export class Historial extends Component {
                     
                 })
                 console.log("sesiones", self.state.sesionesPsicologicas)
+                console.log("aux",aux)
                 aux.sort(function(date1,date2){
-                    return date2 - date1
+                    return date2.fecha_sesion - date1.fecha_sesion
                 })
+                console.log("auix dps de lsort", aux)
                 self.setState({ sesionesPsicologicas: aux })
                 console.log("asdfasdfasdfamipixulasdfa")
             }).catch(err => {
@@ -58,7 +60,8 @@ export class Historial extends Component {
             })
             console.log("sesiones", self.state.sesionesPsiquiatricas)
             aux.sort(function(date1,date2){
-                return date2 - date1
+                console.log("dateholi",date1)
+                return date2.fecha_sesion - date1.fecha_sesion
             })
             self.setState({ sesionesPsiquiatricas: aux, loadingInfo: 'false' })
             console.log("asdfasdfasdfamipixulasdfa")
