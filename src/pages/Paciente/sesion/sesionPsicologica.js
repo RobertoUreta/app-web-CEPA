@@ -78,6 +78,9 @@ export class SesionPsicologica extends Component {
         const pdf = new jsPDF();
         var width = pdf.internal.pageSize.getWidth();
         var height = pdf.internal.pageSize.getHeight();
+        var divHeight = document.getElementById('divToPrint').clientHeight;
+        var divWidth = document.getElementById('divToPrint').clientWidth
+        var ratio = divHeight / divWidth 
         pdf.addImage(imgDataUtal, 'png', 0, 0)
         pdf.setFontSize(20)
         pdf.text(55,40,`Registro Sesión Psicológica N°${num}`)
@@ -85,7 +88,8 @@ export class SesionPsicologica extends Component {
         html2canvas(input)
             .then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'JPEG', 15, 45, width - 30, height - 85, 'content');
+                height = ratio * width
+                pdf.addImage(imgData, 'JPEG', 15, 45, width - 30, height - 115, 'content');
                 pdf.save(`REG_SESION_PSICOLOGICA_N_${num}`);
 
             })

@@ -3,7 +3,8 @@ import { Table, Pagination } from 'react-bootstrap'
 import "../../../styles/styles.css"
 import { ModalRegistroSesion } from '../../../components/ModalRegistroSesion';
 import { updateRegistroPsicologico } from '../../../backend/paciente/registros';
-import  SweetAlert  from 'react-bootstrap-sweetalert'
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { verificarSesion } from '../../../backend/paciente/paciente';
 
 
 
@@ -21,7 +22,8 @@ export class HistorialPacientePsicologico extends Component {
             resta: 0,
             idSesion: 0,
             alert: null,
-            numSesion:0
+            numSesion: 0,
+            usuario: this.props.usuario
         }
     }
 
@@ -29,9 +31,11 @@ export class HistorialPacientePsicologico extends Component {
         this.setState({ alert: null })
     }
 
-    _handleShow(id,largo) {
-        console.log("aaa", id,largo)
-        this.setState({ show: true, idSesion: id ,numSesion: largo})
+    _handleShow(id, largo, idUsuario) {
+        console.log("id,largo,idUsuario", id, largo, idUsuario)
+
+        this.setState({ show: true, idSesion: id, numSesion: largo })
+
     }
 
     _handleClose = (modalEvt) => {
@@ -57,7 +61,6 @@ export class HistorialPacientePsicologico extends Component {
     }
 
     _handleClick = (event) => {
-        console.log("handleCLick", event.target.id)
         this.setState({
             currentPage: Number(event.target.id)
         });
@@ -72,11 +75,12 @@ export class HistorialPacientePsicologico extends Component {
         let largo = sesiones.length
         const renderSesiones = currentSesiones.map((v, i) => {
             let fecha = v.fecha_sesion.getDate() + "-" + (v.fecha_sesion.getMonth() + 1) + "-" + v.fecha_sesion.getFullYear()
+            let nsesion = largo - ((elementsPerPage * (currentPage - 1)) + i)
             return (
                 <tr key={v.id_sesion} id={v.id_sesion} >
-                    <td id={v.id_sesion}  onClick={()=> this._handleShow(v.id_sesion,largo - ((elementsPerPage * (currentPage - 1)) + i))}  >Sesión N°{largo - ((elementsPerPage * (currentPage - 1)) + i)}</td>
-                    <td id={v.id_sesion}  onClick={()=> this._handleShow(v.id_sesion,largo - ((elementsPerPage * (currentPage - 1)) + i))}  >{fecha}</td>
-                    <td id={v.id_sesion}  onClick={()=> this._handleShow(v.id_sesion,largo - ((elementsPerPage * (currentPage - 1)) + i))}  >{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
+                    <td id={v.id_sesion} onClick={() => this._handleShow(v.id_sesion, nsesion, this.state.usuario)}  >Sesión N°{nsesion}</td>
+                    <td id={v.id_sesion} onClick={() => this._handleShow(v.id_sesion, nsesion, this.state.usuario)}  >{fecha}</td>
+                    <td id={v.id_sesion} onClick={() => this._handleShow(v.id_sesion, nsesion, this.state.usuario)}  >{(v.nombre + " " + v.apellido_paterno + " " + v.apellido_materno)}</td>
                 </tr>
             )
         })
@@ -128,7 +132,7 @@ export class HistorialPacientePsicologico extends Component {
                                 <th>Sesión</th>
                                 <th>Fecha</th>
 
-                                <th>Profesional a Cargo</th>
+                                <th>Psicológo a Cargo</th>
                             </tr>
                         </thead>
                         <tbody>

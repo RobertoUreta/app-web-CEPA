@@ -50,6 +50,7 @@ export let obtenerHistorialPsicologico = async (data) => {
     }
 }
 
+
 export let obtenerHistorialPsiquiatrico = async (data) => {
     try{
         console.log(data)

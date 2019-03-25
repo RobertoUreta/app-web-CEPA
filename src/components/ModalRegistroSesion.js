@@ -35,7 +35,8 @@ export class ModalRegistroSesion extends Component {
 
 
     render() {
-        console.log("modalregistrosesionprops",this.props.numSesion)
+        console.log("Modal IdSEsion", this.props.idSesion)
+        console.log("Modal refRegistro", this.props.refRegistro)
         return (
             <Modal size="lg" show={this.props.show} onHide={this._handleClose}>
                 <Modal.Header closeButton>
@@ -47,7 +48,10 @@ export class ModalRegistroSesion extends Component {
                         idSesion = {this.props.idSesion}
                         numSesion = {this.props.numSesion}
                     /> : <SesionPsiquiatrica 
-                            onSubmit={this._handleFormSubmit}/>}
+                            onSubmit={this._handleFormSubmit}
+                            idSesion = {this.props.idSesion}
+                            refRegistro = {this.props.refRegistro}
+                            numSesion = {this.props.numSesion}/>}
                 </Modal.Body>
             </Modal>
         )
