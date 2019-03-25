@@ -4,7 +4,9 @@ import { Option } from '../../../components/Option'
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { obtenerDatosAdicionales } from '../../../backend/ingreso/ingreso';
 
-const estados = ["Abierto", "Cerrado", "En proceso de alta"]
+const estados = ["Activo", "Cerrado"]
+const tiposIngreso = ["Consulta espontánea","Derivación","ISL"]
+const etapa = ["En lista de espera","Con evaluación de ingreso","En tratamiento","Derivación","En proceso de alta"]
 export class DatosAdicionales extends Component {
     constructor(props) {
         super(props);
@@ -78,10 +80,13 @@ export class DatosAdicionales extends Component {
                                     nombre="etapa"
                                     tooltip="Etapa"
                                     componente={<Form.Control
+                                        as="select"
                                         value={this.state.etapa}
                                         onChange={this.handleChange}
-                                        placeholder="Etapa"
-                                    />}
+                                    >
+                                        <option hidden>Etapa</option>
+                                        <Option options={etapa} />
+                                    </Form.Control>}
                                 />
 
                             </Form.Group>
@@ -93,10 +98,13 @@ export class DatosAdicionales extends Component {
                                     nombre="tipoIngreso"
                                     tooltip="Tipo de Ingreso"
                                     componente={<Form.Control
+                                        as="select"
                                         value={this.state.tipoIngreso}
                                         onChange={this.handleChange}
-                                        placeholder="Tipo de Ingreso"
-                                    />}
+                                    >
+                                        <option hidden>Tipo de Ingreso</option>
+                                        <Option options={tiposIngreso} />
+                                    </Form.Control>}
                                 />
 
                             </Form.Group>

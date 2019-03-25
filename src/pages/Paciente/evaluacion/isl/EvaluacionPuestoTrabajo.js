@@ -3,6 +3,8 @@ import { Form, Col, Button, Row } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../../components/TextoAyuda'
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updatePuestoTrabajoISL, obtenerPuestoTrabajoISL } from '../../../../backend/isl/puestoTrabajoISL';
 export class EvaluacionPuestoTrabajo extends Component {
 
 
@@ -13,7 +15,7 @@ export class EvaluacionPuestoTrabajo extends Component {
             fechaRealizacion: null,
             razonSocial: "",
             rut: "",
-            codigoCiiu: "", 
+            codigoCiiu: "",
             nombreCentroTrabajo: "",
             direccion: "",
             descripcion: "",
@@ -55,33 +57,33 @@ export class EvaluacionPuestoTrabajo extends Component {
             tiempoConoceInf3: "",
             fechaEntrevistaInf3: "",
             aporteContactoInf3: "",
-            cargo:"",
-            descansos:"",
-            controlTiempo:"",
-            capacitacion:"",
-            variedadTarea:"",
-            demandasPsicologicas:"",
-            autonomiaControl:"",
-            ambiguedad:"",
-            apoyoSocial:"",
-            incorporacionTec:"",
-            conflictosInterpersonales:"",
-            condicionesHostiles:"",
-            condicionesDeficientes:"",
-            condicionesAgravantes:"",
-            relacionTrabajadorCompaneros:"",
-            relacionSuperiorJerarquico:"",
-            relacionTrabajadorSuboordinados:"",
-            relacionTrabajadorUsuarios:"",
-            climaLaboralGeneral:"",
-            liderazgo:"",
-            conductasAcosoLaboral:"",
-            conductasAcosoSexual:"",
-            opinionEmpresaTrabajador:"",
-            factoresRiesgoEmpresa:"",
-            accionesMitigacion:"",
-            observaciones:"",
-            conclusion:""
+            cargo: "",
+            descansos: "",
+            controlTiempo: "",
+            capacitacion: "",
+            variedadTarea: "",
+            demandasPsicologicas: "",
+            autonomiaControl: "",
+            ambiguedad: "",
+            apoyoSocial: "",
+            incorporacionTec: "",
+            conflictosInterpersonales: "",
+            condicionesHostiles: "",
+            condicionesDeficientes: "",
+            condicionesAgravantes: "",
+            relacionTrabajadorCompaneros: "",
+            relacionSuperiorJerarquico: "",
+            relacionTrabajadorSuboordinados: "",
+            relacionTrabajadorUsuarios: "",
+            climaLaboralGeneral: "",
+            liderazgo: "",
+            conductasAcosoLaboral: "",
+            conductasAcosoSexual: "",
+            opinionEmpresaTrabajador: "",
+            factoresRiesgoEmpresa: "",
+            accionesMitigacion: "",
+            observaciones: "",
+            conclusion: ""
         };
     }
 
@@ -100,11 +102,115 @@ export class EvaluacionPuestoTrabajo extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        let fecha1 = new Date(aux.fechaRealizacion)
+        aux.fechaRealizacion = fecha1.toJSON().slice(0, 19).replace('T', ' ')
+        console.log(aux);
+        let resp = updatePuestoTrabajoISL(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la evaluación de puesto de trabajo ISl.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
     }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerPuestoTrabajoISL(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data.ok) {
+                let isl = data.respuesta[0];
+                let inf = data.informantes;
+                this.setState({
+                    fechaRealizacion: isl.fecha_realizacion === '0000-00-00' ? null : isl.fecha_realizacion,
+                    razonSocial: isl.razon_social === 'default' ? "" : isl.razon_social,
+                    rut: isl.rut === 'default' ? "" : isl.rut,
+                    codigoCiiu: isl.codigo_ciiu === 'default' ? "" : isl.codigo_ciiu,
+                    nombreCentroTrabajo: isl.nombre_centro_trabajo === 'default' ? "" : isl.nombre_centro_trabajo,
+                    direccion: isl.direccion === 'default' ? "" : isl.direccion,
+                    descripcion: isl.descripcion === 'default' ? "" : isl.descripcion,
+                    antiguedadEmpresa: isl.antiguedad === 'default' ? "" : isl.antiguedad,
+                    antiguedadPuesto: isl.antiguedad_puesto === 'default' ? "" : isl.antiguedad_puesto,//falta en la tabla de db
+                    evalDesempeno: isl.eval_desempeno === 'default' ? "" : isl.eval_desempeno,
+                    cambiosPt: isl.cambios_pt === 'default' ? "" : isl.cambios_pt,
+                    ausentismoEnfermedad: isl.ausentismo_enfermedad === 'default' ? "" : isl.ausentismo_enfermedad,
+                    jornadaSemanal: isl.jornada_semanal === 'default' ? "" : isl.jornada_semanal,
+                    sistemaTurnos: isl.sistema_turnos === 'default' ? "" : isl.sistema_turnos,
+                    obligacionControlHorarios: isl.obligacion_control_horarios === 'default' ? "" : isl.obligacion_control_horarios,
+                    colacion: isl.colacion === 'default' ? "" : isl.colacion,
+                    horasExtraordinarias: isl.horas_extraordinarias === 'default' ? "" : isl.horas_extraordinarias,
+                    tipoRemuneracion: isl.tipo_remuneracion === 'default' ? "" : isl.tipo_remuneracion,
+                    vacaciones: isl.vacaciones === 'default' ? "" : isl.vacaciones,
+                    medicoSolicitante: isl.medico_solicitante === 'default' ? "" : isl.medico_solicitante,
+                    motivoConsulta: isl.motivo_consulta === 'default' ? "" : isl.motivo_consulta,
+                    fuente: isl.fuente === 'default' ? "" : isl.fuente,
+                    coordinacionEpt: isl.coordinacion_ept === 'default' ? "" : isl.coordinacion_ept,
+                    riesgoIndagar: isl.riesgo_indagar === 'default' ? "" : isl.riesgo_indagar,
+                    motivoFaltaTestigos: isl.motivo_falta_testigos === 'default' ? "" : isl.motivo_falta_testigos,
+                    metodoSeleccion: isl.metodo_seleccion === 'default' ? "" : isl.metodo_seleccion,
+                    registroConfidencialidad: isl.registro_confidencialidad === 'default' ? "" : isl.registro_confidencialidad,
+                    nombreInf1: inf[0].nombre === 'default' ? "" : inf[0].nombre,
+                    cargoInf1: inf[0].cargo === 'default' ? "" : inf[0].cargo,
+                    relacionJerarquicaInf1: inf[0].relacion_jerarquica === 'default' ? "" : inf[0].relacion_jerarquica,
+                    tiempoConoceInf1: inf[0].tiempo_conoce === 'default' ? "" : inf[0].tiempo_conoce,
+                    fechaEntrevistaInf1: inf[0].fechas_entrevistas === 'default' ? "" : inf[0].fechas_entrevistas,
+                    aporteContactoInf1: inf[0].aporte_contacto === 'default' ? "" : inf[0].aporte_contacto,
+                    nombreInf2: inf[1].nombre === 'default' ? "" : inf[1].nombre,
+                    cargoInf2: inf[1].cargo === 'default' ? "" : inf[1].cargo,
+                    relacionJerarquicaInf2: inf[1].relacion_jerarquica === 'default' ? "" : inf[1].relacion_jerarquica,
+                    tiempoConoceInf2: inf[1].tiempo_conoce === 'default' ? "" : inf[1].tiempo_conoce,
+                    fechaEntrevistaInf2: inf[1].fechas_entrevistas === 'default' ? "" : inf[1].fechas_entrevistas,
+                    aporteContactoInf2: inf[1].aporte_contacto === 'default' ? "" : inf[1].aporte_contacto,
+                    nombreInf3: inf[2].nombre === 'default' ? "" : inf[2].nombre,
+                    cargoInf3: inf[2].cargo === 'default' ? "" : inf[2].cargo,
+                    relacionJerarquicaInf3: inf[2].relacion_jerarquica === 'default' ? "" : inf[2].relacion_jerarquica,
+                    tiempoConoceInf3: inf[2].tiempo_conoce === 'default' ? "" : inf[2].tiempo_conoce,
+                    fechaEntrevistaInf3: inf[2].fechas_entrevistas === 'default' ? "" : inf[2].fechas_entrevistas,
+                    aporteContactoInf3: inf[2].aporte_contacto === 'default' ? "" : inf[2].aporte_contacto,
+                    cargo: isl.cargo === 'default' ? "" : isl.cargo,
+                    descansos: isl.descansos === 'default' ? "" : isl.descansos,
+                    controlTiempo: isl.control_tiempo === 'default' ? "" : isl.control_tiempo,
+                    capacitacion: isl.capacitacion === 'default' ? "" : isl.capacitacion,
+                    variedadTarea: isl.variedad_tarea === 'default' ? "" : isl.variedad_tarea,
+                    demandasPsicologicas: isl.demandas_psicologicas === 'default' ? "" : isl.demandas_psicologicas,
+                    autonomiaControl: isl.autonomia_control === 'default' ? "" : isl.autonomia_control,
+                    ambiguedad: isl.ambiguedad === 'default' ? "" : isl.ambiguedad,
+                    apoyoSocial: isl.apoyo_social === 'default' ? "" : isl.apoyo_social,
+                    incorporacionTec: isl.incorporacion_tec === 'default' ? "" : isl.incorporacion_tec,
+                    conflictosInterpersonales: isl.conflictos_interpersonales === 'default' ? "" : isl.conflictos_interpersonales,
+                    condicionesHostiles: isl.condiciones_hostiles === 'default' ? "" : isl.condiciones_hostiles,
+                    condicionesDeficientes: isl.condiciones_deficientes === 'default' ? "" : isl.condiciones_deficientes,
+                    condicionesAgravantes: isl.condiciones_agravantes === 'default' ? "" : isl.condiciones_agravantes,
+                    relacionTrabajadorCompaneros: isl.relacion_trabajador_companeros === 'default' ? "" : isl.relacion_trabajador_companeros,
+                    relacionSuperiorJerarquico: isl.relacion_superior_jerarquico === 'default' ? "" : isl.relacion_superior_jerarquico,
+                    relacionTrabajadorSuboordinados: isl.relacion_trabajador_suboordinados === 'default' ? "" : isl.relacion_trabajador_suboordinados,
+                    relacionTrabajadorUsuarios: isl.relacion_trabajador_usuarios === 'default' ? "" : isl.relacion_trabajador_usuarios,
+                    climaLaboralGeneral: isl.clima_laboral_general === 'default' ? "" : isl.clima_laboral_general,
+                    liderazgo: isl.liderazgo === 'default' ? "" : isl.liderazgo,
+                    conductasAcosoLaboral: isl.conductas_acoso_laboral === 'default' ? "" : isl.conductas_acoso_laboral,
+                    conductasAcosoSexual: isl.conductas_acoso_sexual === 'default' ? "" : isl.conductas_acoso_sexual,
+                    opinionEmpresaTrabajador: isl.opinion_empresa_trabajador === 'default' ? "" : isl.opinion_empresa_trabajador,
+                    factoresRiesgoEmpresa: isl.factores_riesgo_empresa === 'default' ? "" : isl.factores_riesgo_empresa,
+                    accionesMitigacion: isl.acciones_mitigacion === 'default' ? "" : isl.acciones_mitigacion,
+                    observaciones: isl.observaciones === 'default' ? "" : isl.observaciones,
+                    conclusion: isl.conclusion === 'default' ? "" : isl.conclusion,
+                });
+            }
+        })
+    }
+
 
     render() {
         return (
@@ -428,7 +534,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                 </Col>
                             </Row>
                             <Form.Label>b. Individualización del o los informantes clave aportado por la empresa (al menos 1 distinto al de/la trabajador/a). Consignar el nombre es obligatorio </Form.Label>
-                            
+
                             <Form.Group controlId="nombreInf1">
                                 <Form.Label><strong><i>Informante 1</i></strong></Form.Label>
                                 <TextoAyuda
@@ -728,11 +834,11 @@ export class EvaluacionPuestoTrabajo extends Component {
                                 />
                             </Form.Group>
                             <Form.Label><strong>6. Áreas de exploración en EPT-SM</strong></Form.Label>
-                            
+
                             <Form.Group controlId="cargo">
-                            <Form.Label><strong><i>Área: Dinámica de trabajo</i></strong></Form.Label>
-                            <Form.Group><Form.Label><i>Agente de riesgo: Diseño de la tarea y/o puesto de trabajo</i></Form.Label></Form.Group>
-                            
+                                <Form.Label><strong><i>Área: Dinámica de trabajo</i></strong></Form.Label>
+                                <Form.Group><Form.Label><i>Agente de riesgo: Diseño de la tarea y/o puesto de trabajo</i></Form.Label></Form.Group>
+
                                 <TextoAyuda
                                     nombre="cargo"
                                     tooltip="Cargo de trabajo"
@@ -810,11 +916,11 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     />}
                                 />
                             </Form.Group>
-                           
-                            
+
+
                             <Form.Group controlId="autonomiaControl">
-                            <Form.Label><strong><i>Área: contexto del trabajo</i></strong></Form.Label>
-                            <Form.Group><Form.Label><i>Agente de riesgo: Características organizacionales</i></Form.Label></Form.Group>
+                                <Form.Label><strong><i>Área: contexto del trabajo</i></strong></Form.Label>
+                                <Form.Group><Form.Label><i>Agente de riesgo: Características organizacionales</i></Form.Label></Form.Group>
                                 <TextoAyuda
                                     nombre="autonomiaControl"
                                     tooltip="Autonomía y control"
@@ -1105,6 +1211,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );
