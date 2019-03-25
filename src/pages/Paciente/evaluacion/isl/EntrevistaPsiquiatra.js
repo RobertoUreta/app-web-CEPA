@@ -5,7 +5,8 @@ import { TextoAyuda } from '../../../../components/TextoAyuda'
 
 import { TablaFamiliar } from '../../../../components/TablaFamiliar'
 import { ModalFamiliar } from '../../../../components/ModalFamiliar'
-
+import { updatePsiquiatraISL, obtenerPsiquiatraISL } from '../../../../backend/isl/psiquiatraISL';
+import SweetAlert from 'react-bootstrap-sweetalert'
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 const nivelesEducacion = ["Enseñanza Basica", "Enseñanza Media", "Educación Superior"]
 const antGinecoObstetricosLista = ["menarquia",
@@ -43,12 +44,12 @@ export class EntrevistaPsiquiatra extends Component {
             razonesCambio: "",
             empleoActual: "",
             funcionesPorContrato: "",
-            menarquia: false,
-            menopausia: false,
-            gpa: false,
-            ets: false,
-            fur: false,
-            tipo: false,
+            menarquia: 0,
+            menopausia: 0,
+            gpa: 0,
+            ets: 0,
+            fur: 0,
+            tipo: 0,
             observacionesAntGinecoObstetricos: "",
             eje1: "",
             eje2: "",
@@ -73,7 +74,7 @@ export class EntrevistaPsiquiatra extends Component {
         this.setState({ show: modalEvt });
     }
 
-    _handleModalSubmit = (modalInfo ) => {
+    _handleModalSubmit = (modalInfo) => {
 
         console.log("_handleModalSubmit")
         var info = JSON.parse(modalInfo)
@@ -86,13 +87,87 @@ export class EntrevistaPsiquiatra extends Component {
     _handleShow() {
         this.setState({ show: true })
     }
-
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updatePsiquiatraISL(aux, this.props.pacienteId);
+        resp
+            .then(res => {
+                //console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la Entrevista Psiquiatrica del ISL.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+
+    componentDidMount() {
+        let prom = obtenerPsiquiatraISL(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data.ok) {
+                let isl = data.respuesta[0];
+                this.setState({
+                    estadoCivil: isl.estado_civil=== 'default' ? "" :isl.estado_civil,
+                    escolaridad: isl.escolaridad=== 'default' ? "" :isl.escolaridad,
+                    actividad: isl.actividad=== 'default' ? "" :isl.actividad,
+                    historiaFamiliar: isl.historia_familiar=== 'default' ? "" :isl.historia_familiar,
+                    patologiasComunes: isl.patologias_comunes=== 'default' ? "" :isl.patologias_comunes,
+                    patologiasLaborales: isl.patologias_laborales=== 'default' ? "" :isl.patologias_laborales,
+                    atencionesPatologiaMental: isl.atenciones_patologia_mental=== 'default' ? "" :isl.atenciones_patologia_mental,
+                    antecendentesFamiliaresSaludMental: isl.antecedentes_familiares_salud_mental=== 'default' ? "" :isl.antecedentes_familiares_salud_mental,
+                    enfermedadesActualesConsumo:isl.enfermedades_actuales_consumo=== 'default' ? "" :isl.enfermedades_actuales_consumo,
+                    motivoConsulta:isl.motivo_consulta=== 'default' ? "" :isl.motivo_consulta,
+                    factoresRiesgoLaboral: isl.factores_riesgo_laboral=== 'default' ? "" :isl.factores_riesgo_laboral,
+                    sintomas: isl.sintomas=== 'default' ? "" :isl.sintomas,
+                    desarrolloSintomas: isl.desarrollo_sintomas=== 'default' ? "" :isl.desarrollo_sintomas,
+                    tratamientosPrevios: isl.tratamientos_previos=== 'default' ? "" :isl.tratamientos_previos,
+                    examenMental: isl.examen_mental=== 'default' ? "" :isl.examen_mental,
+                    edadInicio: isl.edad_inicio=== 'default' ? "" :isl.edad_inicio,//agregar a tabla
+                    tiposTrabajos: isl.tipos_trabajos=== 'default' ? "" :isl.tipos_trabajos,
+                    tiempoPermanencia: isl.tiempo_permanencia=== 'default' ? "" :isl.tiempo_permanencia,
+                    razonesCambio: isl.razones_cambio=== 'default' ? "" :isl.razones_cambio,
+                    empleoActual: isl.empleo_actual=== 'default' ? "" :isl.empleo_actual,
+                    funcionesPorContrato:isl.funciones_por_contrato=== 'default' ? "" :isl.funciones_por_contrato,
+                    menarquia: isl.menarquia ? 1:0,
+                    menopausia: isl.menopausia?1:0,
+                    gpa: isl.gpa?1:0,
+                    ets: isl.ets?1:0,
+                    fur: isl.fur?1:0,
+                    tipo: isl.tipo?1:0,
+                    observacionesAntGinecoObstetricos:isl.observaciones=== 'default' ? "" :isl.observaciones,
+                    eje1: isl.eje_1=== 'default' ? "" :isl.eje_1,
+                    eje2: isl.eje_2=== 'default' ? "" :isl.eje_2,
+                    eje3: isl.eje_3=== 'default' ? "" :isl.eje_3,
+                    eje4: isl.eje_4=== 'default' ? "" :isl.eje_4,
+                    eeg: isl.eeg=== 'default' ? "" :isl.eeg,
+                    impresionesClinicas: isl.impresiones_clinicas=== 'default' ? "" :isl.impresiones_clinicas,
+                    conclusionesEvaluacion: isl.conclusiones_evaluacion=== 'default' ? "" :isl.conclusiones_evaluacion,//agregar a tabla,
+                });
+                let familiares = data.familiares
+                for (let index = 0; index < familiares.length; index++) {
+                    const element = familiares[index];
+                    this.state.familia.push({
+                        nombre: element.nombre,
+                        edad: element.edad,
+                        relacionPaciente: element.relacion_paciente,
+                        ocupacion: element.ocupacion
+                    })
+                    this.setState(this.state)
+                }
+
+            }
+        })
     }
 
     render() {
@@ -157,7 +232,7 @@ export class EntrevistaPsiquiatra extends Component {
                             <Form.Group controlId="modalGrupoFamiliar">
                                 <TablaFamiliar
                                     elements={this.state.familia} />
-                                <Button className= "btn-custom" onClick={this._handleShow}> Agregar integrante familia</Button>
+                                <Button className="btn-custom" onClick={this._handleShow}> Agregar integrante familia</Button>
                                 <ModalFamiliar
                                     show={this.state.show}
                                     fnCerrar={this._handleClose}
@@ -395,14 +470,17 @@ export class EntrevistaPsiquiatra extends Component {
                                     <Col>
                                         <Form.Group controlId="antGinecoObstetricosCheckBox">
                                             <Col>
-                                                {antGinecoObstetricosLista.slice(0, 3).map((name, i) => (
+                                                {antGinecoObstetricosLista.slice(0, 3).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        checked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`antGinecoObstetricos${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -411,14 +489,17 @@ export class EntrevistaPsiquiatra extends Component {
                                     <Col>
                                         <Form.Group controlId="antGinecoObstetricosCheckBox1">
                                             <Col>
-                                                {antGinecoObstetricosLista.slice(3, 6).map((name, i) => (
+                                                {antGinecoObstetricosLista.slice(3, 6).map((name) => (
                                                     <Form.Check
                                                         custom
-                                                        value={this.state.name}
-                                                        onChange={this.handleChange}
+                                                        checked={this.state[name]}
+                                                        value={this.state[name]}
+                                                        onChange={event => this.setState({
+                                                            [event.target.id]: event.target.checked ? 1 : 0
+                                                        })}
                                                         label={name}
                                                         type="checkbox"
-                                                        id={`antGinecoObstetricos1${i}`}
+                                                        id={`${name}`}
                                                     />
                                                 ))}
                                             </Col>
@@ -550,6 +631,7 @@ export class EntrevistaPsiquiatra extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );
