@@ -296,7 +296,7 @@ export class RegistrarSesion extends Component {
                                             onChange={this.handleChange}
                                         >
                                             <option hidden>Estado Sesión</option>
-                                            <Option options={["Asiste", "No asiste", "Justificado", "Solicita cambio de hora", ""]} />
+                                            <Option options={["Asiste", "No asiste","Justificado","Solicita cambio de hora","Profesional cambia hora"]} />
                                         </Form.Control>} />
                                 </Form.Group>
                             </Row>

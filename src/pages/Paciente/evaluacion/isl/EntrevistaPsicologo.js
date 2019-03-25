@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Form, Col, Button, Row } from 'react-bootstrap'
 import { Option } from '../../../../components/Option'
 import { TextoAyuda } from '../../../../components/TextoAyuda'
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { updatepsicologoISL, obtenerpsicologoISL } from '../../../../backend/isl/psicologoISL';
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 export class EntrevistaPsicologo extends Component {
 
@@ -58,10 +60,76 @@ export class EntrevistaPsicologo extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const email = this.inputEmail.value
-        const pwd = this.inputPwd.value
-        console.log({ email, pwd });
+        const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        console.log(aux);
+        let resp = updatepsicologoISL(aux, this.props.pacienteId);
+        resp
+            .then(res => { 
+                console.log("agregado", res.data)
+                if (res.data.ok) {
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos de la entrevista Psicologica del ISL.
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
 
+            })
+    }
+    _hideAlert = () => {
+        this.setState({ alert: null })
+    }
+
+    componentDidMount() {
+        let prom = obtenerpsicologoISL(this.props.pacienteId);
+        prom.then(res => {
+            let data = res.data;
+            console.log(res.data);
+            if (data.ok) {
+                let isl = data.respuesta[0];
+                let dsm = data.dsm[0];
+                this.setState({
+                    estadoCivil: isl.estado_civil === 'default' ? "":isl.estado_civil,
+                    numHijos:isl.num_hijos === 0 ? "":isl.num_hijos,
+                    nombreEmpresa:isl.nombre_empresa === 'default' ? "":isl.nombre_empresa,
+                    rolCumpleEmpresa:isl.rol_cumple_en_empresa === 'default' ? "":isl.rol_cumple_en_empresa,
+                    tiempoEnProfesion:isl.tiempo_en_profesion  === 'default' ? "":isl.tiempo_en_profesion,
+                    tiempoEnCargo:isl.tiempo_en_cargo === 'default' ? "":isl.tiempo_en_cargo,
+                    tiempoEnEmpresa:isl.tiempo_en_profesion === 'default' ? "":isl.tiempo_en_profesion,//falta agregar este datos a las tablas
+                    funcionesRealizadasEnEmpresa:isl.funciones_realizadas_en_empresa === 'default' ? "":isl.funciones_realizadas_en_empresa,
+                    descripcionCargo:isl.descripcion_cargo === 'default' ? "":isl.descripcion_cargo,
+                    horarios:isl.horarios === 'default' ? "":isl.horarios,
+                    limiteAlcanceCargo:isl.limite_alcance_cargo === 'default' ? "":isl.limite_alcance_cargo,
+                    calidadRelacionesInterpersonales:isl.calidad_relaciones_interpersonales === 'default' ? "":isl.calidad_relaciones_interpersonales,
+                    liderazgo:isl.liderazgo === 'default' ? "":isl.liderazgo,
+                    caracteristicasJefatura:isl.caracteristicas_jefatura === 'default' ? "":isl.caracteristicas_jefatura,
+                    tipoContrato:isl.tipo_contrato === 'default' ? "":isl.tipo_contrato,
+                    estabilidad:isl.estabilidad === 'default' ? "":isl.estabilidad,
+                    cambioFunciones:isl.cambio_funciones === 'default' ? "":isl.cambio_funciones,
+                    obligacionesExtraContrato:isl.obligaciones_extra_contrato === 'default' ? "":isl.obligaciones_extra_contrato,
+                    menoscaboFunciones:isl.menoscabo_funciones === 'default' ? "":isl.menoscabo_funciones,
+                    medidasProteccionTrabajadorEfectividad:isl.medidas_proteccion_trabajador_efectividad === 'default' ? "":isl.medidas_proteccion_trabajador_efectividad,
+                    motivacionesDiep:isl.motivaciones_diep === 'default' ? "":isl.motivaciones_diep,
+                    sintomas:isl.sintomas === 'default' ? "":isl.sintomas,
+                    cuandoAparecen:isl.cuando_aparecen === 'default' ? "":isl.cuando_aparecen,
+                    cuandoIntensifican:isl.cuando_intensifican === 'default' ? "":isl.cuando_intensifican,
+                    queHaceAlRespecto:isl.que_hace_al_respecto === 'default' ? "":isl.que_hace_al_respecto,
+                    lugaresDeTrabajoActuales:isl.lugares_de_trabajo_actuales === 'default' ? "":isl.lugares_de_trabajo_actuales,
+                    antiguedadEnTrabajos:isl.antiguedad_en_trabajos === 'default' ? "":isl.antiguedad_en_trabajos,
+                    despidosRenunciasCausas:isl.despidos_renuncias_causas === 'default' ? "":isl.despidos_renuncias_causas,
+                    interesMotivacionesTrabajoActual:isl.interes_motivaciones_trabajo_actual === 'default' ? "":isl.interes_motivaciones_trabajo_actual,
+                    genograma:isl.genograma === 'default' ? "":isl.genograma,
+                    expectativaTrabajador:isl.expectativa_trabajador === 'default' ? "":isl.expectativa_trabajador,
+                    eje1:dsm.eje_1 === 'default' ? "":dsm.eje_1,
+                    eje2:dsm.eje_2 === 'default' ? "":dsm.eje_2,
+                    eje3:dsm.eje_3 === 'default' ? "":dsm.eje_3,
+                    eje4:dsm.eje_4 === 'default' ? "":dsm.eje_4,
+                    eeg:dsm.eeg === 'default' ? "":dsm.egg,
+                    impresionesClinicas:dsm.impresiones_clinicas === 'default' ? "":dsm.impresiones_clinicas,
+                });
+            }
+        })
     }
 
     render() {
@@ -120,14 +188,14 @@ export class EntrevistaPsicologo extends Component {
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                    <Form.Group controlId="nombreEmpresa">
+                                    <Form.Group controlId="rolCumpleEmpresa">
                                         <TextoAyuda
-                                            nombre="nombreEmpresa"
-                                            tooltip="Nombre de la empresa"
+                                            nombre="rolCumpleEmpresa"
+                                            tooltip="Rol que cumple en la empresa"
                                             componente={<Form.Control
-                                                value={this.state.nombreEmpresa}
+                                                value={this.state.rolCumpleEmpresa}
                                                 onChange={this.handleChange}
-                                                placeholder="Nombre de la empresa"
+                                                placeholder="Rol que cumple en la empresa"
                                             />}
                                         />
                                     </Form.Group>
@@ -573,6 +641,7 @@ export class EntrevistaPsicologo extends Component {
                         </Form.Group>
                     </Form.Row>
 
+                    {this.state.alert}
                 </form>
             </div>
         );

@@ -38,19 +38,19 @@ export class Evaluacion extends Component {
                     </div>
 
                     <div label="Entrevista Médica (ISL)">
-                        <EntrevistaMedica />
+                        <EntrevistaMedica userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
 
                     <div label="Entrevista Psicólogo (ISL)">
-                        <EntrevistaPsicologo />
+                        <EntrevistaPsicologo userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
 
                     <div label="Entrevista Psiquiatra (ISL)">
-                        <EntrevistaPsiquiatra />
+                        <EntrevistaPsiquiatra userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
 
                     <div label="Evaluación Puesto de Trabajo (ISL)">
-                        <EvaluacionPuestoTrabajo />
+                        <EvaluacionPuestoTrabajo userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                 </Accordion>
 

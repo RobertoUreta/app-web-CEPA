@@ -72,7 +72,7 @@ export class DiagnosticoPsicologico extends Component {
         prom.then(res => {
             let data = res.data;
             console.log(res.data);
-            if (data !== undefined) {
+            if (data.ok) {
                 let diag = data.respuesta[0];
                 this.setState({
                     diagnostico: diag.diagnostico==='default'?"":diag.diagnostico,
