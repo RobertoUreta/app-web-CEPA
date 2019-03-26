@@ -13,6 +13,7 @@ export class AdultoContacto extends Component {
             apellidoMaterno: "",
             parentezco: "",
             telefonoMovil: "",
+            alert: null
         };
     }
 
@@ -138,7 +139,8 @@ export class AdultoContacto extends Component {
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
-
+                    
+                    {this.state.alert}
                 </form>
             </div>
         );

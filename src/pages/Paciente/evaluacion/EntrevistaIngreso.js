@@ -85,6 +85,9 @@ export class EntrevistaIngreso extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaEntrevista===null) {
+            aux.fechaEntrevista='1900-01-10'
+        }
         let fecha = new Date(aux.fechaEntrevista)
         aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
@@ -108,11 +111,14 @@ export class EntrevistaIngreso extends Component {
         let prom = obtenerEvaIngreso(this.props.pacienteId);
         prom.then(res => {
             let data = res.data;
+            let aux = new Date(data.fecha_entrevista)
+            let fecha = aux.toISOString().split('T')
             console.log(res.data);
             if (data.ok) {
                 let entrevista = data.respuesta[0];
+                console.log("fechaaa",entrevista.fecha_entrevista);
                 this.setState({
-                    fechaEntrevista: entrevista.fecha_entrevista === '0000-00-00' ? null : entrevista.fecha_entrevista,
+                    fechaEntrevista: fecha[0] === '1900-01-10' ? null : entrevista.fecha_entrevista,
                     grupoFamiliar: entrevista.grupo_familiar === 'default' ? "" : entrevista.grupo_familiar,
                     observaciones: entrevista.observaciones === 'default' ? "" : entrevista.observaciones,
                     solicitante: entrevista.solicitante === 'default' ? "" : entrevista.solicitante,
