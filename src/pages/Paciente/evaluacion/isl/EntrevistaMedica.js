@@ -6,6 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../../components/TextoAyuda'
 import { updateMedicoISL, obtenerMedicoISL } from '../../../../backend/isl/medicoISL';
 import SweetAlert from 'react-bootstrap-sweetalert'
+import { imgDataUtal, imgDataFooter } from '../../../../images/imagenes/imagenes';
+import * as jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js'
+import html2canvas from 'html2canvas'
+window.html2canvas = html2canvas
+window.onePageCanvas = document.createElement("canvas");
+
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 const nivelesEducacion = ["Enseñanza Basica", "Enseñanza Media", "Educación Superior"]
 export class EntrevistaMedica extends Component {
@@ -13,7 +20,6 @@ export class EntrevistaMedica extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             estadoCivil: "",
             escolaridad: "",
@@ -33,7 +39,9 @@ export class EntrevistaMedica extends Component {
             sugerenciaTest: 0,
             sugerenciaTestEspecificar: "",
             observaciones: "",
-            observacionesGenerales: ""
+            observacionesGenerales: "",
+            editable: false,
+
         };
     }
 
@@ -69,8 +77,81 @@ export class EntrevistaMedica extends Component {
 
             })
     }
+
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
     _hideAlert = () => {
         this.setState({ alert: null })
+    }
+
+
+    printDocument() {
+
+        const input = document.getElementById('divToPrint');
+        var opt = {
+            margin: [1.8,1,1.5,1],
+            filename: 'EVALUACIÓN_MÉDICA_ISL.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                console.log("hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAii ", pdf_pages.length)
+                var myFooter = "Footer info"
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
+
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.7, 1.6, `Evaluación Médica ISL`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+                    // The 10,200 value is only for A4 landscape. You need to define your own for other page sizes
+                    pdf.text(myFooter, 10, 200)
+
+                }
+            }).save()
+
+        /*html2canvas(input)
+            .then((canvas) => {
+                var pdf = new jsPDF();
+                var imgData = canvas.toDataURL('image/png');
+                var imgWidth = 210;
+                var pageHeight = 295;
+                console.log(canvas.height, canvas.width)
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight; //801.81
+                var position = 45;
+                pdf.addImage(imgDataUtal, 'png', 0, 0)
+                pdf.addImage(imgData, 'PNG', 22.5, position, imgWidth - 45, imgHeight  );
+                pdf.setFontSize(20)
+                pdf.text(65, 40, `Evaluación Médica ISL`)
+           //     pdf.addImage(imgDataFooter, 'png', 0, 255)
+                heightLeft -= pageHeight;
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight + 45;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 22.5, position, imgWidth - 45, imgHeight);
+                    if(pageHeight > heightLeft){
+                        pdf.addImage(imgDataFooter, 'png', 0, 255)
+                    }
+                    heightLeft -= pageHeight;
+                }
+                pdf.save(`EVALUACIÓN_MÉDICA_ISL`);
+
+
+
+            })
+            ;*/
+
     }
 
     componentDidMount() {
@@ -107,7 +188,7 @@ export class EntrevistaMedica extends Component {
 
     render() {
         return (
-            <div className="entrevistaMedica">
+            <div><div id="divToPrint" className="entrevistaMedica">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -225,6 +306,7 @@ export class EntrevistaMedica extends Component {
                                 />
 
                             </Form.Group>
+                            <div className="html2pdf__page-break"></div>
                             <Form.Group controlId="laboresRealizadas">
                                 <Form.Label><strong>2. Historia Laboral</strong></Form.Label>
                                 <TextoAyuda
@@ -253,6 +335,7 @@ export class EntrevistaMedica extends Component {
                                     />}
                                 />
                             </Form.Group>
+                            <div className="html2pdf__page-break"></div>
                             <Form.Group controlId="evaluacionGeneralPreliminar">
                                 <Form.Label><strong>3. Evaluación General Preliminar</strong></Form.Label>
                                 <Form.Group controlId="apariencia">
@@ -310,6 +393,7 @@ export class EntrevistaMedica extends Component {
                                 </Form.Group>
                             </Form.Group>
                             <Form.Group>
+                                <div className="html2pdf__page-break"></div>
                                 <Form.Label><strong>4. Comportamiento durante la evaluación</strong></Form.Label>
                                 <Form.Group controlId="oposicionamiento">
                                     <Form.Check
@@ -390,20 +474,38 @@ export class EntrevistaMedica extends Component {
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <div className="btn-container">
-                                    <Button
-                                        className="btn-submit"
-                                        type="submit"
-                                    >
-                                        Guardar
-                                        </Button>
-                                </div>
+
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
 
                     {this.state.alert}
                 </form>
+            </div>
+
+                <div className="btn-container">
+                    <Button
+                        className="btn-custom"
+                        onClick={() => this.printDocument()}>
+                        Imprimir</Button>
+
+                    <div className="divider"></div>
+
+                    <Button
+                        className="btn-submit"
+                        onClick={this._handleClick}
+                    >
+                        Editar
+                    </Button>
+                    <div className="divider"></div>
+                    <Button
+                        className="btn-submit"
+                        type="submit"
+                        onClick={this.handleSubmit}
+                    >
+                        Guardar
+                    </Button>
+                </div>
             </div>
         );
     }
