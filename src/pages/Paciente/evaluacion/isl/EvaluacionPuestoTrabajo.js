@@ -103,6 +103,9 @@ export class EvaluacionPuestoTrabajo extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaRealizacion===null) {
+            aux.fechaRealizacion='1900-01-10'
+        }
         let fecha1 = new Date(aux.fechaRealizacion)
         aux.fechaRealizacion = fecha1.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
@@ -132,9 +135,12 @@ export class EvaluacionPuestoTrabajo extends Component {
             console.log(res.data);
             if (data.ok) {
                 let isl = data.respuesta[0];
+                let aux = new Date(isl.fecha_realizacion)
+                let fecha = aux.toISOString().split('T')
+                console.log(fecha);
                 let inf = data.informantes;
                 this.setState({
-                    fechaRealizacion: isl.fecha_realizacion === '0000-00-00' ? null : isl.fecha_realizacion,
+                    fechaRealizacion: fecha[0] === '1900-01-10' ? null : isl.fecha_realizacion,
                     razonSocial: isl.razon_social === 'default' ? "" : isl.razon_social,
                     rut: isl.rut === 'default' ? "" : isl.rut,
                     codigoCiiu: isl.codigo_ciiu === 'default' ? "" : isl.codigo_ciiu,

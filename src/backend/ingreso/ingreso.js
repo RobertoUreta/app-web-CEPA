@@ -25,42 +25,38 @@ export let obtenerIdIngreso = (data, id) => {
     });
 }
 
-export let updateDatosAdicionales = (data, id) => {
-    request.put('/update_datosadicionales', {
-        data, id
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    });
+export let updateDatosAdicionales = async (data, id) => {
+    try{
+        let res = await request.put('/update_datosadicionales', {data, id})
+        return res;
+    }catch(error){
+      console.log(error); 
+    } 
 }
 
-export let updateDatosSocioDemo = (data, id) => {
-    request.put('/update_datossociodemo', {
-        data, id
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    });
+export let updateDatosSocioDemo = async (data, id) => {
+    try{
+        let res = await request.put('/update_datossociodemo', {data, id})
+        return res;
+    }catch(error){
+      console.log(error); 
+    }
 }
 
-export let updateAdultoContacto = (data, id) => {
-   
-    request.put('/update_adultocontacto', {
-        data, id
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    });
+export let updateAdultoContacto = async (data, id) => {
+    try{
+        let res = await request.put('/update_adultocontacto', {data, id})
+        return res;
+    }catch(error){
+      console.log(error); 
+    }
 }
 
 export let updateDatosPersonales =  async (data,id ) => {
     try{
         let res = await request.put('/update_datosPersonales',{data,id})
         console.log("res", res)
-        return res;
+        return res; 
     }catch(error){
 
     }

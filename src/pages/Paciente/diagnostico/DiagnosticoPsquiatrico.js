@@ -38,6 +38,9 @@ export class DiagnosticoPsiquiatrico extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaCierrePsiquiatra===null) {
+            aux.fechaCierrePsiquiatra='1900-01-10'
+        }
         let fecha = new Date(aux.fechaCierrePsiquiatra)
         aux.fechaCierrePsiquiatra = fecha.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
@@ -67,12 +70,14 @@ export class DiagnosticoPsiquiatrico extends Component {
             console.log(res.data);
             if (data.ok) {
                 let diag = data.respuesta[0];
+                let aux = new Date(diag.fecha_cierre_psiquiatra)
+                let fecha = aux.toISOString().split('T')
                 this.setState({
                     tratamientoPsiquiatrico: diag.tratamiento_psiquiatrico === 'default' ? "" : diag.tratamiento_psiquiatrico,
                     diagnosticoDSMeje5: diag.diagnostico_dsm_eje5 === 'default' ? "" : diag.diagnostico_dsm_eje5,
                     etapaTratamiento: diag.etapa_tratamiento === 'default' ? "" : diag.etapa_tratamiento,
                     observacion: diag.observacion === 'default' ? "" : diag.observacion,
-                    fechaCierrePsiquiatra: diag.fecha_cierre_psiquiatra === '0000-00-00' ? null : diag.fecha_cierre_psiquiatra,
+                    fechaCierrePsiquiatra: fecha[0] === '1900-01-10' ? null : diag.fecha_cierre_psiquiatra,
                 });
             }
         })

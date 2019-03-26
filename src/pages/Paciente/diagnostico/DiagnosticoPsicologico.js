@@ -43,6 +43,12 @@ export class DiagnosticoPsicologico extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaTraspasoModTratamiento===null) {
+            aux.fechaTraspasoModTratamiento='1900-01-10'
+        }
+        if (aux.fechaCierrePsicologico===null) {
+            aux.fechaCierrePsicologico='1900-01-10'
+        }
         let fecha = new Date(aux.fechaTraspasoModTratamiento)
         aux.fechaTraspasoModTratamiento = fecha.toJSON().slice(0, 19).replace('T', ' ')
         let fecha1 = new Date(aux.fechaCierrePsicologico)
@@ -74,6 +80,10 @@ export class DiagnosticoPsicologico extends Component {
             console.log(res.data);
             if (data.ok) {
                 let diag = data.respuesta[0];
+                let aux = new Date(diag.fecha_traspaso_mod_tratamiento)
+                let fecha = aux.toISOString().split('T')
+                let aux1 = new Date(diag.fecha_cierre_psicologico)
+                let fecha1 = aux1.toISOString().split('T')
                 this.setState({
                     diagnostico: diag.diagnostico==='default'?"":diag.diagnostico,
                     subtrastorno: diag.subtrastorno==='default'?"":diag.subtrastorno,
@@ -83,8 +93,8 @@ export class DiagnosticoPsicologico extends Component {
                     modeloTerapeutico: diag.modelo_terapeutico==='default'?"":diag.modelo_terapeutico,
                     otroModeloTerapeutico: diag.otro_modelo_terapeutico==='default'?"":diag.otro_modelo_terapeutico,
                     traspasoModalidadTratamiento: diag.traspaso_modalidad_tratamiento?1:0,
-                    fechaTraspasoModTratamiento: diag.fecha_traspaso_mod_tratamiento==='0000-00-00'?null:diag.fecha_traspaso_mod_tratamiento,
-                    fechaCierrePsicologico: diag.fecha_cierre_psicologico==='0000-00-00'?null:diag.fecha_cierre_psicologico
+                    fechaTraspasoModTratamiento: fecha[0]==='1900-01-10'?null:diag.fecha_traspaso_mod_tratamiento,
+                    fechaCierrePsicologico: fecha1[0]==='1900-01-10'?null:diag.fecha_cierre_psicologico
                 });
             }
         })

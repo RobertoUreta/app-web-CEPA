@@ -53,6 +53,11 @@ export class EntrevistaMedica extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaEvaluacionMedica===null) {
+            aux.fechaEvaluacionMedica='1900-01-10'
+        }
+        //let fecha = new Date(aux.fechaEvaluacionMedica)
+        //aux.fechaEvaluacionMedica = fecha.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
         let resp = updateMedicoISL(aux, this.props.pacienteId);
         resp
@@ -80,10 +85,12 @@ export class EntrevistaMedica extends Component {
             console.log(res.data);
             if (data.ok) {
                 let isl = data.respuesta[0];
+                let aux = new Date(isl.fecha_evaluacion_medica)
+                let fecha = aux.toISOString().split('T')
                 this.setState({
                     estadoCivil: isl.estado_civil === 'default' ? "" : isl.estado_civil,
                     escolaridad: isl.escolaridad === 'default' ? "" : isl.escolaridad,
-                    fechaEvaluacionMedica: isl.fecha_evaluacion_medica === null ? "" : isl.fecha_evaluacion_medica,
+                    fechaEvaluacionMedica: fecha[0] === '1900-01-10' ? null : isl.fecha_evaluacion_medica,
                     anamnesis: isl.anamnesis === 'default' ? "" : isl.anamnesis,
                     territorialidadDesplazaFueraLugar: isl.territorialidad_desplaza_fuera_hogar === 'default' ? "" : isl.territorialidad_desplaza_fuera_hogar,
                     patologiasMedicasPsiquiatricasPrevias: isl.patologias_medicas_psiquiatricas_previas === 'default' ? "" : isl.patologias_medicas_psiquiatricas_previas,

@@ -96,20 +96,62 @@ export class General extends Component {
 
         var info = JSON.parse(data)
         this.setState({ datosAdicionales: info })
-        updateDatosAdicionales(info, this.state.id)
+        let resp = updateDatosAdicionales(info, this.state.id)
+        resp
+            .then(res => {
+                console.log("agregado", res.data)
+                if (res.data.ok) {
+                    console.log("llego");
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos adicionales
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
+
+            })
     }
 
     _handleDatosSocio = (data) => {
         var info = JSON.parse(data)
         this.setState({ datosSocioDemograficos: info })
-        updateDatosSocioDemo(info, this.state.id)
+        let resp = updateDatosSocioDemo(info, this.state.id)
+        resp
+            .then(res => {
+                console.log("agregado", res.data)
+                if (res.data.ok) {
+                    console.log("llego");
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos socio-demográficos
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
+
+            })
     }
 
     _handleAdulto = (data) => {
 
         var info = JSON.parse(data)
         this.setState({ adultoContacto: info })
-        updateAdultoContacto(info, this.state.id)
+        let resp = updateAdultoContacto(info, this.state.id)
+        resp
+            .then(res => {
+                console.log("agregado", res.data)
+                if (res.data.ok) {
+                    console.log("llego");
+                    const getAlert = () => (
+                        <SweetAlert success title="Datos agregados" onConfirm={this._hideAlert}>
+                            Se agregaron correctamente los datos del adulto de contacto
+                    </SweetAlert>
+                    )
+                    this.setState({ alert: getAlert() })
+                }
+
+            })
 
     }
 
@@ -136,6 +178,7 @@ export class General extends Component {
                             paciente={this.state.paciente}
                             pacienteId={this.state.id}
                             handleAdultoContacto={this._handleAdulto} />
+                            {this.state.alert}
                     </div>
 
                     <div label="Datos Socio-demográficos">
@@ -143,6 +186,7 @@ export class General extends Component {
                             paciente={this.state.paciente}
                             pacienteId={this.state.id}
                             handleDatosSocio={this._handleDatosSocio} />
+                            {this.state.alert}
                     </div>
 
                     <div label="Datos Adicionales">
@@ -150,6 +194,7 @@ export class General extends Component {
                             paciente={this.state.paciente}
                             pacienteId={this.state.id}
                             handleDatosAdicionales={this._handleDatosAdicionales} />
+                            {this.state.alert}
                     </div>
                 </Accordion>
 

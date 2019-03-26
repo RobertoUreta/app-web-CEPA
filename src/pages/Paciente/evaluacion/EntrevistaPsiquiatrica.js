@@ -113,6 +113,9 @@ export class EntrevistaPsiquiatrica extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaEntrevista===null) {
+            aux.fechaEntrevista='1900-01-10'
+        }
         let fecha = new Date(aux.fechaEntrevista)
         aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
@@ -142,8 +145,10 @@ export class EntrevistaPsiquiatrica extends Component {
             console.log(res.data);
             if (data.ok) {
                 let entrevista = data.respuesta[0];
+                let aux = new Date(entrevista.fecha_entrevista)
+                let fecha = aux.toISOString().split('T')
                 this.setState({
-                    fechaEntrevista: entrevista.fecha_entrevista === '0000-00-00' ? null : entrevista.fecha_entrevista,
+                    fechaEntrevista: fecha[0] === '1900-01-10' ? null : entrevista.fecha_entrevista,
                     motivo: entrevista.motivo === 'default' ? "" : entrevista.motivo,
                     observacion: entrevista.observacion === 'default' ? "" : entrevista.observacion,
                     detalleMotivoPaciente: entrevista.detalle_motivo_paciente === 'default' ? "" : entrevista.detalle_motivo_paciente,
