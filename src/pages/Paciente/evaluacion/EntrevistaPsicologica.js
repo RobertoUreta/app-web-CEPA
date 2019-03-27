@@ -5,12 +5,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { ImagePicker } from 'react-file-picker'
 import SweetAlert from 'react-bootstrap-sweetalert'
+import { imgDataUtal, imgDataFooter } from '../../../images/imagenes/imagenes';
+import * as jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js'
 //--Para cambiar el calendario a español--
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
 import { updateEvaPsicologica, obtenerEvaPsicologica } from '../../../backend/evaluacion/evaluacionPsicologica';
 registerLocale("es", es)
 setDefaultLocale("es")
+
+
 
 
 export class EntrevistaPsicologica extends Component {
@@ -32,7 +37,11 @@ export class EntrevistaPsicologica extends Component {
             observaciones: "",
             srcGenograma: '',
             srcEcomapa: '',
-            alert: null
+            alert: null,
+            editable: false,
+            minRows: 5,
+            maxRows: 30,
+            rows: 5,
         };
     }
 
@@ -58,9 +67,62 @@ export class EntrevistaPsicologica extends Component {
     }
 
     handleChange = event => {
+        console.log("handleChange", event.target.rows)
+        const textareaLineHeight = 16;
+        const { minRows, maxRows } = this.state;
+
+        const previousRows = event.target.rows;
+        event.target.rows = minRows;
+        const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+        if (currentRows === previousRows) {
+            event.target.rows = currentRows;
+        }
+
+        if (currentRows >= maxRows) {
+            event.target.rows = maxRows;
+            event.target.scrollTop = event.target.scrollHeight;
+        }
+        event.target.rows = currentRows < maxRows ? currentRows + 10 : maxRows
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
+
         });
+    }
+
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
+    printDocument() {
+
+        const input = document.getElementById('divToPrint');
+        var opt = {
+            margin: [1.8, 1, 1.5, 1],
+            filename: 'ENTREVISTA_PSICOLÓGICA.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
+
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.65, 1.6, `Entrevista Psicológica`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+
+                }
+            }).save()
     }
 
     _hideAlert = () => {
@@ -117,7 +179,7 @@ export class EntrevistaPsicologica extends Component {
     }
     render() {
         return (
-            <div className="EntrevistaPsicologica">
+            <div><div id="divToPrint" className="EntrevistaPsicologica">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -127,6 +189,7 @@ export class EntrevistaPsicologica extends Component {
                                         nombre="fechaEntrevista"
                                         tooltip="Fecha de Entrevista"
                                         componente={<DatePicker
+                                            readOnly={!this.state.editable}
                                             customInput={<Form.Control />}
                                             dateFormat="dd/MM/yyyy"
                                             selected={this.state.fechaEntrevista}
@@ -149,9 +212,12 @@ export class EntrevistaPsicologica extends Component {
                                     onChange={this._handleImageGenograma}
                                     onError={errMsg => { alert(errMsg) }}
                                 >
-                                    <Button className="btn-custom">
-                                        <i className="fa fa-image"></i>
-                                    </Button>
+                                    <div id="element-to-hide" data-html2canvas-ignore="true">
+
+                                        <Button className="btn-custom">
+                                            <i className="fa fa-image"></i>
+                                        </Button>
+                                    </div>
                                 </ImagePicker>
                             </Form.Group>
                             <Form.Group controlId="ecomapa">
@@ -165,16 +231,20 @@ export class EntrevistaPsicologica extends Component {
                                     onChange={this._handleImageEcomapa}
                                     onError={errMsg => { alert(errMsg) }}
                                 >
-                                    <Button className="btn-custom">
-                                        <i className="fa fa-image"></i>
-                                    </Button>
+                                    <div id="element-to-hide" data-html2canvas-ignore="true">
+
+                                        <Button className="btn-custom">
+                                            <i className="fa fa-image"></i>
+                                        </Button>
+                                    </div>
                                 </ImagePicker>
                             </Form.Group>
                             <Form.Group controlId="recursosIndividualesFamiliares">
                                 <Form.Label>Recursos individuales y familiares</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.recursosIndividualesFamiliares}
                                     onChange={this.handleChange}
                                     placeholder="recursos individuales y familiares"
@@ -184,7 +254,8 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Impresiones clínicas</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.impresionesClinicas}
                                     onChange={this.handleChange}
                                     placeholder="impresiones clinicas"
@@ -194,7 +265,8 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Relaciones interpersonales (descripción de la relación materno filial, paterno filial, fraterna, grupo de pares y/o pareja)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.relacionesInterpersonales}
                                     onChange={this.handleChange}
                                     placeholder="relaciones interpersonales"
@@ -204,7 +276,8 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Descripción de la relación con el terapeuta</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.relacionTerapeuta}
                                     onChange={this.handleChange}
                                     placeholder="relación con el terapeuta"
@@ -214,7 +287,8 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Diagnóstico nosológico</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.diagnosticoNosologico}
                                     onChange={this.handleChange}
                                     placeholder="Diagnóstico nosológico"
@@ -224,7 +298,8 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Diagnóstico descriptivo</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.diagnosticoDescriptivo}
                                     onChange={this.handleChange}
                                     placeholder="Diagnóstico descriptivo"
@@ -234,7 +309,8 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Motivo de consulta co-construido</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.motivoConsultaCoconstruido}
                                     onChange={this.handleChange}
                                     placeholder="motivo consulta co-construido"
@@ -244,26 +320,43 @@ export class EntrevistaPsicologica extends Component {
                                 <Form.Label>Observaciones</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.observaciones}
                                     onChange={this.handleChange}
                                     placeholder="Observaciones"
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <div className="btn-container">
-                                    <Button
-                                        className="btn-submit"
-                                        type="submit"
-                                    >
-                                        Guardar
-                                        </Button>
-                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
                     {this.state.alert}
                 </form>
+            </div>
+                <div className="btn-container">
+                    <Button
+                        className="btn-custom"
+                        onClick={() => this.printDocument()}>
+                        Imprimir</Button>
+
+                    <div className="divider"></div>
+
+                    <Button
+                        className="btn-submit"
+                        onClick={this._handleClick}
+                    >
+                        Editar
+                    </Button>
+                    <div className="divider"></div>
+                    <Button
+                        className="btn-submit"
+                        type="submit"
+                        onClick={this.handleSubmit}
+                    >
+                        Guardar
+                    </Button>
+                </div>
             </div>
         );
     }
