@@ -3,13 +3,12 @@ import { Form, Col, Button } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
-import { ImagePicker,FilePicker } from 'react-file-picker'
+import { ImagePicker } from 'react-file-picker'
 import SweetAlert from 'react-bootstrap-sweetalert'
 //--Para cambiar el calendario a español--
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
 import { updateEvaPsicologica, obtenerEvaPsicologica } from '../../../backend/evaluacion/evaluacionPsicologica';
-import { insertarArchivo } from '../../../backend/paciente/archivo';
 registerLocale("es", es)
 setDefaultLocale("es")
 
@@ -156,20 +155,6 @@ export class EntrevistaPsicologica extends Component {
                                 </ImagePicker>
                             </Form.Group>
                             <Form.Group controlId="ecomapa">
-                                <FilePicker
-                                    extensions={['pdf']}
-                                    onChange={FileObject =>{
-                                        console.log(FileObject);
-                                        const data = new FormData() 
-                                        data.append('file', FileObject)
-                                        insertarArchivo(data)
-                                        }}
-                                    onError={errMsg => console.log(errMsg)}
-                                >
-                                    <Button className="btn-custom">
-                                        <i className="fa fa-image"></i>
-                                    </Button>
-                                </FilePicker>
                                 <Form.Label>Ecomapa</Form.Label>
                                 <div>
                                     <img src={this.state.srcEcomapa} alt="Imagen de Ecomapa" />
