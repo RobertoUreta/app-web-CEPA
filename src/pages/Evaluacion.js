@@ -11,6 +11,7 @@ import {EntrevistaPsicologo} from './Paciente/evaluacion/isl/EntrevistaPsicologo
 import {EntrevistaPsiquiatra} from './Paciente/evaluacion/isl/EntrevistaPsiquiatra'
 import {EvaluacionPuestoTrabajo} from './Paciente/evaluacion/isl/EvaluacionPuestoTrabajo'
 import {EntrevistaPsicologica} from './Paciente/evaluacion/EntrevistaPsicologica'
+import {Archivo} from './Paciente/General/Archivo'
 
 export class Evaluacion extends Component {
 
@@ -27,7 +28,7 @@ export class Evaluacion extends Component {
                         <EntrevistaIngreso  userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Evaluación Social">
-
+                        <Archivo />
                     </div>
                     <div label="Evaluación Psicológica">
                         <EntrevistaPsicologica userId={this.props.userId} pacienteId={this.props.pacienteId}/>
