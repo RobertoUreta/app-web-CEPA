@@ -5,6 +5,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../../components/TextoAyuda'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import { updatePuestoTrabajoISL, obtenerPuestoTrabajoISL } from '../../../../backend/isl/puestoTrabajoISL';
+import { imgDataUtal, imgDataFooter } from '../../../../images/imagenes/imagenes';
+import * as jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js'
+
+
 export class EvaluacionPuestoTrabajo extends Component {
 
 
@@ -83,7 +88,11 @@ export class EvaluacionPuestoTrabajo extends Component {
             factoresRiesgoEmpresa: "",
             accionesMitigacion: "",
             observaciones: "",
-            conclusion: ""
+            conclusion: "",
+            editable: false,
+            minRows: 5,
+            maxRows: 30,
+            rows: 5,
         };
     }
 
@@ -95,16 +104,69 @@ export class EvaluacionPuestoTrabajo extends Component {
     }
 
     handleChange = event => {
+        console.log("handleChange", event.target.rows)
+        const textareaLineHeight = 16;
+        const { minRows, maxRows } = this.state;
+
+        const previousRows = event.target.rows;
+        event.target.rows = minRows;
+        const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+        if (currentRows === previousRows) {
+            event.target.rows = currentRows;
+        }
+
+        if (currentRows >= maxRows) {
+            event.target.rows = maxRows;
+            event.target.scrollTop = event.target.scrollHeight;
+        }
+        event.target.rows = currentRows < maxRows ? currentRows + 10 : maxRows
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
         });
     }
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
+    printDocument() {
+
+        const input = document.getElementById('divToPrint');
+        var opt = {
+            margin: [1.8, 1, 1.5, 1],
+            filename: 'EVALUACIÓN_PUESTO_TRABAJO_ISL.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                console.log("el pdf", opt.filename)
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
+
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.45, 1.6, `Evaluación Puesto Tabajo ISL`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+
+                }
+            }).save()
+    }
+
 
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
-        if (aux.fechaRealizacion===null) {
-            aux.fechaRealizacion='1900-01-10'
+        if (aux.fechaRealizacion === null) {
+            aux.fechaRealizacion = '1900-01-10'
         }
         let fecha1 = new Date(aux.fechaRealizacion)
         aux.fechaRealizacion = fecha1.toJSON().slice(0, 19).replace('T', ' ')
@@ -220,7 +282,7 @@ export class EvaluacionPuestoTrabajo extends Component {
 
     render() {
         return (
-            <div className="evaluacionPuestoTrabajo">
+            <div><div id="divToPrint" className="evaluacionPuestoTrabajo">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -233,6 +295,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                         tooltip="Fecha de Realización"
                                         componente={<DatePicker
                                             customInput={<Form.Control />}
+                                            readOnly={!this.state.editable}
                                             dateFormat="dd/MM/yyyy"
                                             selected={this.state.fechaRealizacion}
                                             onChange={this._handleChange}
@@ -248,6 +311,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     nombre="razonSocial"
                                     tooltip="Razón social"
                                     componente={<Form.Control
+                                        readOnly={!this.state.editable}
                                         value={this.state.razonSocial}
                                         onChange={this.handleChange}
                                         placeholder="Razón social"
@@ -262,6 +326,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="rut"
                                             tooltip="Rut"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.rut}
                                                 onChange={this.handleChange}
                                                 placeholder="Rut"
@@ -275,6 +340,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="codigoCiiu"
                                             tooltip="Código CIIU (Info. del empleador)"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.codigoCiiu}
                                                 onChange={this.handleChange}
                                                 placeholder="Código CIIU (Info. del empleador)"
@@ -290,6 +356,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="nombreCentroTrabajo"
                                             tooltip="Nombre del centro de trabajo"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.nombreCentroTrabajo}
                                                 onChange={this.handleChange}
                                                 placeholder="Nombre del centro de trabajo"
@@ -303,6 +370,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="direccion"
                                             tooltip="Dirección del centro de trabajo"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.direccion}
                                                 onChange={this.handleChange}
                                                 placeholder="Dirección del centro de trabajo"
@@ -319,7 +387,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Descripción general del cargo, funciones y tareas"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.descripcion}
                                         onChange={this.handleChange}
                                         placeholder="Descripción general del cargo, funciones y tareas"
@@ -332,7 +401,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Antigüedad en la empresa (del afectado)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.antiguedadEmpresa}
                                         onChange={this.handleChange}
                                         placeholder="Antigüedad en la empresa (del afectado)"
@@ -345,7 +415,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Antigüedad en el puesto"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.antiguedadPuesto}
                                         onChange={this.handleChange}
                                         placeholder="Antigüedad en el puesto"
@@ -358,7 +429,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Evaluación de desempeño en los últimos 6 meses (Mencionar que medios de evaluación de desempeño existe en la empresa y si no existe)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.evalDesempeno}
                                         onChange={this.handleChange}
                                         placeholder="Evaluación de desempeño en los últimos 6 meses (Mencionar que medios de evaluación de desempeño existe en la empresa y si no exite)"
@@ -371,7 +443,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Cambios en el puesto de trabajo en los últimos 6 meses"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.cambiosPt}
                                         onChange={this.handleChange}
                                         placeholder="Cambios en el puesto de trabajo en los últimos 6 meses"
@@ -384,7 +457,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Ausentismo por enfermedad (en los últimos 12 meses)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.ausentismoEnfermedad}
                                         onChange={this.handleChange}
                                         placeholder="Ausentismo por enfermedad (en los últimos 12 meses)"
@@ -399,7 +473,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Jornada semanal de Trabajo (Indicar si tiene control de horario y jornada de turnos)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.jornadaSemanal}
                                         onChange={this.handleChange}
                                         placeholder="Jornada semanal de trabajo ( indicar si tiene control de horario y jornada de turnos)"
@@ -412,7 +487,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Sistema de Turnos"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.sistemaTurnos}
                                         onChange={this.handleChange}
                                         placeholder="Sistema de turnos"
@@ -425,7 +501,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Obligación de control horario (si aplica o no el artículo 22° del código del trabajo)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.obligacionControlHorarios}
                                         onChange={this.handleChange}
                                         placeholder="Obligación de control horario (si aplica o no el artículo 22° del código del trabajo)"
@@ -438,7 +515,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Colación (tiempo que tiene asignado, tiempo que se toma para almorzar, consignar si sale a almorzar o almuerza en el lugar de trabajo u oficina)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.colacion}
                                         onChange={this.handleChange}
                                         placeholder="Colación (tiempo que asignado, tiempo que se toma para almorzar, consignar si sale a almorzar o almuerza en el lugar de trabajo u oficina)"
@@ -451,7 +529,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Horas extraordinarias (remuneradas y no remuneradas)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.horasExtraordinarias}
                                         onChange={this.handleChange}
                                         placeholder="Horas extraordinarias (remuneradas y no remuneradas)"
@@ -464,7 +543,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Tipo de remuneración"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.tipoRemuneracion}
                                         onChange={this.handleChange}
                                         placeholder="Tipo de remuneración"
@@ -477,7 +557,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Vacaciones (días formal y cuánto se toma)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.vacaciones}
                                         onChange={this.handleChange}
                                         placeholder="Vacaciones (días formal y cuánto se toma)"
@@ -492,6 +573,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     nombre="medicoSolicitante"
                                     tooltip="Médico evaluador o solicitante"
                                     componente={<Form.Control
+                                        readOnly={!this.state.editable}
                                         value={this.state.medicoSolicitante}
                                         onChange={this.handleChange}
                                         placeholder="Médico evaluador o solicitante"
@@ -504,7 +586,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Queja y/o motivo de consulta (Escribir explícitamente lo que indica la DIEP u ODA. De acuerdo a lo referido por la paciente/médica)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.motivoConsulta}
                                         onChange={this.handleChange}
                                         placeholder="Queja y/o motivo de consulta (Escribir explícitamente lo que indica la DIEP u ODA. De acuerdo a lo referido por la paciente/médico...)"
@@ -518,6 +601,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="fuente"
                                             tooltip="Fuente (DIEP, ODA, u otro medio de información)"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.fuente}
                                                 onChange={this.handleChange}
                                                 placeholder="Fuente (DIEP, ODA, u otro medio de información)"
@@ -531,6 +615,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="coordinacionEpt"
                                             tooltip="Coordinación EPT (Con quién se coordinó internamente)"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.coordinacionEpt}
                                                 onChange={this.handleChange}
                                                 placeholder="Coordinación EPT (con quién se coordinó internamente)"
@@ -547,6 +632,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     nombre="nombreInf1"
                                     tooltip="Nombre"
                                     componente={<Form.Control
+                                        readOnly={!this.state.editable}
                                         value={this.state.nombreInf1}
                                         onChange={this.handleChange}
                                         placeholder="Nombre"
@@ -560,6 +646,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="cargoInf1"
                                             tooltip="Cargo"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.cargoInf1}
                                                 onChange={this.handleChange}
                                                 placeholder="Cargo"
@@ -573,6 +660,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="relacionJerarquicaInf1"
                                             tooltip="Relación jerarquica"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.relacionJerarquicaInf1}
                                                 onChange={this.handleChange}
                                                 placeholder="Relación jerarquica"
@@ -588,6 +676,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="tiempoConoceInf1"
                                             tooltip="Hace cuánto tiempo lo conoce"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.tiempoConoceInf1}
                                                 onChange={this.handleChange}
                                                 placeholder="Hace cuánto tiempo lo conoce"
@@ -601,6 +690,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="aporteContactoInf1"
                                             tooltip="Por quien fue aportado este contacto (trabajador, jefatura, pares, otro)"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.aporteContactoInf1}
                                                 onChange={this.handleChange}
                                                 placeholder="Por quien fue aportado este contacto (trabajador, jefatura, pares, otros)"
@@ -615,7 +705,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Fecha, hora entrevista y duración entrevista"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.fechaEntrevistaInf1}
                                         onChange={this.handleChange}
                                         placeholder="Fecha, hora entrevista y duración entrevista"
@@ -629,6 +720,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     nombre="nombreInf2"
                                     tooltip="Nombre"
                                     componente={<Form.Control
+                                        readOnly={!this.state.editable}
                                         value={this.state.nombreInf2}
                                         onChange={this.handleChange}
                                         placeholder="Nombre"
@@ -642,6 +734,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="cargoInf2"
                                             tooltip="Cargo"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.cargoInf2}
                                                 onChange={this.handleChange}
                                                 placeholder="Cargo"
@@ -670,6 +763,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="tiempoConoceInf2"
                                             tooltip="Hace cuánto tiempo lo conoce"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.tiempoConoceInf2}
                                                 onChange={this.handleChange}
                                                 placeholder="Hace cuánto tiempo lo conoce"
@@ -683,6 +777,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="aporteContactoInf2"
                                             tooltip="Por quien fue aportado este contacto (trabajador, jefatura, pares, otro)"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.aporteContactoInf2}
                                                 onChange={this.handleChange}
                                                 placeholder="Por quien fue aportado este contacto (trabajador, jefatura, pares, otros)"
@@ -697,7 +792,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Fecha, hora entrevista y duración entrevista"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.fechaEntrevistaInf2}
                                         onChange={this.handleChange}
                                         placeholder="Fecha, hora entrevista y duración entrevista"
@@ -710,6 +806,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     nombre="nombreInf3"
                                     tooltip="Nombre"
                                     componente={<Form.Control
+                                        readOnly={!this.state.editable}
                                         value={this.state.nombreInf3}
                                         onChange={this.handleChange}
                                         placeholder="Nombre"
@@ -723,6 +820,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="cargoInf3"
                                             tooltip="Cargo"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.cargoInf3}
                                                 onChange={this.handleChange}
                                                 placeholder="Cargo"
@@ -736,6 +834,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="relacionJerarquicaInf3"
                                             tooltip="Relación jerarquica"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.relacionJerarquicaInf3}
                                                 onChange={this.handleChange}
                                                 placeholder="Relación jerarquica"
@@ -751,6 +850,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="tiempoConoceInf3"
                                             tooltip="Hace cuánto tiempo lo conoce"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.tiempoConoceInf3}
                                                 onChange={this.handleChange}
                                                 placeholder="Hace cuánto tiempo lo conoce"
@@ -764,6 +864,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                             nombre="aporteContactoInf3"
                                             tooltip="Por quien fue aportado este contacto (trabajador, jefatura, pares, otro)"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.aporteContactoInf3}
                                                 onChange={this.handleChange}
                                                 placeholder="Por quien fue aportado este contacto (trabajador, jefatura, pares, otros)"
@@ -778,7 +879,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Fecha, hora entrevista y duración entrevista"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.fechaEntrevistaInf3}
                                         onChange={this.handleChange}
                                         placeholder="Fecha, hora entrevista y duración entrevista"
@@ -791,7 +893,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Riesgo (s) a indagar"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="4"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.riesgoIndagar}
                                         onChange={this.handleChange}
                                         placeholder="Riesgo(s) a indagar"
@@ -805,7 +908,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Motivo de falta de testigos"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.motivoFaltaTestigos}
                                         onChange={this.handleChange}
                                         placeholder="Motivo de falta de testigos"
@@ -818,7 +922,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Método de selección de nuevos testigos"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.metodoSeleccion}
                                         onChange={this.handleChange}
                                         placeholder="Método de selección de nuevos testigos"
@@ -832,7 +937,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Registro de las condiciones de confidencialidad"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="5"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.registroConfidencialidad}
                                         onChange={this.handleChange}
                                         placeholder="Registro de las condiciones de confidencialidad"
@@ -850,7 +956,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Cargo de trabajo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.cargo}
                                         onChange={this.handleChange}
                                         placeholder="Carga de trabajo"
@@ -863,7 +970,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Descansos"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.descansos}
                                         onChange={this.handleChange}
                                         placeholder="Descansos"
@@ -876,7 +984,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Control sobre el tiempo de trabajo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.controlTiempo}
                                         onChange={this.handleChange}
                                         placeholder="Control sobre el tiempo de trabajo"
@@ -889,7 +998,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Capacitación/habilitación para la tarea"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.capacitacion}
                                         onChange={this.handleChange}
                                         placeholder="Capacitación/habilitación para la tarea"
@@ -902,7 +1012,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Variedad de la tarea"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.variedadTarea}
                                         onChange={this.handleChange}
                                         placeholder="Variedad de la tarea"
@@ -915,7 +1026,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Demandas psicológicas"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.demandasPsicologicas}
                                         onChange={this.handleChange}
                                         placeholder="Demandas psicológicas"
@@ -932,7 +1044,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Autonomía y control"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.autonomiaControl}
                                         onChange={this.handleChange}
                                         placeholder="Autonomía y control"
@@ -945,7 +1058,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Ambigüedad o conflicto de rol"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.ambiguedad}
                                         onChange={this.handleChange}
                                         placeholder="Ambigüedad o conflicto de rol"
@@ -958,7 +1072,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Apoyo social de la empresa"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.apoyoSocial}
                                         onChange={this.handleChange}
                                         placeholder="Apoyo social de la empresa"
@@ -971,7 +1086,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Incorporación de nuevas tecnologías"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.incorporacionTec}
                                         onChange={this.handleChange}
                                         placeholder="Incorporación de nuevas tecnologías"
@@ -984,7 +1100,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Conflictos interpersonales recurrentes"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.conflictosInterpersonales}
                                         onChange={this.handleChange}
                                         placeholder="Conflictos interpersonales recurrentes"
@@ -997,7 +1114,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Condiciones organizacionales hostiles"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.condicionesHostiles}
                                         onChange={this.handleChange}
                                         placeholder="Condiciones organizacionales hostiles"
@@ -1010,7 +1128,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Condiciones Físicas o ergonómicas deficientes"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.condicionesDeficientes}
                                         onChange={this.handleChange}
                                         placeholder="Condiciones Físicas o ergonómicas deficientes"
@@ -1023,7 +1142,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Condiciones del ambiente agravantes"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.condicionesAgravantes}
                                         onChange={this.handleChange}
                                         placeholder="Condiciones del ambiente agravantes"
@@ -1037,7 +1157,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Relación trabajador - compañeros"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.relacionTrabajadorCompaneros}
                                         onChange={this.handleChange}
                                         placeholder="Relación trabajador - compañeros"
@@ -1050,7 +1171,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Relación trabajador - superior jerárquico"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.relacionSuperiorJerarquico}
                                         onChange={this.handleChange}
                                         placeholder="Relación trabajador - supervisor jerárquico"
@@ -1063,7 +1185,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Relación trabajador - subordinados"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.relacionTrabajadorSuboordinados}
                                         onChange={this.handleChange}
                                         placeholder="Relación trabajador - subordinados"
@@ -1076,7 +1199,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Relación trabajador - usuarios, clientes, proveedores, alumnos, apoderados."
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.relacionTrabajadorUsuarios}
                                         onChange={this.handleChange}
                                         placeholder="Relación trabajador - usuarios, clientes, proveedores, alumnos, apoderados."
@@ -1089,7 +1213,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Clima laboral general"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.climaLaboralGeneral}
                                         onChange={this.handleChange}
                                         placeholder="Clima laboral general"
@@ -1103,7 +1228,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Liderazgo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.liderazgo}
                                         onChange={this.handleChange}
                                         placeholder="Liderazgo"
@@ -1116,7 +1242,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Conductas de acoso laboral"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.conductasAcosoLaboral}
                                         onChange={this.handleChange}
                                         placeholder="Conductas de acoso laboral"
@@ -1129,7 +1256,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Conductas de acoso sexual"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.conductasAcosoSexual}
                                         onChange={this.handleChange}
                                         placeholder="Conductas de acoso sexual"
@@ -1143,7 +1271,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Opinión de la empresa respecto al trabajador"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.opinionEmpresaTrabajador}
                                         onChange={this.handleChange}
                                         placeholder="Opinión de la empresa respecto al trabajador"
@@ -1156,7 +1285,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Identificación de factores de riesgo por la empresa"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.factoresRiesgoEmpresa}
                                         onChange={this.handleChange}
                                         placeholder="Identificación de factores de riesgo por la empresa"
@@ -1169,7 +1299,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Acciones de mitigación"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.accionesMitigacion}
                                         onChange={this.handleChange}
                                         placeholder="Acciones de mitigación"
@@ -1183,7 +1314,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Observaciones"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.observaciones}
                                         onChange={this.handleChange}
                                         placeholder="Observaciones"
@@ -1197,7 +1329,8 @@ export class EvaluacionPuestoTrabajo extends Component {
                                     tooltip="Conclusión"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="8"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.conclusion}
                                         onChange={this.handleChange}
                                         placeholder="Conclusión"
@@ -1205,14 +1338,7 @@ export class EvaluacionPuestoTrabajo extends Component {
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <div className="btn-container">
-                                    <Button
-                                        className="btn-submit"
-                                        type="submit"
-                                    >
-                                        Guardar
-                                        </Button>
-                                </div>
+
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
@@ -1220,6 +1346,29 @@ export class EvaluacionPuestoTrabajo extends Component {
                     {this.state.alert}
                 </form>
             </div>
+                <div className="btn-container">
+                    <Button
+                        className="btn-custom"
+                        onClick={() => this.printDocument()}>
+                        Imprimir</Button>
+
+                    <div className="divider"></div>
+
+                    <Button
+                        className="btn-submit"
+                        onClick={this._handleClick}
+                    >
+                        Editar
+                    </Button>
+                    <div className="divider"></div>
+                    <Button
+                        className="btn-submit"
+                        type="submit"
+                        onClick={this.handleSubmit}
+                    >
+                        Guardar
+                    </Button>
+                </div></div>
         );
     }
 }

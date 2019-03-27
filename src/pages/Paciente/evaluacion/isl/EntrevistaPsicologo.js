@@ -4,6 +4,9 @@ import { Option } from '../../../../components/Option'
 import { TextoAyuda } from '../../../../components/TextoAyuda'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import { updatepsicologoISL, obtenerpsicologoISL } from '../../../../backend/isl/psicologoISL';
+import { imgDataUtal, imgDataFooter } from '../../../../images/imagenes/imagenes';
+import html2pdf from 'html2pdf.js'
+
 const estadosCiviles = ["Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Conviviente"]
 export class EntrevistaPsicologo extends Component {
 
@@ -13,49 +16,106 @@ export class EntrevistaPsicologo extends Component {
 
         this.state = {
             estadoCivil: "",
-            numHijos:"",
-            nombreEmpresa:"",
-            rolCumpleEmpresa:"",
-            tiempoEnProfesion:"",
-            tiempoEnCargo:"",
-            tiempoEnEmpresa:"",//falta agregar este datos a las tablas
-            funcionesRealizadasEnEmpresa:"",
-            descripcionCargo:"",
-            horarios:"",
-            limiteAlcanceCargo:"",
-            calidadRelacionesInterpersonales:"",
-            liderazgo:"",
-            caracteristicasJefatura:"",
-            tipoContrato:"",
-            estabilidad:"",
-            cambioFunciones:"",
-            obligacionesExtraContrato:"",
-            menoscaboFunciones:"",
-            medidasProteccionTrabajadorEfectividad:"",
-            motivacionesDiep:"",
-            sintomas:"",
-            cuandoAparecen:"",
-            cuandoIntensifican:"",
-            queHaceAlRespecto:"",
-            lugaresDeTrabajoActuales:"",
-            antiguedadEnTrabajos:"",
-            despidosRenunciasCausas:"",
-            interesMotivacionesTrabajoActual:"",
-            genograma:"",
-            expectativaTrabajador:"",
-            eje1:"",
-            eje2:"",
-            eje3:"",
-            eje4:"",
-            eeg:"",
-            impresionesClinicas:""
+            numHijos: 0,
+            nombreEmpresa: "",
+            rolCumpleEmpresa: "",
+            tiempoEnProfesion: "",
+            tiempoEnCargo: "",
+            tiempoEnEmpresa: "",//falta agregar este datos a las tablas
+            funcionesRealizadasEnEmpresa: "",
+            descripcionCargo: "",
+            horarios: "",
+            limiteAlcanceCargo: "",
+            calidadRelacionesInterpersonales: "",
+            liderazgo: "",
+            caracteristicasJefatura: "",
+            tipoContrato: "",
+            estabilidad: "",
+            cambioFunciones: "",
+            obligacionesExtraContrato: "",
+            menoscaboFunciones: "",
+            medidasProteccionTrabajadorEfectividad: "",
+            motivacionesDiep: "",
+            sintomas: "",
+            cuandoAparecen: "",
+            cuandoIntensifican: "",
+            queHaceAlRespecto: "",
+            lugaresDeTrabajoActuales: "",
+            antiguedadEnTrabajos: "",
+            despidosRenunciasCausas: "",
+            interesMotivacionesTrabajoActual: "",
+            genograma: "",
+            expectativaTrabajador: "",
+            eje1: "",
+            eje2: "",
+            eje3: "",
+            eje4: "",
+            eeg: "",
+            impresionesClinicas: "",
+            editable: false,
+            minRows: 5,
+            maxRows: 30,
+            rows: 5,
         };
     }
 
     handleChange = event => {
+        console.log("handleChange", event.target.rows)
+        const textareaLineHeight = 16;
+        const { minRows, maxRows } = this.state;
+
+        const previousRows = event.target.rows;
+        event.target.rows = minRows;
+        const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+        if (currentRows === previousRows) {
+            event.target.rows = currentRows;
+        }
+
+        if (currentRows >= maxRows) {
+            event.target.rows = maxRows;
+            event.target.scrollTop = event.target.scrollHeight;
+        }
+        event.target.rows = currentRows < maxRows ? currentRows + 10 : maxRows
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
+
         });
+    }
+
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
+    printDocument() {
+
+        const input = document.getElementById('divToPrint');
+        var opt = {
+            margin: [1.8, 1, 1.5, 1],
+            filename: 'EVALUACIÓN_PSICÓLOGO_ISL.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
+
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.65, 1.6, `Evaluación Psicólogo ISL`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+
+                }
+            }).save()
     }
 
     handleSubmit = event => {
@@ -64,7 +124,7 @@ export class EntrevistaPsicologo extends Component {
         console.log(aux);
         let resp = updatepsicologoISL(aux, this.props.pacienteId);
         resp
-            .then(res => { 
+            .then(res => {
                 console.log("agregado", res.data)
                 if (res.data.ok) {
                     const getAlert = () => (
@@ -90,43 +150,43 @@ export class EntrevistaPsicologo extends Component {
                 let isl = data.respuesta[0];
                 let dsm = data.dsm[0];
                 this.setState({
-                    estadoCivil: isl.estado_civil === 'default' ? "":isl.estado_civil,
-                    numHijos:isl.num_hijos === 0 ? "":isl.num_hijos,
-                    nombreEmpresa:isl.nombre_empresa === 'default' ? "":isl.nombre_empresa,
-                    rolCumpleEmpresa:isl.rol_cumple_en_empresa === 'default' ? "":isl.rol_cumple_en_empresa,
-                    tiempoEnProfesion:isl.tiempo_en_profesion  === 'default' ? "":isl.tiempo_en_profesion,
-                    tiempoEnCargo:isl.tiempo_en_cargo === 'default' ? "":isl.tiempo_en_cargo,
-                    tiempoEnEmpresa:isl.tiempo_en_profesion === 'default' ? "":isl.tiempo_en_profesion,//falta agregar este datos a las tablas
-                    funcionesRealizadasEnEmpresa:isl.funciones_realizadas_en_empresa === 'default' ? "":isl.funciones_realizadas_en_empresa,
-                    descripcionCargo:isl.descripcion_cargo === 'default' ? "":isl.descripcion_cargo,
-                    horarios:isl.horarios === 'default' ? "":isl.horarios,
-                    limiteAlcanceCargo:isl.limite_alcance_cargo === 'default' ? "":isl.limite_alcance_cargo,
-                    calidadRelacionesInterpersonales:isl.calidad_relaciones_interpersonales === 'default' ? "":isl.calidad_relaciones_interpersonales,
-                    liderazgo:isl.liderazgo === 'default' ? "":isl.liderazgo,
-                    caracteristicasJefatura:isl.caracteristicas_jefatura === 'default' ? "":isl.caracteristicas_jefatura,
-                    tipoContrato:isl.tipo_contrato === 'default' ? "":isl.tipo_contrato,
-                    estabilidad:isl.estabilidad === 'default' ? "":isl.estabilidad,
-                    cambioFunciones:isl.cambio_funciones === 'default' ? "":isl.cambio_funciones,
-                    obligacionesExtraContrato:isl.obligaciones_extra_contrato === 'default' ? "":isl.obligaciones_extra_contrato,
-                    menoscaboFunciones:isl.menoscabo_funciones === 'default' ? "":isl.menoscabo_funciones,
-                    medidasProteccionTrabajadorEfectividad:isl.medidas_proteccion_trabajador_efectividad === 'default' ? "":isl.medidas_proteccion_trabajador_efectividad,
-                    motivacionesDiep:isl.motivaciones_diep === 'default' ? "":isl.motivaciones_diep,
-                    sintomas:isl.sintomas === 'default' ? "":isl.sintomas,
-                    cuandoAparecen:isl.cuando_aparecen === 'default' ? "":isl.cuando_aparecen,
-                    cuandoIntensifican:isl.cuando_intensifican === 'default' ? "":isl.cuando_intensifican,
-                    queHaceAlRespecto:isl.que_hace_al_respecto === 'default' ? "":isl.que_hace_al_respecto,
-                    lugaresDeTrabajoActuales:isl.lugares_de_trabajo_actuales === 'default' ? "":isl.lugares_de_trabajo_actuales,
-                    antiguedadEnTrabajos:isl.antiguedad_en_trabajos === 'default' ? "":isl.antiguedad_en_trabajos,
-                    despidosRenunciasCausas:isl.despidos_renuncias_causas === 'default' ? "":isl.despidos_renuncias_causas,
-                    interesMotivacionesTrabajoActual:isl.interes_motivaciones_trabajo_actual === 'default' ? "":isl.interes_motivaciones_trabajo_actual,
-                    genograma:isl.genograma === 'default' ? "":isl.genograma,
-                    expectativaTrabajador:isl.expectativa_trabajador === 'default' ? "":isl.expectativa_trabajador,
-                    eje1:dsm.eje_1 === 'default' ? "":dsm.eje_1,
-                    eje2:dsm.eje_2 === 'default' ? "":dsm.eje_2,
-                    eje3:dsm.eje_3 === 'default' ? "":dsm.eje_3,
-                    eje4:dsm.eje_4 === 'default' ? "":dsm.eje_4,
-                    eeg:dsm.eeg === 'default' ? "":dsm.egg,
-                    impresionesClinicas:dsm.impresiones_clinicas === 'default' ? "":dsm.impresiones_clinicas,
+                    estadoCivil: isl.estado_civil === 'default' ? "" : isl.estado_civil,
+                    numHijos: isl.num_hijos === 0 ? "" : isl.num_hijos,
+                    nombreEmpresa: isl.nombre_empresa === 'default' ? "" : isl.nombre_empresa,
+                    rolCumpleEmpresa: isl.rol_cumple_en_empresa === 'default' ? "" : isl.rol_cumple_en_empresa,
+                    tiempoEnProfesion: isl.tiempo_en_profesion === 'default' ? "" : isl.tiempo_en_profesion,
+                    tiempoEnCargo: isl.tiempo_en_cargo === 'default' ? "" : isl.tiempo_en_cargo,
+                    tiempoEnEmpresa: isl.tiempo_en_profesion === 'default' ? "" : isl.tiempo_en_profesion,//falta agregar este datos a las tablas
+                    funcionesRealizadasEnEmpresa: isl.funciones_realizadas_en_empresa === 'default' ? "" : isl.funciones_realizadas_en_empresa,
+                    descripcionCargo: isl.descripcion_cargo === 'default' ? "" : isl.descripcion_cargo,
+                    horarios: isl.horarios === 'default' ? "" : isl.horarios,
+                    limiteAlcanceCargo: isl.limite_alcance_cargo === 'default' ? "" : isl.limite_alcance_cargo,
+                    calidadRelacionesInterpersonales: isl.calidad_relaciones_interpersonales === 'default' ? "" : isl.calidad_relaciones_interpersonales,
+                    liderazgo: isl.liderazgo === 'default' ? "" : isl.liderazgo,
+                    caracteristicasJefatura: isl.caracteristicas_jefatura === 'default' ? "" : isl.caracteristicas_jefatura,
+                    tipoContrato: isl.tipo_contrato === 'default' ? "" : isl.tipo_contrato,
+                    estabilidad: isl.estabilidad === 'default' ? "" : isl.estabilidad,
+                    cambioFunciones: isl.cambio_funciones === 'default' ? "" : isl.cambio_funciones,
+                    obligacionesExtraContrato: isl.obligaciones_extra_contrato === 'default' ? "" : isl.obligaciones_extra_contrato,
+                    menoscaboFunciones: isl.menoscabo_funciones === 'default' ? "" : isl.menoscabo_funciones,
+                    medidasProteccionTrabajadorEfectividad: isl.medidas_proteccion_trabajador_efectividad === 'default' ? "" : isl.medidas_proteccion_trabajador_efectividad,
+                    motivacionesDiep: isl.motivaciones_diep === 'default' ? "" : isl.motivaciones_diep,
+                    sintomas: isl.sintomas === 'default' ? "" : isl.sintomas,
+                    cuandoAparecen: isl.cuando_aparecen === 'default' ? "" : isl.cuando_aparecen,
+                    cuandoIntensifican: isl.cuando_intensifican === 'default' ? "" : isl.cuando_intensifican,
+                    queHaceAlRespecto: isl.que_hace_al_respecto === 'default' ? "" : isl.que_hace_al_respecto,
+                    lugaresDeTrabajoActuales: isl.lugares_de_trabajo_actuales === 'default' ? "" : isl.lugares_de_trabajo_actuales,
+                    antiguedadEnTrabajos: isl.antiguedad_en_trabajos === 'default' ? "" : isl.antiguedad_en_trabajos,
+                    despidosRenunciasCausas: isl.despidos_renuncias_causas === 'default' ? "" : isl.despidos_renuncias_causas,
+                    interesMotivacionesTrabajoActual: isl.interes_motivaciones_trabajo_actual === 'default' ? "" : isl.interes_motivaciones_trabajo_actual,
+                    genograma: isl.genograma === 'default' ? "" : isl.genograma,
+                    expectativaTrabajador: isl.expectativa_trabajador === 'default' ? "" : isl.expectativa_trabajador,
+                    eje1: dsm.eje_1 === 'default' ? "" : dsm.eje_1,
+                    eje2: dsm.eje_2 === 'default' ? "" : dsm.eje_2,
+                    eje3: dsm.eje_3 === 'default' ? "" : dsm.eje_3,
+                    eje4: dsm.eje_4 === 'default' ? "" : dsm.eje_4,
+                    eeg: dsm.eeg === 'default' ? "" : dsm.egg,
+                    impresionesClinicas: dsm.impresiones_clinicas === 'default' ? "" : dsm.impresiones_clinicas,
                 });
             }
         })
@@ -134,19 +194,21 @@ export class EntrevistaPsicologo extends Component {
 
     render() {
         return (
-            <div className="entrevistaPsicologo">
+            <div><div id="divToPrint" className="entrevistaPsicologo">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
-                        <Form.Label><strong>1. Anamnesis del paciente</strong></Form.Label>
+                            <Form.Label><strong>1. Anamnesis del paciente</strong></Form.Label>
                             <Row>
-                                
+
                                 <Col>
                                     <Form.Group controlId="estadoCivil">
                                         <TextoAyuda
                                             nombre="estadoCivil"
                                             tooltip="Estado Civil"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
+
                                                 as="select"
                                                 value={this.state.estadoCivil}
                                                 onChange={this.handleChange}
@@ -164,6 +226,7 @@ export class EntrevistaPsicologo extends Component {
                                             nombre="numHijos"
                                             tooltip="N° de hijos"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.numHijos}
                                                 onChange={this.handleChange}
                                                 placeholder="N° de hijos"
@@ -172,7 +235,7 @@ export class EntrevistaPsicologo extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            
+
                             <Row>
                                 <Col>
                                     <Form.Group controlId="nombreEmpresa">
@@ -180,6 +243,7 @@ export class EntrevistaPsicologo extends Component {
                                             nombre="nombreEmpresa"
                                             tooltip="Nombre de la empresa"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.nombreEmpresa}
                                                 onChange={this.handleChange}
                                                 placeholder="Nombre de la empresa"
@@ -193,6 +257,7 @@ export class EntrevistaPsicologo extends Component {
                                             nombre="rolCumpleEmpresa"
                                             tooltip="Rol que cumple en la empresa"
                                             componente={<Form.Control
+                                                readOnly={!this.state.editable}
                                                 value={this.state.rolCumpleEmpresa}
                                                 onChange={this.handleChange}
                                                 placeholder="Rol que cumple en la empresa"
@@ -207,7 +272,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Tiempo que lleva desempañándose en esta profesión"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.tiempoEnProfesion}
                                         onChange={this.handleChange}
                                         placeholder="Tiempo que lleva desempeñándose en esta profesión"
@@ -220,7 +286,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Tiempo que lleva desempeñándose en este cargo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.tiempoEnCargo}
                                         onChange={this.handleChange}
                                         placeholder="Tiempo que lleva desempeñándose en este cargo"
@@ -233,7 +300,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Tiempo que lleva desempeñándose en esta empresa"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.tiempoEnEmpresa}
                                         onChange={this.handleChange}
                                         placeholder="Tiempo que lleva desempeñándose en esta empresa"
@@ -246,7 +314,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Funciones realizadas al interior de la empresa"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.funcionesRealizadasEnEmpresa}
                                         onChange={this.handleChange}
                                         placeholder="Funciones que realiza al interior de la empresa"
@@ -260,7 +329,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="descripción del cargo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.descripcionCargo}
                                         onChange={this.handleChange}
                                         placeholder="descripción del cargo"
@@ -273,7 +343,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Horarios"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.horarios}
                                         onChange={this.handleChange}
                                         placeholder="Horarios"
@@ -286,7 +357,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Límites y alcances del cargo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.limiteAlcanceCargo}
                                         onChange={this.handleChange}
                                         placeholder="Límites y alcances del cargo"
@@ -299,7 +371,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="calidad relaciones interpersonales"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.calidadRelacionesInterpersonales}
                                         onChange={this.handleChange}
                                         placeholder="calidad relaciones interpersonales"
@@ -312,7 +385,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Liderazgo"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.liderazgo}
                                         onChange={this.handleChange}
                                         placeholder="Liderazgo"
@@ -325,7 +399,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Características jefatura"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.caracteristicasJefatura}
                                         onChange={this.handleChange}
                                         placeholder="Características jefatura"
@@ -338,7 +413,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Tipo contrato"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.tipoContrato}
                                         onChange={this.handleChange}
                                         placeholder="Tipo contrato"
@@ -351,7 +427,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Estabilidad"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.estabilidad}
                                         onChange={this.handleChange}
                                         placeholder="Estabilidad"
@@ -364,7 +441,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Cambio de funciones"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.cambioFunciones}
                                         onChange={this.handleChange}
                                         placeholder="Cambio de funciones"
@@ -377,7 +455,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Obligaciones extra contrato"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.obligacionesExtraContrato}
                                         onChange={this.handleChange}
                                         placeholder="Obligaciones extra contrato"
@@ -390,7 +469,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Menoscabo de funciones (únicamente para casos de hostigamiento laboral)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.menoscaboFunciones}
                                         onChange={this.handleChange}
                                         placeholder="Menoscabo de funciones (únicamente para casos de hostigamiento laboral)"
@@ -403,7 +483,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Medidas de protección al trabajador y efectividad (únicamente para casos de acoso sexual)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.medidasProteccionTrabajadorEfectividad}
                                         onChange={this.handleChange}
                                         placeholder="Medidas de protección al trabajador y efectividad (únicamente para casos de acoso sexual)"
@@ -417,7 +498,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Motivaciones DIEP"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="8"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.motivacionesDiep}
                                         onChange={this.handleChange}
                                         placeholder="Motivaciones DIEP"
@@ -431,7 +513,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Cuáles son los síntomas"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.sintomas}
                                         onChange={this.handleChange}
                                         placeholder="Cuáles son los síntomas"
@@ -444,7 +527,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Cuándo aparecen"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.cuandoAparecen}
                                         onChange={this.handleChange}
                                         placeholder="Cuándo aparecen"
@@ -457,7 +541,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Cuándo se intensifican"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.cuandoIntensifican}
                                         onChange={this.handleChange}
                                         placeholder="Cuándo se intensifican"
@@ -470,7 +555,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Qué hace al respecto-historia"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="8"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.queHaceAlRespecto}
                                         onChange={this.handleChange}
                                         placeholder="Que hace al respecto-historia"
@@ -484,7 +570,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Indicar si profesional se desempeña en más de un lugar de trabajo actualmente"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.lugaresDeTrabajoActuales}
                                         onChange={this.handleChange}
                                         placeholder="Indicar si profesional se desempeña en más de un lugar de trabajo actualmente"
@@ -497,7 +584,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Antigüedad en ambos trabajos (tiempo de permanencia)"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.antiguedadEnTrabajos}
                                         onChange={this.handleChange}
                                         placeholder="Antigüedad en ambos trabajos (tiempo de permanencia)"
@@ -510,7 +598,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Despidos o renuncias y causas de estas"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.despidosRenunciasCausas}
                                         onChange={this.handleChange}
                                         placeholder="Despidos o renuncias y causas de estas"
@@ -523,7 +612,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Interés y motivaciones por el trabajo actual"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.interesMotivacionesTrabajoActual}
                                         onChange={this.handleChange}
                                         placeholder="Interés y motivaciones por el trabajo actual"
@@ -538,7 +628,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Genograma (consignar: estructura y dinámica de familiar nuclear, y presencia de estresores). Indicar a crisis o eventos críticos al interior del sistema familiar (duelos, pérdidas, cambios de ciudad, enfermedades, etc). "
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="4"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.genograma}
                                         onChange={this.handleChange}
                                         placeholder="Genograma (consignar: estructura y dinámica de familiar nuclear, y presencia de estresores). Indicar a crisis o eventos críticos al interior del sistema familiar (duelos, pérdidas, cambios de ciudad, enfermedades, etc). "
@@ -553,7 +644,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Expectativas del trabajador"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="4"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.expectativaTrabajador}
                                         onChange={this.handleChange}
                                         placeholder="Expectativas del trabajador"
@@ -568,7 +660,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Eje I"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.eje1}
                                         onChange={this.handleChange}
                                         placeholder="Eje I"
@@ -581,7 +674,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Eje II"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.eje2}
                                         onChange={this.handleChange}
                                         placeholder="Eje II"
@@ -594,7 +688,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Eje III"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.eje3}
                                         onChange={this.handleChange}
                                         placeholder="Eje III"
@@ -607,7 +702,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Eje IV"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="2"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.eje4}
                                         onChange={this.handleChange}
                                         placeholder="Eje IV"
@@ -620,7 +716,8 @@ export class EntrevistaPsicologo extends Component {
                                     tooltip="Impresiones clínicas"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="4"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.impresionesClinicas}
                                         onChange={this.handleChange}
                                         placeholder="Impresiones clínicas"
@@ -629,21 +726,36 @@ export class EntrevistaPsicologo extends Component {
                             </Form.Group>
 
                             <Form.Group>
-                                <div className="btn-container">
-                                    <Button
-                                        className="btn-submit"
-                                        type="submit"
-                                    >
-                                        Guardar
-                                        </Button>
-                                </div>
+
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
 
                     {this.state.alert}
                 </form>
-            </div>
+            </div><div className="btn-container">
+                    <Button
+                        className="btn-custom"
+                        onClick={() => this.printDocument()}>
+                        Imprimir</Button>
+
+                    <div className="divider"></div>
+
+                    <Button
+                        className="btn-submit"
+                        onClick={this._handleClick}
+                    >
+                        Editar
+                    </Button>
+                    <div className="divider"></div>
+                    <Button
+                        className="btn-submit"
+                        type="submit"
+                        onClick={this.handleSubmit}
+                    >
+                        Guardar
+                    </Button>
+                </div></div>
         );
     }
 }

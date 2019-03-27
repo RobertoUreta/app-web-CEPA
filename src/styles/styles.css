@@ -212,6 +212,7 @@
 
   .form-control{
     border-color: black;
+    line-height: 1;
   }
 
   .accordion-section{

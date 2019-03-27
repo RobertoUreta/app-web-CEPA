@@ -8,12 +8,18 @@ import { ModalFamiliar } from '../../../components/ModalFamiliar'
 import { TablaFamiliar } from '../../../components/TablaFamiliar'
 import { updateEvaIngreso, obtenerEvaIngreso } from '../../../backend/evaluacion/evaluacionIngreso'
 import SweetAlert from 'react-bootstrap-sweetalert'
+import { imgDataUtal, imgDataFooter } from '../../../images/imagenes/imagenes';
+import * as jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js'
 //--Para cambiar el calendario a español--
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import es from 'date-fns/locale/es';
 registerLocale("es", es)
 setDefaultLocale("es")
 //---------------------------------------
+
+
+
 const tiposFamilias = ["Familia nuclear", "Familia extensa", "Familia monoparental",
     "Familia ensamblada", "Familia homoparental", "Familia de padres separados"]
 
@@ -42,7 +48,11 @@ export class EntrevistaIngreso extends Component {
             observacionesFinales: "",
             show: false,
             familia: [],
-            alert: null
+            alert: null,
+            editable: false,
+            minRows: 5,
+            maxRows: 30,
+            rows: 5,
         };
     }
 
@@ -73,9 +83,62 @@ export class EntrevistaIngreso extends Component {
     }
 
     handleChange = event => {
+        console.log("handleChange", event.target.rows)
+        const textareaLineHeight = 16;
+        const { minRows, maxRows } = this.state;
+
+        const previousRows = event.target.rows;
+        event.target.rows = minRows;
+        const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+        if (currentRows === previousRows) {
+            event.target.rows = currentRows;
+        }
+
+        if (currentRows >= maxRows) {
+            event.target.rows = maxRows;
+            event.target.scrollTop = event.target.scrollHeight;
+        }
+        event.target.rows = currentRows < maxRows ? currentRows + 10 : maxRows
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
+
         });
+    }
+
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
+    printDocument() {
+        const input = document.getElementById('divToPrint');
+        var opt = {
+            margin: [1.8, 1, 1.5, 1],
+            filename: 'ENTREVISTA_INGRESO.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
+
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.7, 1.6, `Entrevista Ingreso`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+
+                }
+            }).save()
+
     }
 
     _hideAlert = () => {
@@ -85,8 +148,8 @@ export class EntrevistaIngreso extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
-        if (aux.fechaEntrevista===null) {
-            aux.fechaEntrevista='1900-01-10'
+        if (aux.fechaEntrevista === null) {
+            aux.fechaEntrevista = '1900-01-10'
         }
         let fecha = new Date(aux.fechaEntrevista)
         aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
@@ -116,7 +179,7 @@ export class EntrevistaIngreso extends Component {
             console.log(res.data);
             if (data.ok) {
                 let entrevista = data.respuesta[0];
-                console.log("fechaaa",entrevista.fecha_entrevista);
+                console.log("fechaaa", entrevista.fecha_entrevista);
                 this.setState({
                     fechaEntrevista: fecha[0] === '1900-01-10' ? null : entrevista.fecha_entrevista,
                     grupoFamiliar: entrevista.grupo_familiar === 'default' ? "" : entrevista.grupo_familiar,
@@ -150,7 +213,7 @@ export class EntrevistaIngreso extends Component {
 
     render() {
         return (
-            <div className="EntrevistaIngreso">
+            <div><div id="divToPrint" className="EntrevistaIngreso">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -161,6 +224,7 @@ export class EntrevistaIngreso extends Component {
                                         tooltip="Fecha de Entrevista"
                                         componente={<DatePicker
                                             customInput={<Form.Control />}
+                                            readOnly={!this.state.editable}
                                             dateFormat="dd/MM/yyyy"
                                             selected={this.state.fechaEntrevista}
                                             onChange={this._handleChange}
@@ -176,6 +240,7 @@ export class EntrevistaIngreso extends Component {
                                     tooltip="Grupo familiar"
                                     componente={<Form.Control
                                         as="select"
+                                        disabled={!this.state.editable}
                                         value={this.state.grupoFamiliar}
                                         onChange={this.handleChange}
                                     >
@@ -188,7 +253,8 @@ export class EntrevistaIngreso extends Component {
                             <Form.Group controlId="observaciones">
                                 <Form.Control
                                     as="textarea"
-                                    rows="2"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.observaciones}
                                     onChange={this.handleChange}
                                     placeholder="Observaciones"
@@ -198,7 +264,9 @@ export class EntrevistaIngreso extends Component {
                             <Form.Group controlId="modalGrupoFamiliar">
                                 <TablaFamiliar
                                     elements={this.state.familia} />
-                                <Button className="btn-custom" onClick={this._handleShow}> Agregar integrante familia</Button>
+                                <div id="element-to-hide" data-html2canvas-ignore="true">
+                                    <Button className="btn-custom" onClick={this._handleShow}> Agregar integrante familia</Button>
+                                </div>
                                 <ModalFamiliar
                                     show={this.state.show}
                                     fnCerrar={this._handleClose}
@@ -209,7 +277,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>¿Quién solicita la consulta? (iniciativa propia, médico, instituciones, otros)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.solicitante}
                                     onChange={this.handleChange}
                                     placeholder="solicitante"
@@ -219,7 +288,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Motivo de consulta del paciente (textual)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.motivoConsultaPaciente}
                                     onChange={this.handleChange}
                                     placeholder="motivo consulta paciente"
@@ -229,7 +299,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>De la institución (si corresponde)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.motivoConsultaInstitucion}
                                     onChange={this.handleChange}
                                     placeholder="motivo consulta institución"
@@ -239,7 +310,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>De la familia</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.motivoConsultaFamilia}
                                     onChange={this.handleChange}
                                     placeholder="motivo consulta familia"
@@ -249,7 +321,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Soluciones intentadas y resultados</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.solucionesIntensadas}
                                     onChange={this.handleChange}
                                     placeholder="soluciones intensadas"
@@ -259,7 +332,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Principal sintomatología</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.principalSintomatologia}
                                     onChange={this.handleChange}
                                     placeholder="principal sintomatologia"
@@ -269,7 +343,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Tratamiento o evaluaciones previas (salud mental)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.tratamientoPrevio}
                                     onChange={this.handleChange}
                                     placeholder="tratamiento previo"
@@ -279,7 +354,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Consumo de sustancias(Alcohol, tabaco y otras drogas)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.consumoSustancias}
                                     onChange={this.handleChange}
                                     placeholder="Consumo de sustancias"
@@ -289,7 +365,8 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Impresiones clínicas</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.impresionesClinicas}
                                     onChange={this.handleChange}
                                     placeholder="impresiones clinicas"
@@ -299,26 +376,43 @@ export class EntrevistaIngreso extends Component {
                                 <Form.Label>Observaciones (incluir percepción de apoyo social)</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.observacionesFinales}
                                     onChange={this.handleChange}
                                     placeholder="Observaciones (incluir percepción de apoyo social)"
                                 />
                             </Form.Group>
                             <Form.Group>
-                                <div className="btn-container">
-                                    <Button
-                                        className="btn-submit"
-                                        type="submit"
-                                    >
-                                        Guardar
-                                        </Button>
-                                </div>
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
                     {this.state.alert}
                 </form>
+            </div>
+                <div className="btn-container">
+                    <Button
+                        className="btn-custom"
+                        onClick={() => this.printDocument()}>
+                        Imprimir</Button>
+
+                    <div className="divider"></div>
+
+                    <Button
+                        className="btn-submit"
+                        onClick={this._handleClick}
+                    >
+                        Editar
+                    </Button>
+                    <div className="divider"></div>
+                    <Button
+                        className="btn-submit"
+                        type="submit"
+                        onClick={this.handleSubmit}
+                    >
+                        Guardar
+                    </Button>
+                </div>
             </div>
         );
     }

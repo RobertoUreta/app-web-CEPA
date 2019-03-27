@@ -6,6 +6,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TextoAyuda } from '../../../components/TextoAyuda'
 import { updateEvaPsiquiatrica, obtenerEvaPsiquiatrica } from '../../../backend/evaluacion/evaluacionPsiquiatrica';
 import SweetAlert from 'react-bootstrap-sweetalert'
+import { imgDataUtal, imgDataFooter } from '../../../images/imagenes/imagenes';
+import * as jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js'
 const motivos = ["Derivación", "Consulta espontanea"]
 const anamnesisRemotaLista = ["hta",
     "dm",
@@ -93,7 +96,11 @@ export class EntrevistaPsiquiatrica extends Component {
             cuidadoFamiliar: "",
             proximoControl: "",
             observacionesIndicacionesPlanTratamiento: "",
-            alert: null
+            alert: null,
+            editable: false,
+            minRows: 5,
+            maxRows: 30,
+            rows: 5,
         };
     }
 
@@ -105,16 +112,69 @@ export class EntrevistaPsiquiatrica extends Component {
     }
 
     handleChange = event => {
+        console.log("handleChange", event.target.rows)
+        const textareaLineHeight = 16;
+        const { minRows, maxRows } = this.state;
+
+        const previousRows = event.target.rows;
+        event.target.rows = minRows;
+        const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+        if (currentRows === previousRows) {
+            event.target.rows = currentRows;
+        }
+
+        if (currentRows >= maxRows) {
+            event.target.rows = maxRows;
+            event.target.scrollTop = event.target.scrollHeight;
+        }
+        event.target.rows = currentRows < maxRows ? currentRows + 10 : maxRows
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
+
         });
+    }
+
+    _handleClick = () => {
+        this.setState({ editable: !this.state.editable })
+    }
+
+    printDocument() {
+
+        const input = document.getElementById('divToPrint');
+        var opt = {
+            margin: [1.8, 1, 1.5, 1],
+            filename: 'ENTREVISTA_PSIQUIÁTRICA.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
+
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.65, 1.6, `Entrevista Psiquiátrica`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+
+                }
+            }).save()
     }
 
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
-        if (aux.fechaEntrevista===null) {
-            aux.fechaEntrevista='1900-01-10'
+        if (aux.fechaEntrevista === null) {
+            aux.fechaEntrevista = '1900-01-10'
         }
         let fecha = new Date(aux.fechaEntrevista)
         aux.fechaEntrevista = fecha.toJSON().slice(0, 19).replace('T', ' ')
@@ -155,7 +215,7 @@ export class EntrevistaPsiquiatrica extends Component {
                     anamnesisProxima: entrevista.anamnesis_proxima === 'default' ? "" : entrevista.anamnesis_proxima,
                     hipotesisDiagnosticaDSMV: entrevista.hipotesis_diagnostica_dsm_v === 'default' ? "" : entrevista.hipotesis_diagnostica_dsm_v,
                     impresionesClinicas: entrevista.impresiones_clinicas === 'default' ? "" : entrevista.impresiones_clinicas,
-                    hta: entrevista.hta ? 1: 0,
+                    hta: entrevista.hta ? 1 : 0,
                     dm: entrevista.dm ? 1 : 0,
                     tbc: entrevista.tbc ? 1 : 0,
                     epi: entrevista.epi ? 1 : 0,
@@ -207,7 +267,7 @@ export class EntrevistaPsiquiatrica extends Component {
     }
     render() {
         return (
-            <div className="EntrevistaPsiquiatrica">
+            <div><div id="divToPrint" className="EntrevistaPsiquiatrica">
                 <form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col}>
@@ -218,6 +278,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="fecha de entrevista"
                                         tooltip="Fecha de entrevista"
                                         componente={<DatePicker
+                                            readOnly={!this.state.editable}
                                             customInput={<Form.Control />}
                                             dateFormat="dd/MM/yyyy"
                                             selected={this.state.fechaEntrevista}
@@ -232,6 +293,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                 <Form.Label>Motivo de derivación o consulta</Form.Label>
                                 <Form.Control
                                     as="select"
+                                    readOnly={!this.state.editable}
                                     value={this.state.motivo}
                                     onChange={this.handleChange}
                                 >
@@ -244,7 +306,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                     tooltip="Observación"
                                     componente={<Form.Control
                                         as="textarea"
-                                        rows="3"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.observacion}
                                         onChange={this.handleChange}
                                         placeholder="Observación"
@@ -256,7 +319,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                 <Form.Label>Detallar motivo de consulta del paciente</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.detalleMotivoPaciente}
                                     onChange={this.handleChange}
                                     placeholder="Detalle motivo de consulta del paciente"
@@ -266,7 +330,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                 <Form.Label>Anamnesis próxima</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows="5"
+                                    rows={this.state.rows}
+                                    readOnly={!this.state.editable}
                                     value={this.state.anamnesisProxima}
                                     onChange={this.handleChange}
                                     placeholder="Anamnesis próxima"
@@ -281,6 +346,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {anamnesisRemotaLista.slice(0, 4).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
@@ -300,6 +366,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {anamnesisRemotaLista.slice(4, 8).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
@@ -319,6 +386,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {anamnesisRemotaLista.slice(8, 12).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state.name}
                                                         onChange={event => this.setState({
@@ -342,7 +410,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Observación"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.observacionesAnamnesisRemota}
                                             onChange={this.handleChange}
                                             placeholder="Observación"
@@ -361,6 +430,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {antGinecoObstetricosLista.slice(0, 3).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
@@ -380,6 +450,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {antGinecoObstetricosLista.slice(3, 6).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
@@ -400,7 +471,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Observación"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.observacionesAntGinecoObstetricos}
                                             onChange={this.handleChange}
                                             placeholder="Observación"
@@ -419,6 +491,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {habitosLista.slice(0, 4).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
@@ -438,6 +511,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 {habitosLista.slice(4, 7).map((name) => (
                                                     <Form.Check
                                                         custom
+                                                        disabled={!this.state.editable}
                                                         checked={this.state[name]}
                                                         value={this.state[name]}
                                                         onChange={event => this.setState({
@@ -455,6 +529,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                                 nombre="otro"
                                                 tooltip="Otros"
                                                 componente={<Form.Control
+                                                    readOnly={!this.state.editable}
                                                     value={this.state.otro}
                                                     onChange={this.handleChange}
                                                     placeholder="Otros (indicar)"
@@ -470,7 +545,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Observación"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.observacionesHabitos}
                                             onChange={this.handleChange}
                                             placeholder="Observación"
@@ -487,7 +563,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Médicos"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.medicos}
                                             onChange={this.handleChange}
                                             placeholder="Médicos"
@@ -501,7 +578,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Psiquiátricos"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.psiquiatricos}
                                             onChange={this.handleChange}
                                             placeholder="Psiquiátricos"
@@ -514,6 +592,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="depresion"
                                         tooltip="Depresión"
                                         componente={<Form.Control
+                                            readOnly={!this.state.editable}
                                             value={this.state.depresion}
                                             onChange={this.handleChange}
                                             placeholder="Depresión"
@@ -526,6 +605,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="ohDrogas"
                                         tooltip="OH/Drogas"
                                         componente={<Form.Control
+                                            readOnly={!this.state.editable}
                                             value={this.state.ohDrogas}
                                             onChange={this.handleChange}
                                             placeholder="OH/Drogas"
@@ -538,6 +618,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="suicidios"
                                         tooltip="Suicidios"
                                         componente={<Form.Control
+                                            readOnly={!this.state.editable}
                                             value={this.state.suicidios}
                                             onChange={this.handleChange}
                                             placeholder="Suicidios"
@@ -550,6 +631,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="homicidios"
                                         tooltip="Homicidios"
                                         componente={<Form.Control
+                                            readOnly={!this.state.editable}
                                             value={this.state.homicidios}
                                             onChange={this.handleChange}
                                             placeholder="Homicidios"
@@ -562,6 +644,7 @@ export class EntrevistaPsiquiatrica extends Component {
                                         nombre="otrosAntecedentesFamiliares"
                                         tooltip="Otros"
                                         componente={<Form.Control
+                                            readOnly={!this.state.editable}
                                             value={this.state.otrosAntecedesFamiliares}
                                             onChange={this.handleChange}
                                             placeholder="Otros"
@@ -576,7 +659,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                 <Form.Group controlId="hipotesisDiagnosticaDSMV">
                                     <Form.Control
                                         as="textarea"
-                                        rows="5"
+                                        rows={this.state.rows}
+                                        readOnly={!this.state.editable}
                                         value={this.state.hipotesisDiagnosticaDSMV}
                                         onChange={this.handleChange}
                                         placeholder="Hipotesis diagnostica según DSM V"
@@ -588,7 +672,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Impresiones Clínicas"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.impresionesClinicas}
                                             onChange={this.handleChange}
                                             placeholder="Impresiones Clínicas"
@@ -605,7 +690,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Fármacos"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.farmacos}
                                             onChange={this.handleChange}
                                             placeholder="Fármacos"
@@ -619,7 +705,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Entrevista a significantes afectivos"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.entrevistaSignificantesAfectivos}
                                             onChange={this.handleChange}
                                             placeholder="Entrevista a significantes afectivos"
@@ -633,7 +720,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Exámenes laboratorio"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.examenesLaboratorio}
                                             onChange={this.handleChange}
                                             placeholder="Exámenes laboratorio"
@@ -647,7 +735,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Derivación"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.derivacion}
                                             onChange={this.handleChange}
                                             placeholder="Derivación"
@@ -661,7 +750,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Coordinación con psicoterapeuta"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.coordinacionPsicoterapeuta}
                                             onChange={this.handleChange}
                                             placeholder="Coordinación con psicoterapeuta"
@@ -675,7 +765,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Coordinación con centro de derivación"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.coordinacionCentroDerivacion}
                                             onChange={this.handleChange}
                                             placeholder="Coordinación con Centro de Derivación"
@@ -689,7 +780,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Instrumentos a aplicar"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.instrumentosAplicar}
                                             onChange={this.handleChange}
                                             placeholder="Instrumentos a aplicar"
@@ -703,7 +795,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Cuidado familiar"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.cuidadoFamiliar}
                                             onChange={this.handleChange}
                                             placeholder="Cuidado familiar"
@@ -717,7 +810,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Próximo control"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.proximoControl}
                                             onChange={this.handleChange}
                                             placeholder="Próximo control"
@@ -731,7 +825,8 @@ export class EntrevistaPsiquiatrica extends Component {
                                         tooltip="Observaciones"
                                         componente={<Form.Control
                                             as="textarea"
-                                            rows="3"
+                                            rows={this.state.rows}
+                                            readOnly={!this.state.editable}
                                             value={this.state.observacionesIndicacionesPlanTratamiento}
                                             onChange={this.handleChange}
                                             placeholder="Observaciones"
@@ -743,20 +838,37 @@ export class EntrevistaPsiquiatrica extends Component {
 
 
                             <Form.Group>
-                                <div className="btn-container">
-                                    <Button
-                                        className="btn-submit"
-                                        type="submit"
-                                    >
-                                        Guardar
-                                        </Button>
-                                </div>
+
                             </Form.Group>
                         </Form.Group>
                     </Form.Row>
 
                     {this.state.alert}
                 </form>
+            </div>
+                <div className="btn-container">
+                    <Button
+                        className="btn-custom"
+                        onClick={() => this.printDocument()}>
+                        Imprimir</Button>
+
+                    <div className="divider"></div>
+
+                    <Button
+                        className="btn-submit"
+                        onClick={this._handleClick}
+                    >
+                        Editar
+                    </Button>
+                    <div className="divider"></div>
+                    <Button
+                        className="btn-submit"
+                        type="submit"
+                        onClick={this.handleSubmit}
+                    >
+                        Guardar
+                    </Button>
+                </div>
             </div>
         );
     }

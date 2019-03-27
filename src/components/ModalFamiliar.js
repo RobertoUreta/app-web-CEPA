@@ -147,10 +147,10 @@ export class ModalFamiliar extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button  className="btn-custom" variant="secondary" onClick={this._handleClose}>
-                        Close
+                        Cerrar
                     </Button>
-                    <Button variant="primary" onClick={this._handleModalSubmit}>
-                        Save Changes
+                    <Button className="btn-custom" variant="primary" onClick={this._handleModalSubmit}>
+                        Guardar
                     </Button>
                 </Modal.Footer>
             </Modal>
