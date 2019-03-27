@@ -58,6 +58,9 @@ export class EpicrisisPsicologica extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fecha===null) {
+            aux.fecha='1900-01-10'
+        }
         let fecha1 = new Date(aux.fecha)
         aux.fecha = fecha1.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux);
@@ -87,9 +90,11 @@ export class EpicrisisPsicologica extends Component {
             console.log(res.data);
             if (data.ok) {
                 let epi = data.respuesta[0];
+                let aux = new Date(epi.fecha_epicrisis)
+                let fecha = aux.toISOString().split('T')
                 let bateria = data.bateria;
                 this.setState({
-                    fecha: epi.fecha_epicrisis === '0000-00-00' ? null : epi.fecha_epicrisis,
+                    fecha: fecha[0] === '1900-01-10' ? null : epi.fecha_epicrisis,
                     tipoEpicrisis: epi.tipo_epicrisis === 'default' ? "" : epi.tipo_epicrisis,
                     motivos: epi.motivos === 'default' ? "" : epi.motivos,
                     observacionRemisionSintomas: epi.observacion_remision_sintomas === 'default' ? "" : epi.observacion_remision_sintomas,

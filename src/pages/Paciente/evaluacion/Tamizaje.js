@@ -47,6 +47,9 @@ export class Tamizaje extends Component {
     handleSubmit = event => {
         event.preventDefault();
         const aux = JSON.parse(JSON.stringify(this.state, null, '  '));
+        if (aux.fechaSolicitud===null) {
+            aux.fechaSolicitud='1900-01-10'
+        }
         let fecha = new Date(aux.fechaSolicitud)
         aux.fechaSolicitud = fecha.toJSON().slice(0, 19).replace('T', ' ')
         console.log(aux)
@@ -72,12 +75,14 @@ export class Tamizaje extends Component {
         let prom = obtenerTamizaje(this.props.pacienteId)
         prom.then(res => {
             let tami = res.data.respuesta[0];
+            let aux = new Date(tami.fecha_solicitud)
+            let fecha = aux.toISOString().split('T')
             console.log('tamizaje cambiandooooooo: ', tami)
             if (tami.ok) {
                 console.log("no es undefined", tami)
                 this.setState({
                     nombreSolicitante: tami.nombre_solicitante === 'default' ? "" : tami.nombre_solicitante,
-                    fechaSolicitud: tami.fecha_solicitud ===  '0000-00-00' ? "" : tami.fecha_solicitud,
+                    fechaSolicitud: fecha ===  '1900-01-10' ? "" : tami.fecha_solicitud,
                     horarioDisponible: tami.horario_disponible === 'default' ? "" :tami.horario_disponible,
                     nivelUrgencia: tami.nivel_urgencia === 'default' ? "" : tami.nivel_urgencia,
                     preguntaSintomatologia:tami.pregunta_sintomatologia === 'default' ? "": tami.pregunta_sintomatologia,
