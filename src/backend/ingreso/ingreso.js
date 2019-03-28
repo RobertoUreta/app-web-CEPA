@@ -63,7 +63,8 @@ export let updateDatosPersonales =  async (data,id ) => {
     
 }
 
-export let obtenerAdultoContacto= async (id) => {
+
+export let obtenerAdultoContacto = async (id) => {
     try{
         let res = await request.get('/obtener_adultoContacto', {params: {idPaciente: id}})
         return res;

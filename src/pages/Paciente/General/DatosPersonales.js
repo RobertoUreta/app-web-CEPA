@@ -5,6 +5,8 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import { addYears } from 'date-fns/esm';
 import { TextoAyuda } from '../../../components/TextoAyuda'
+import { obtenerDatosPersonales } from '../../../backend/ingreso/ingreso';
+import { obtenerDatosPaciente } from '../../../backend/paciente/paciente';
 
 const valoresSesion = [0, 3000, 8000, 15000]
 const relacionesContractuales = ["Sin contrato", "Honorarios", "Pension de vejez"]
@@ -12,6 +14,8 @@ const previsiones = ["Ninguna", "Fonasa A", "Fonasa B", "Fonasa C", "Fonasa D",
     "Isapre Banmédica", "Isapre Consalud", "Isapre Colmena",
     "Isapre CruzBlanca", "Isapre Nueva Masvida", "Isapre Vida Tres"]
 const tiposEstablecimientos = ["Municipal", "Particular-Subvencionado", "Particular"]
+const nivelesInstruccion = ["Ed. Básica Completa", "Ed.Básica Incompleta", "Ed.Media Incompleta",
+"Ed. Media Completa", "Superior Incompleta","Superior Completa"]
 
 export class DatosPersonales extends Component {
 
@@ -53,30 +57,37 @@ export class DatosPersonales extends Component {
             }
         )
     }
-    componentWillMount() {
+    componentDidMount() {
+        let promise = obtenerDatosPaciente(this.props.pacienteId)
+        promise
+        .then( res => {
+            console.log(res)
+            let paciente = res.data.paciente[0]
+            if (paciente !== undefined) {
+                console.log("no es undefined", paciente)
+                this.setState({
+                    nombre: paciente.nombre === "default" ? "" : paciente.nombre,
+                    apellidoPaterno: paciente.apellido_paterno === "default" ? "" : paciente.apellido_paterno,
+                    apellidoMaterno: paciente.apellido_materno === "default" ? "" : paciente.apellido_materno,
+                    rut: paciente.rut === "12345678" ? "" : paciente.rut,
+                    fechaNacimiento: paciente.fecha_nacimiento,
+                    telefonoMovil: paciente.telefono_movil === "default" ? "" : paciente.telefono_movil,
+                    telefonoFijo: paciente.telefono_fijo === "default" ? "" : paciente.telefono_fijo,
+                    correo: paciente.correo === "default@default.com" ? "" : paciente.correo,
+                    nivelInstruccion: paciente.nivel_instruccion === "default" ? "" : paciente.nivel_instruccion,
+                    establecimientoEducacional: paciente.establecimiento_educacional === "default" ? "" : paciente.establecimiento_educacional,
+                    tipoEstablecimiento: paciente.tipo_establecimiento === "default" ? "" : paciente.tipo_establecimiento,
+                    prevision: paciente.prevision === "default" ? "" : paciente.prevision,
+                    ocupacion: paciente.ocupacion === "default" ? "" : paciente.ocupacion,
+                    relacionContractual: paciente.relacion_contractual === "default" ? "" : paciente.relacion_contractual,
+                    tipoPaciente: paciente.tipo_paciente === "default" ? "" : paciente.tipo_paciente,
+                    valorSesion: paciente.valor_sesion === "default" ? "" : paciente.valor_sesion,
+                })
+                this._cambiarDigitoVerificador(this.state.rut);
+            }
+        })
         let paciente = this.props.paciente
-        if (paciente !== undefined) {
-            console.log("no es undefined", paciente)
-            this.setState({
-                nombre: paciente.nombre === "default" ? "" : paciente.nombre,
-                apellidoPaterno: paciente.apellido_paterno === "default" ? "" : paciente.apellido_paterno,
-                apellidoMaterno: paciente.apellido_materno === "default" ? "" : paciente.apellido_materno,
-                rut: paciente.rut === "12345678" ? "" : paciente.rut,
-                fechaNacimiento: paciente.fecha_nacimiento,
-                telefonoMovil: paciente.telefono_movil === "default" ? "" : paciente.telefono_movil,
-                telefonoFijo: paciente.telefono_fijo === "default" ? "" : paciente.telefono_fijo,
-                correo: paciente.correo === "default@default.com" ? "" : paciente.correo,
-
-                establecimientoEducacional: paciente.establecimiento_educacional === "default" ? "" : paciente.establecimiento_educacional,
-                tipoEstablecimiento: paciente.tipo_establecimiento === "default" ? "" : paciente.tipo_establecimiento,
-                prevision: paciente.prevision === "default" ? "" : paciente.prevision,
-                ocupacion: paciente.ocupacion === "default" ? "" : paciente.ocupacion,
-                relacionContractual: paciente.relacion_contractual === "default" ? "" : paciente.relacion_contractual,
-                tipoPaciente: paciente.tipo_paciente === "default" ? "" : paciente.tipo_paciente,
-                valorSesion: paciente.valor_sesion === "default" ? "" : paciente.valor_sesion,
-            })
-            this._cambiarDigitoVerificador(this.state.rut);
-        }
+        
     }
     _handleChange = (date) => {
         this.setState({
@@ -230,11 +241,15 @@ export class DatosPersonales extends Component {
                         </Form.Group>
                         <Form.Group as={Col}>
                             <Form.Group controlId="nivelInstruccion">
-                                <TextoAyuda nombre="nivelInstruccion" tooltip="Nivel de Instrucción" componente={<Form.Control
+                                <TextoAyuda nombre="nivelInstruccion" tooltip="Nivel de Instrucción" 
+                                componente={<Form.Control
+                                    as="select"
                                     value={this.state.nivelInstruccion}
                                     onChange={this.handleChange}
-                                    placeholder="Nivel de Instrucción"
-                                />} />
+                                >
+                                <option hidden>Nivel de Instrucción</option> 
+                                <Option options={nivelesInstruccion} />
+                                </Form.Control>} />
                             </Form.Group>
                             <Form.Group controlId="establecimientoEducacional">
                                 <TextoAyuda nombre="establecimientoEducacional" tooltip="Establecimiento educacional" componente={<Form.Control
@@ -245,7 +260,9 @@ export class DatosPersonales extends Component {
                             </Form.Group>
                             <Row>
                                 <Form.Group as={Col} controlId="tipoEstablecimiento">
-                                    <TextoAyuda nombre="tipoEstablecimiento" tooltip="Tipo de establecimiento" componente={<Form.Control
+                                    <TextoAyuda nombre="tipoEstablecimiento" tooltip="Tipo de establecimiento" 
+                                    componente={
+                                    <Form.Control
                                         as="select"
                                         value={this.state.tipoEstablecimiento}
                                         onChange={this.handleChange}
