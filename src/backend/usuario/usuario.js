@@ -34,7 +34,6 @@ export let obtenerSupervisores= ()=>{
         arr.forEach(element => {
             supervisores.set( element.nombre +' '+element.apellido_paterno,element.id_usuario)
         });
-        console.log(supervisores);
     })
     .catch(err=>{
         supervisores.push("default");
@@ -59,6 +58,15 @@ export let obtenerRoles= ()=>{
         console.log(err);
     });
     return roles;
+}
+
+export let obtenerRolId =async (id) => {
+    try{
+        let promise = await request.get('/rol_usuarioId',{params:{id:id}})
+        return promise
+    }catch(err){
+        console.log(err)
+    }
 }
 
 export let revisarRestricted = ()=>{

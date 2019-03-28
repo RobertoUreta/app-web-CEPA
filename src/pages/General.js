@@ -6,7 +6,7 @@ import { DatosSocioDemograficos } from './Paciente/General/DatosSocioDemografico
 import { DatosAdicionales } from './Paciente/General/DatosAdicionales'
 import Accordion from '../components/Accordion';
 
-import  SweetAlert  from 'react-bootstrap-sweetalert'
+import SweetAlert from 'react-bootstrap-sweetalert'
 
 import { insertarIngreso, updateAdultoContacto, updateDatosSocioDemo, updateDatosAdicionales, updateDatosPersonales } from '../backend/ingreso/ingreso'
 import { obtenerDatosPaciente } from '../backend/paciente/paciente';
@@ -18,30 +18,40 @@ export class General extends Component {
 
         this.state = {
             id: this.props.userId,
+            nombre: "",
+            apellidoPaterno: "",
+            apellidoMaterno: "",
             paciente: {},
             datosGenerales: {},
             adultoContacto: {},
             datosSocioDemograficos: {},
             datosAdicionales: {},
-            alert: null
+            alert: null,
+            verificador: false,
         }
     }
 
 
 
-    async componentDidMount() {
+    componentDidMount() {
 
         let fecha = new Date()
         let ingreso = fecha.toJSON().slice(0, 19).replace('T', ' ')
         let data = { fechaIngreso: ingreso }
-        let insertar = insertarIngreso(data, this.state.id,this.props.loggedUser)
+        let insertar = insertarIngreso(data, this.state.id, this.props.loggedUser)
 
         insertar
             .then(res => {
                 let promise = obtenerDatosPaciente(this.state.id)
                 promise
                     .then(res => {
-                        this.setState({ paciente: res.data.paciente[0] })
+                        let data = res.data.paciente[0]
+                        this.setState({
+                            paciente: data,
+                            nombre: data.nombre === "default" ? "" : data.nombre,
+                            apellidoPaterno: data.apellido_paterno === "default" ? "" : data.apellido_paterno,
+                            apellidoMaterno: data.apellido_materno === "default" ? "" : data.apellido_materno,
+                        })
                         console.log("stateGeneral", this.state.paciente)
                     }).catch(err => {
                         console.log(err)
@@ -56,9 +66,6 @@ export class General extends Component {
     _hideAlert = () => {
         this.setState({ alert: null })
     }
-
-    
-
 
 
     _handleDatosGenerales = (infoPaciente) => {
@@ -83,13 +90,10 @@ export class General extends Component {
                             Se agregaron correctamente los datos del paciente
                         </SweetAlert>
                     )
-                    this.setState({alert: getAlert()})
+                    this.setState({ alert: getAlert() })
                 }
 
             })
-        //insertarIngreso(info, this.state.id)
-
-        //this.props.history.push(enlace)
     }
 
     _handleDatosAdicionales = (data) => {
@@ -156,29 +160,26 @@ export class General extends Component {
     }
 
     render() {
-        console.log("stateGeneral!!!",this.state)
-        let { verificador } = false;
-        if (this.state.datosGenerales.nombre !== undefined) {
-            verificador = true
-        }
+        console.log("stateGeneral!!!", this.state)
+
         return (
             <div>
-                <h2>{verificador ? this.state.datosGenerales.nombre + " " + this.state.datosGenerales.apellidoPaterno + " "
-                    + this.state.datosGenerales.apellidoMaterno : ""}</h2>
+                <h2>{this.state.nombre + " " + this.state.apellidoPaterno + " "
+                    + this.state.apellidoMaterno}</h2>
                 <Accordion>
                     <div label="Datos Personales">
                         <DatosPersonales
                             paciente={this.state.paciente}
-                            id={this.state.id}
+                            pacienteId={this.state.id}
                             handlePaciente={this._handleDatosGenerales} />
-                            {this.state.alert}
+                        {this.state.alert}
                     </div>
                     <div label="Adulto Contacto">
                         <AdultoContacto
                             paciente={this.state.paciente}
                             pacienteId={this.state.id}
                             handleAdultoContacto={this._handleAdulto} />
-                            {this.state.alert}
+                        {this.state.alert}
                     </div>
 
                     <div label="Datos Socio-demográficos">
@@ -186,7 +187,7 @@ export class General extends Component {
                             paciente={this.state.paciente}
                             pacienteId={this.state.id}
                             handleDatosSocio={this._handleDatosSocio} />
-                            {this.state.alert}
+                        {this.state.alert}
                     </div>
 
                     <div label="Datos Adicionales">
@@ -194,11 +195,11 @@ export class General extends Component {
                             paciente={this.state.paciente}
                             pacienteId={this.state.id}
                             handleDatosAdicionales={this._handleDatosAdicionales} />
-                            {this.state.alert}
+                        {this.state.alert}
                     </div>
                 </Accordion>
 
-                
+
 
             </div>
         )

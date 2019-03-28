@@ -39,10 +39,6 @@ export class NavLateral extends Component {
       return <Epicrisis userId={this.props.loggedUser} pacienteId={this.props.userId} />
     }
 
-    if (this.state.selectedPath === "registrosesion") {
-      return <Sesion userId={this.props.userId} />
-    }
-
     if (this.state.selectedPath === "diagnostico") {
       return <Diagnostico userId={this.props.loggedUser} pacienteId={this.props.userId} />
     }
@@ -71,9 +67,7 @@ export class NavLateral extends Component {
             <Nav.Item>
               <Nav.Link eventKey="tratamiento"> Tratamiento</Nav.Link>
             </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="registrosesion"> Registro Sesión</Nav.Link>
-            </Nav.Item>
+            
             <Nav.Item>
               <Nav.Link eventKey="epicrisis"> Epicrisis </Nav.Link>
             </Nav.Item>

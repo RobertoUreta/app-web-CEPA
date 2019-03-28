@@ -7,6 +7,7 @@ import "../styles/styles.css"
 import {verificarSesion} from '../backend/login'
 
 import request from '../backend/config'
+import { obtenerRolId } from '../backend/usuario/usuario';
 
 export class Usuario extends Component {
 
@@ -16,6 +17,7 @@ export class Usuario extends Component {
 
         this.state = {
             usuarios: [],
+            esAdmin: false,
         }
     }
 
@@ -44,7 +46,7 @@ export class Usuario extends Component {
     }
 
 
-    componentWillMount() {
+    componentDidMount() {
         const self = this;
         request.get('/listaUsuario')
             .then(res => {
@@ -60,6 +62,20 @@ export class Usuario extends Component {
             if (!resp.data.ok) {
                 this.props.history.push('/')
             }
+        })
+        let id = this.props.match.params.id
+        let promise = obtenerRolId(id)
+        promise
+        .then(res =>{
+            console.log("respaciente",res)
+            let rol = res.data.roles[0].nombre_rol
+            if(rol === "ADMIN"){
+                this.setState({
+                    esAdmin:true
+                })
+                console.log(this.state.esAdmin)
+            }
+
         })
     }
 
@@ -95,7 +111,8 @@ export class Usuario extends Component {
                     <div>
                         {this.state && this.state.usuarios &&
                             <TablaUsuario
-                                elements={this.state.usuarios} />}
+                                elements={this.state.usuarios}
+                                esAdmin={this.state.esAdmin} />}
                     </div>
                 </div>
             </div>
