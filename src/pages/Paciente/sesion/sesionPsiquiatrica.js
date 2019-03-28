@@ -5,6 +5,7 @@ import { TextoAyuda } from '../../../components/TextoAyuda'
 import * as jsPDF from 'jspdf';
 import html2canvas from 'html2canvas'
 import { imgDataFooter, imgDataUtal } from '../../../images/imagenes/imagenes';
+import html2pdf from 'html2pdf.js'
 
 import { obtenerRegistroPsiquiatrico } from '../../../backend/paciente/registros';
 const tiposTratamiento = ["Terapia individual", "Taller", "Intervención grupal", "Derivación asistida"];
@@ -25,7 +26,9 @@ export class SesionPsiquiatrica extends Component {
             id: this.props.idSesion,
             refRegistro: this.props.refRegistro,
             num: this.props.numSesion,
-            mostrarBotones: true
+            minRows: 5,
+            maxRows: 30,
+            rows: 5,
         };
     }
     componentDidMount() {
@@ -52,33 +55,56 @@ export class SesionPsiquiatrica extends Component {
 
     printDocument(num) {
  
-        console.log("aasdfa", num)
         const input = document.getElementById('divToPrint');
-        const pdf = new jsPDF();
-        var width = pdf.internal.pageSize.getWidth();
-        var height = pdf.internal.pageSize.getHeight()
-        var divHeight = document.getElementById('divToPrint').clientHeight;
-        var divWidth = document.getElementById('divToPrint').clientWidth
-        var ratio = divHeight / divWidth 
-        console.log(ratio)
-        pdf.addImage(imgDataUtal, 'png', 0, 0)
-        pdf.setFontSize(20)
-        pdf.text(55, 40, `Registro Sesión Psiquiatrica N°${num}`)
-        pdf.addImage(imgDataFooter, 'png', 0, 255)
-        html2canvas(input)
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                height = ratio * width
-                pdf.addImage(imgData, 'JPEG', 15, 45, width - 30, height -10, 'content');
-                pdf.save(`REG_SESION_PSIQUIATRICA_N_${num}`);
+        var opt = {
+            margin: [1.8, 1, 1.5, 1],
+            filename: `REGISTRO_SESIÓN_PSIQUIÁTRICA_N°${num}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: 'avoid-all' }
+        };
+        html2pdf().set(opt).from(input).toPdf().get('pdf')
+            .then(function (pdf) {
+                var number_of_pages = pdf.internal.getNumberOfPages()
+                var pdf_pages = pdf.internal.pages
+                for (var i = 1; i < pdf_pages.length; i++) {
+                    // We are telling our pdfObject that we are now working on this page
+                    pdf.setPage(i)
 
-            })
-            ;
+                    if (i === 1) {
+                        pdf.setFontSize(20)
+                        pdf.text(2.55, 1.6, `Registro Sesión Psiquiátrica N°${num}`)
+                    }
+
+                    pdf.addImage(imgDataUtal, 'png', 0, 0)
+                    pdf.addImage(imgDataFooter, 'png', 0, 10.1)
+
+                }
+            }).save()
 
     }
     handleChange = event => {
+        console.log("handleChange", event.target.rows)
+        const textareaLineHeight = 16;
+        const { minRows, maxRows } = this.state;
+
+        const previousRows = event.target.rows;
+        event.target.rows = minRows;
+        const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+        if (currentRows === previousRows) {
+            event.target.rows = currentRows;
+        }
+
+        if (currentRows >= maxRows) {
+            event.target.rows = maxRows;
+            event.target.scrollTop = event.target.scrollHeight;
+        }
+        event.target.rows = currentRows < maxRows ? currentRows + 10 : maxRows
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
+
         });
     }
 
