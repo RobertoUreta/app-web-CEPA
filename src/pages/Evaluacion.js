@@ -28,7 +28,7 @@ export class Evaluacion extends Component {
                         <EntrevistaIngreso  userId={this.props.userId} pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Evaluación Social">
-                        <Archivo />
+                        <Archivo pacienteId={this.props.pacienteId}/>
                     </div>
                     <div label="Evaluación Psicológica">
                         <EntrevistaPsicologica userId={this.props.userId} pacienteId={this.props.pacienteId}/>

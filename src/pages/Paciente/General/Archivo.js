@@ -24,9 +24,11 @@ export class Archivo extends Component {
     onClickHandler = () => {
         if (this.state.selectedFile != null) {
             const data = new FormData()
+            data.append('pacienteId',this.props.pacienteId)
             for (var x = 0; x < this.state.selectedFile.length; x++) {
                 data.append('file', this.state.selectedFile[x])
             }
+            
             let resp = insertarArchivo(data)
             resp.then(res => { // then print response status
                 if (res.data.ok) {
