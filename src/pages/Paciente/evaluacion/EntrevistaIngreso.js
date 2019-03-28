@@ -174,11 +174,11 @@ export class EntrevistaIngreso extends Component {
         let prom = obtenerEvaIngreso(this.props.pacienteId);
         prom.then(res => {
             let data = res.data;
-            let aux = new Date(data.fecha_entrevista)
-            let fecha = aux.toISOString().split('T')
             console.log(res.data);
             if (data.ok) {
                 let entrevista = data.respuesta[0];
+                let aux = new Date(entrevista.fecha_entrevista)
+                let fecha = aux.toISOString().split('T')
                 console.log("fechaaa", entrevista.fecha_entrevista);
                 this.setState({
                     fechaEntrevista: fecha[0] === '1900-01-10' ? null : entrevista.fecha_entrevista,
